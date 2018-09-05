@@ -1,5 +1,6 @@
 package com.vp.list.model;
 
+import android.support.annotation.Keep;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
@@ -8,6 +9,7 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 
+@Keep
 public class SearchResponse {
     private static final String POSITIVE_RESPONSE = "True";
     @SerializedName("Search")

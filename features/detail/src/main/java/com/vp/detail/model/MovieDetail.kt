@@ -1,7 +1,9 @@
 package com.vp.detail.model
 
+import android.support.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
+@Keep
 data class MovieDetail(@SerializedName("Title") val title: String,
                        @SerializedName("Year") val year: String,
                        @SerializedName("Runtime") val runtime: String,
