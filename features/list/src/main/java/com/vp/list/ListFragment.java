@@ -107,6 +107,19 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         gridPagingScrollListener = new GridPagingScrollListener(layoutManager);
         gridPagingScrollListener.setLoadMoreItemsListener(this);
         recyclerView.addOnScrollListener(gridPagingScrollListener);
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                switch (listAdapter.getItemViewType(position)) {
+                    case ListAdapter.VIEW_TYPE_DATA:
+                        return 1;
+                    case ListAdapter.VIEW_TYPE_PROGRESS_BAR:
+                        return 2;
+                    default:
+                        return -1;
+                }
+            }
+        });
     }
 
     private void showProgressBar() {
@@ -124,12 +137,17 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     private void handleResult(@NonNull ListAdapter listAdapter, @NonNull SearchResult searchResult) {
         switch (searchResult.getListState()) {
             case LOADED: {
+                listAdapter.showLoadingIndicator(false);
                 setItemsData(listAdapter, searchResult);
                 showList();
                 break;
             }
             case IN_PROGRESS: {
                 showProgressBar();
+                break;
+            }
+            case NEXT_PAGE_LOADING: {
+                listAdapter.showLoadingIndicator(true);
                 break;
             }
             default: {

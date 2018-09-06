@@ -42,6 +42,10 @@ public class SearchResult {
         return new SearchResult(Collections.emptyList(), 0, ListState.IN_PROGRESS);
     }
 
+    public static SearchResult nextPageLoading() {
+        return new SearchResult(Collections.emptyList(), 0, ListState.NEXT_PAGE_LOADING);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

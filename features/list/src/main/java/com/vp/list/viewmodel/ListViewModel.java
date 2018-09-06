@@ -40,6 +40,8 @@ public class ListViewModel extends ViewModel {
             aggregatedItems.clear();
             currentTitle = title;
             liveData.setValue(SearchResult.inProgress());
+        } else {
+            liveData.setValue(SearchResult.nextPageLoading());
         }
         searchService.search(title, page).enqueue(new Callback<SearchResponse>() {
             @Override
