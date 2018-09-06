@@ -1,9 +1,9 @@
 apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 def localProperties = new Properties()
 localProperties.load(new FileInputStream(rootProject.file("local.properties")))
@@ -45,7 +45,6 @@ dependencies {
     implementation project(':dagger.addons')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin"
-    implementation 'com.squareup:javapoet:1.11.1'
 
     //support
     implementation "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
