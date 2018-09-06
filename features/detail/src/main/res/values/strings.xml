@@ -5,4 +5,6 @@
     <string name="director">Director: %s</string>
     <string name="runtime">Runtime: %s</string>
     <string name="loading_error">Loading error</string>
+    <string name="movie_added_to_favorites">Movie removed from favorites</string>
+    <string name="movie_removed_from_favorites">Movie added to favorites</string>
 </resources>
