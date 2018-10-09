@@ -45,3 +45,7 @@
 
 # OkHttp platform used only on JVM and when Conscrypt dependency is available.
 -dontwarn okhttp3.internal.platform.ConscryptPlatform
+
+# Keep models classes in order to be able to parse them from ws
+-keep class com.vp.list.model.ListItem { *; }
+-keep class com.vp.list.model.SearchResponse { *; }

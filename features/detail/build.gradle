@@ -37,8 +37,8 @@ android {
 dependencies {
     implementation project(':dagger.addons')
     implementation "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
-    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.2.60'
+    implementation "com.android.support.constraint:constraint-layout:$rootProject.constraintLayout"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$rootProject.kotlin"
 
     //glide
     implementation "com.github.bumptech.glide:glide:$rootProject.glide"

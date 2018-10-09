@@ -24,6 +24,8 @@ android {
         debugProguard {
             initWith buildTypes.debug
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            useProguard true
+            shrinkResources true
             minifyEnabled true
         }
     }
