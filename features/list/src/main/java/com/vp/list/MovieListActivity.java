@@ -1,5 +1,6 @@
 package com.vp.list;
 
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.widget.SearchView;
+
+import com.vp.list.di.ConectivityReciverModule;
 
 import javax.inject.Inject;
 
@@ -23,7 +26,6 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
     DispatchingAndroidInjector<Fragment> dispatchingActivityInjector;
     private SearchView searchView;
     private boolean searchViewExpanded = true;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AndroidInjection.inject(this);

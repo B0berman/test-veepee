@@ -3,6 +3,7 @@ package com.vp.list;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ViewAnimator;
 
+import com.vp.list.di.ConectivityReciverModule;
 import com.vp.list.viewmodel.SearchResult;
 import com.vp.list.viewmodel.ListViewModel;
 
@@ -42,11 +44,17 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     private TextView errorTextView;
     private String currentQuery = "Interview";
 
+    private ConectivityReciverModule conectivityReciver;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AndroidSupportInjection.inject(this);
         listViewModel = ViewModelProviders.of(this, factory).get(ListViewModel.class);
+
+        // register The connectivity change reciver
+        IntentFilter conectivityIntent = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        conectivityReciver = new ConectivityReciverModule(listViewModel, currentQuery);
+        getContext().registerReceiver(conectivityReciver, conectivityIntent);
     }
 
     @Nullable
@@ -163,7 +171,15 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     }
 
     @Override
-    public void onItemClick(String imdbID) {
-        //TODO handle click events
+    public void onItemClick(String imdbID, String poster) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("app://movies/detail?imdbID="+imdbID+"&poster="+poster));
+        intent.setPackage(requireContext().getPackageName());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        getContext().unregisterReceiver(conectivityReciver);
     }
 }
