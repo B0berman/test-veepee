@@ -1,10 +1,10 @@
 package com.vp.list.model;
 
-import androidx.annotation.NonNull;
-
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 import static java.util.Collections.emptyList;
 

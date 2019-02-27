@@ -8,17 +8,22 @@ import com.vp.list.service.SearchService;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.mockito.verification.VerificationMode;
 
 import java.io.IOException;
 
 import retrofit2.mock.Calls;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 public class ListViewModelTest {
     @Rule
@@ -52,6 +57,20 @@ public class ListViewModelTest {
 
         //then
         verify(mockObserver).onChanged(SearchResult.inProgress());
+    }
+
+    @Test
+    public void shouldReturnLoadedOnSuccess() {
+        //given
+        SearchService searchService = mock(SearchService.class);
+        when(searchService.search(anyString(), anyInt())).thenReturn(Calls.response(mock(SearchResponse.class)));
+        ListViewModel listViewModel = new ListViewModel(searchService);
+
+        //when
+        listViewModel.searchMoviesByTitle("title", 1);
+
+        //then
+        assertThat(listViewModel.observeMovies().getValue().getListState()).isEqualTo(ListState.LOADED);
     }
 
 }

@@ -1,10 +1,5 @@
 package com.vp.list.viewmodel;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-import androidx.annotation.NonNull;
-
 import com.vp.list.model.ListItem;
 import com.vp.list.model.SearchResponse;
 import com.vp.list.service.SearchService;
@@ -14,6 +9,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,7 +34,6 @@ public class ListViewModel extends ViewModel {
     }
 
     public void searchMoviesByTitle(@NonNull String title, int page) {
-
         if (page == 1 && !title.equals(currentTitle)) {
             aggregatedItems.clear();
             currentTitle = title;
@@ -50,6 +48,7 @@ public class ListViewModel extends ViewModel {
                 if (result != null) {
                     aggregatedItems.addAll(result.getSearch());
                 }
+                liveData.postValue(SearchResult.success(aggregatedItems, aggregatedItems.size()));
             }
 
             @Override

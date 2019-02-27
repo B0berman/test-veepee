@@ -12,12 +12,14 @@ buildscript {
         kotlin = '1.2.60'
         supportLibraryVersion = '1.0.0'
         constraintLayout = '1.1.2'
+        swipeRefreshLayout = '1.0.0'
         retrofit = '2.4.0'
         lifecycle = '2.0.0'
         gson = '2.8.2'
         dagger = '2.16'
         glide = '4.8.0'
         okhttp = '3.10.0'
+        room = "2.1.0-alpha04"
     }
 
     repositories {

@@ -2,6 +2,9 @@ package com.vp.list.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import androidx.annotation.Keep;
+
+@Keep
 public class ListItem {
     @SerializedName("Title")
     private String title;
