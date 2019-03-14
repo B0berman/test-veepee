@@ -43,8 +43,11 @@ dependencies {
     implementation project(':features:detail')
     implementation project(':features:favorites')
     implementation project(':dagger.addons')
+    implementation project(':moviedatabase')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin"
+
+    implementation "androidx.core:core-ktx:$rootProject.ktxVersion"
 
     //support
     implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
@@ -65,4 +68,13 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    androidTestImplementation "androidx.arch.core:core-testing:$rootProject.archCoreTestingVersion"
+    androidTestImplementation "androidx.test:core:$rootProject.coreTestingVersion"
+
+    //memory leak analyser
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
+    // Optional, if you use support library fragments:
+    debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.3'
+
 }

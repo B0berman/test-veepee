@@ -1,34 +1,43 @@
 package com.vp.list;
 
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ViewAnimator;
 
-import com.vp.list.viewmodel.SearchResult;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.vp.list.viewmodel.ListViewModel;
+import com.vp.list.viewmodel.SearchResult;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import dagger.android.support.AndroidSupportInjection;
 
-public class ListFragment extends Fragment implements GridPagingScrollListener.LoadMoreItemsListener, ListAdapter.OnItemClickListener {
-    public static final String TAG = "ListFragment";
+public class ListFragment extends Fragment implements GridPagingScrollListener.LoadMoreItemsListener,
+        ListAdapter.OnItemClickListener {
+    static final String TAG = "ListFragment";
     private static final String CURRENT_QUERY = "current_query";
+    private static final String URI_PATH_DETAIL = "detail";
+    private static final String URI_PATH_FAVORITES = "favorites";
+    private static final String QUERY_PARAM_MOVIE_ID = "?imdbID=";
+    private final String URI_BASE = "app://movies/";
 
     @Inject
     ViewModelProvider.Factory factory;
@@ -37,6 +46,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     private GridPagingScrollListener gridPagingScrollListener;
     private ListAdapter listAdapter;
     private ViewAnimator viewAnimator;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private TextView errorTextView;
@@ -47,6 +57,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         super.onCreate(savedInstanceState);
         AndroidSupportInjection.inject(this);
         listViewModel = ViewModelProviders.of(this, factory).get(ListViewModel.class);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -60,12 +71,15 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.recyclerView);
         viewAnimator = view.findViewById(R.id.viewAnimator);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         progressBar = view.findViewById(R.id.progressBar);
         errorTextView = view.findViewById(R.id.errorText);
 
         if (savedInstanceState != null) {
             currentQuery = savedInstanceState.getString(CURRENT_QUERY);
         }
+
+        swipeRefreshLayout.setOnRefreshListener(listViewModel);
 
         initBottomNavigation(view);
         initList();
@@ -78,11 +92,31 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         showProgressBar();
     }
 
+
+    // region Menu
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.movie_list_fragment_options_menu,menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_refresh) {
+            listViewModel.onRefresh();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    // endregion Menu
+
     private void initBottomNavigation(@NonNull View view) {
         BottomNavigationView bottomNavigationView = view.findViewById(R.id.bottomNavigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.favorites) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("app://movies/favorites"));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(URI_BASE+ URI_PATH_FAVORITES));
                 intent.setPackage(requireContext().getPackageName());
                 startActivity(intent);
             }
@@ -110,7 +144,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     }
 
     private void showList() {
-        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(recyclerView));
+        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(swipeRefreshLayout));
     }
 
     private void showError() {
@@ -121,6 +155,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         switch (searchResult.getListState()) {
             case LOADED: {
                 setItemsData(listAdapter, searchResult);
+                swipeRefreshLayout.setRefreshing(false);
                 showList();
                 break;
             }
@@ -155,7 +190,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         listViewModel.searchMoviesByTitle(currentQuery, page);
     }
 
-    public void submitSearchQuery(@NonNull final String query) {
+    void submitSearchQuery(@NonNull final String query) {
         currentQuery = query;
         listAdapter.clearItems();
         listViewModel.searchMoviesByTitle(query, 1);
@@ -164,6 +199,10 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
 
     @Override
     public void onItemClick(String imdbID) {
-        //TODO handle click events
+        Intent intent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse(URI_BASE+ URI_PATH_DETAIL + QUERY_PARAM_MOVIE_ID +imdbID));
+        intent.setPackage(requireContext().getPackageName());
+        startActivity(intent);
     }
+
 }

@@ -14,11 +14,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ListViewModel extends ViewModel {
+public class ListViewModel extends ViewModel implements SwipeRefreshLayout.OnRefreshListener {
     private MutableLiveData<SearchResult> liveData = new MutableLiveData<>();
     private SearchService searchService;
 
@@ -37,10 +38,12 @@ public class ListViewModel extends ViewModel {
     public void searchMoviesByTitle(@NonNull String title, int page) {
 
         if (page == 1 && !title.equals(currentTitle)) {
-            aggregatedItems.clear();
-            currentTitle = title;
-            liveData.setValue(SearchResult.inProgress());
+            updateData(title);
         }
+        launchSearchRequest(title, page);
+    }
+
+    private void launchSearchRequest(@NonNull String title, int page) {
         searchService.search(title, page).enqueue(new Callback<SearchResponse>() {
             @Override
             public void onResponse(@NonNull Call<SearchResponse> call, @NonNull Response<SearchResponse> response) {
@@ -49,6 +52,7 @@ public class ListViewModel extends ViewModel {
 
                 if (result != null) {
                     aggregatedItems.addAll(result.getSearch());
+                    liveData.setValue(SearchResult.success(aggregatedItems,aggregatedItems.size()));
                 }
             }
 
@@ -57,5 +61,21 @@ public class ListViewModel extends ViewModel {
                 liveData.setValue(SearchResult.error());
             }
         });
+    }
+
+    private void updateData(@NonNull String title) {
+        aggregatedItems.clear();
+        currentTitle = title;
+        liveData.setValue(SearchResult.inProgress());
+    }
+
+    private void refreshData() {
+        updateData(currentTitle);
+        launchSearchRequest(currentTitle,1);
+    }
+
+    @Override
+    public void onRefresh() {
+        refreshData();
     }
 }

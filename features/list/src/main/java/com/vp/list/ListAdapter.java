@@ -48,16 +48,16 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         return listItems.size();
     }
 
-    public void setItems(List<ListItem> listItems) {
+    void setItems(List<ListItem> listItems) {
         this.listItems = listItems;
         notifyDataSetChanged();
     }
 
-    public void clearItems() {
+    void clearItems() {
         listItems.clear();
     }
 
-    public void setOnItemClickListener(@Nullable OnItemClickListener onItemClickListener) {
+    void setOnItemClickListener(@Nullable OnItemClickListener onItemClickListener) {
         if (onItemClickListener != null) {
             this.onItemClickListener = onItemClickListener;
         } else {

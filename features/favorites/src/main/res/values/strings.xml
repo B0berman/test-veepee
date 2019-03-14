@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">favorites</string>
     <string name="activity_label">Favorites</string>
+    <string name="favorite_item_poster_content_description">Poster of the movie</string>
+    <string name="favorite_item_title_content_description">Title of the movie</string>
+    <string name="favorite_item_director_content_description">Director of the movie</string>
+    <string name="favorite_item_title">Title: %s</string>
+    <string name="favorite_item_director">Director: %s</string>
+    <string name="favorite_item_description">Movie %1$s by %2$s</string>
 </resources>

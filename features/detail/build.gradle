@@ -36,9 +36,16 @@ android {
 
 dependencies {
     implementation project(':dagger.addons')
+    implementation project(':moviedatabase')
+
     implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayout"
-    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.2.60'
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$rootProject.kotlin_version"
+
+    //asynchronism
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutines"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutines"
+
 
     //glide
     implementation "com.github.bumptech.glide:glide:$rootProject.glide"

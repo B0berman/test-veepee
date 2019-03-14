@@ -1,8 +1,5 @@
 package com.vp.list.viewmodel;
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.lifecycle.Observer;
-
 import com.vp.list.model.SearchResponse;
 import com.vp.list.service.SearchService;
 
@@ -11,6 +8,8 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.lifecycle.Observer;
 import retrofit2.mock.Calls;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,6 +51,20 @@ public class ListViewModelTest {
 
         //then
         verify(mockObserver).onChanged(SearchResult.inProgress());
+    }
+
+    @Test
+    public void shouldReturnLoadedState() {
+        //given
+        SearchService searchService = mock(SearchService.class);
+        when(searchService.search(anyString(), anyInt())).thenReturn(Calls.response(mock(SearchResponse.class)));
+        ListViewModel listViewModel = new ListViewModel(searchService);
+
+        //when
+        listViewModel.searchMoviesByTitle("title", 1);
+
+        //then
+        assertThat(listViewModel.observeMovies().getValue().getListState()).isEqualTo(ListState.LOADED);
     }
 
 }
