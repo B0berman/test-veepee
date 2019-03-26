@@ -1,10 +1,9 @@
 package com.vp.list.viewmodel;
-
-import com.vp.list.model.ListItem;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
+import co.uk.missionlabs.db.Model.ListItem;
 
 public class SearchResult {
 

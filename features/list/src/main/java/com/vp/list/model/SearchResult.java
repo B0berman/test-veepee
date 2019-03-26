@@ -5,6 +5,8 @@ import androidx.annotation.NonNull;
 import java.util.Collections;
 import java.util.List;
 
+import co.uk.missionlabs.db.Model.ListItem;
+
 public class SearchResult {
 
     private List<ListItem> items;

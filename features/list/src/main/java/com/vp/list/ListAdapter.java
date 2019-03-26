@@ -8,10 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.vp.list.model.ListItem;
 
 import java.util.Collections;
 import java.util.List;
+
+import co.uk.missionlabs.db.Model.ListItem;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder> {
     private static final String NO_IMAGE = "N/A";

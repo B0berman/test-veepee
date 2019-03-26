@@ -1,5 +1,7 @@
 package com.vp.list;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -29,6 +31,7 @@ public class GridPagingScrollListener extends RecyclerView.OnScrollListener {
     }
 
     private boolean shouldLoadNextPage() {
+        Log.i("should",isNotLoadingInProgress()+" "+userScrollsToNextPage()+" "+isNotFirstPage()+" "+hasNextPage());
         return isNotLoadingInProgress() && userScrollsToNextPage() && isNotFirstPage() && hasNextPage();
     }
 

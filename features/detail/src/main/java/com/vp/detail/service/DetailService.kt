@@ -1,6 +1,6 @@
 package com.vp.detail.service
 
-import com.vp.detail.model.MovieDetail
+import co.uk.missionlabs.db.Model.MovieDetail
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query

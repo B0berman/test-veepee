@@ -17,6 +17,7 @@ class MoviesApplication : Application(), HasActivityInjector {
                 .application(this)
                 .build()
                 .inject(this)
+
     }
 
     override fun activityInjector(): DispatchingAndroidInjector<Activity>? = dispatchingActivityInjector

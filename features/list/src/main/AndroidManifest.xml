@@ -11,6 +11,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name="com.vp.detail.DetailActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="movies"
+                    android:pathPrefix="/detail"
+                    android:scheme="app" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

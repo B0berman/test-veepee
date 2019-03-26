@@ -6,6 +6,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import co.uk.missionlabs.db.Model.ListItem;
+
 import static java.util.Collections.emptyList;
 
 public class SearchResponse {
