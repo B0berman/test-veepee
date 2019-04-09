@@ -2,6 +2,8 @@
     <string name="app_name">list</string>
     <string name="search">Search</string>
     <string name="data_loading_error">Data loading error</string>
+    <string name="data_loading_error_button">Refresh</string>
     <string name="favorites">Favorites</string>
     <string name="movies">Movies</string>
+    <string name="movies_not_found">Can\'t display movie detail, movie not found</string>
 </resources>

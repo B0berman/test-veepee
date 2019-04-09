@@ -1,8 +1,10 @@
 package com.vp.detail.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.vp.databases.FavoriteMovieRepository
 import com.vp.detail.DetailActivity
 import com.vp.detail.model.MovieDetail
 import com.vp.detail.service.DetailService
@@ -11,11 +13,12 @@ import retrofit2.Response
 import javax.inject.Inject
 import javax.security.auth.callback.Callback
 
-class DetailsViewModel @Inject constructor(private val detailService: DetailService) : ViewModel() {
+class DetailsViewModel @Inject constructor(private val detailService: DetailService, application: Application) : AndroidViewModel(application) {
 
     private val details: MutableLiveData<MovieDetail> = MutableLiveData()
     private val title: MutableLiveData<String> = MutableLiveData()
     private val loadingState: MutableLiveData<LoadingState> = MutableLiveData()
+    var repository: FavoriteMovieRepository = FavoriteMovieRepository(application)
 
     fun title(): LiveData<String> = title
 
@@ -41,6 +44,18 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
                 loadingState.value = LoadingState.ERROR
             }
         })
+    }
+
+    fun isFavoriteMovieExist(imdbID: String): Boolean {
+        return repository.isFavoriteMovieExit(imdbID)
+    }
+
+    fun addToFavoriteMovie(imdbID: String, title: String, year: String, poster: String) {
+        repository.addToFavoriteMovie(imdbID, title, year, poster)
+    }
+
+    fun deleteToFavoriteMovie(imdbID: String) {
+        repository.deleteToFavoriteMovie(imdbID)
     }
 
     enum class LoadingState {
