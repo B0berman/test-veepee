@@ -17,10 +17,12 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
 
+    lateinit var detailViewModel: DetailsViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding: ActivityDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
-        val detailViewModel = ViewModelProviders.of(this, factory).get(DetailsViewModel::class.java)
+        detailViewModel = ViewModelProviders.of(this, factory).get(DetailsViewModel::class.java)
         binding.viewModel = detailViewModel
         queryProvider = this
         binding.setLifecycleOwner(this)
@@ -32,6 +34,12 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.detail_menu, menu)
+        val starMenuItem = menu?.findItem(R.id.star)
+        starMenuItem?.setOnMenuItemClickListener {
+            detailViewModel.saveToFavorite(queryProvider.getMovieId())
+            return@setOnMenuItemClickListener true
+        }
+
         return true
     }
 

@@ -4,12 +4,14 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.Observer;
 
 import com.vp.list.model.SearchResponse;
+import com.vp.list.model.SearchResult;
 import com.vp.list.service.SearchService;
 
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import retrofit2.mock.Calls;
 
@@ -32,7 +34,7 @@ public class ListViewModelTest {
         ListViewModel listViewModel = new ListViewModel(searchService);
 
         //when
-        listViewModel.searchMoviesByTitle("title", 1);
+        listViewModel.searchMoviesByTitle("title", 1,true);
 
         //then
         assertThat(listViewModel.observeMovies().getValue().getListState()).isEqualTo(ListState.ERROR);
@@ -48,10 +50,25 @@ public class ListViewModelTest {
         listViewModel.observeMovies().observeForever(mockObserver);
 
         //when
-        listViewModel.searchMoviesByTitle("title", 1);
+        listViewModel.searchMoviesByTitle("title", 1,true);
 
         //then
-        verify(mockObserver).onChanged(SearchResult.inProgress());
+        verify(mockObserver).onChanged(SearchResult.Companion.inProgress());
     }
 
+    @Test
+    public void shouldReturnInSuccessState() {
+        //given
+        SearchService searchService = mock(SearchService.class);
+        when(searchService.search(anyString(), anyInt())).thenReturn(Calls.response(mock(SearchResponse.class)));
+        ListViewModel listViewModel = new ListViewModel(searchService);
+        Observer<SearchResult> mockObserver = (Observer<SearchResult>) mock(Observer.class);
+        listViewModel.observeMovies().observeForever(mockObserver);
+
+        //when
+        listViewModel.searchMoviesByTitle("title", 1,true);
+
+        //then
+        assertThat(Objects.requireNonNull(listViewModel.observeMovies().getValue()).getListState()).isEqualTo(ListState.LOADED);
+    }
 }
