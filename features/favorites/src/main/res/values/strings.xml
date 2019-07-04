@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">favorites</string>
     <string name="activity_label">Favorites</string>
+    <string name="year_template">Year: %1$s</string>
+    <string name="director_template">Director: %1$s</string>
+    <string name="removed_from_favorites_message">Removed from favorites</string>
+    <string name="removed_from_favorites_undo">Undo</string>
 </resources>

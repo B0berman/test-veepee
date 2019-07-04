@@ -42,12 +42,12 @@ dependencies {
     implementation project(':features:list')
     implementation project(':features:detail')
     implementation project(':features:favorites')
-    implementation project(':dagger.addons')
+    implementation project(':core')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin"
 
     //support
-    implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
+    implementation "androidx.appcompat:appcompat:$rootProject.appCompat"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayout"
 
     //dagger

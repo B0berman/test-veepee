@@ -35,10 +35,11 @@ android {
 }
 
 dependencies {
-    implementation project(':dagger.addons')
-    implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
+    implementation project(':core')
+    implementation "androidx.appcompat:appcompat:$rootProject.appCompat"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayout"
-    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.2.60'
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$rootProject.kotlin"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.kotlinx"
 
     //glide
     implementation "com.github.bumptech.glide:glide:$rootProject.glide"
@@ -50,6 +51,7 @@ dependencies {
 
     //architecture components
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle"
+    implementation group: 'androidx.lifecycle', name: 'lifecycle-viewmodel-ktx', version: "$rootProject.lifecycle"
 
     //dagger
     implementation "com.google.dagger:dagger:$rootProject.dagger"
