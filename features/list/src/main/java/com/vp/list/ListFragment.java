@@ -2,23 +2,32 @@ package com.vp.list;
 
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+
 import android.content.Intent;
+
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.ViewAnimator;
 
+
+import com.vp.list.model.ListItem;
 import com.vp.list.viewmodel.SearchResult;
 import com.vp.list.viewmodel.ListViewModel;
 
@@ -39,7 +48,8 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     private ViewAnimator viewAnimator;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
-    private TextView errorTextView;
+    private ImageButton btnRefresh;
+    private LinearLayout frameError;
     private String currentQuery = "Interview";
 
     @Override
@@ -61,7 +71,8 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         recyclerView = view.findViewById(R.id.recyclerView);
         viewAnimator = view.findViewById(R.id.viewAnimator);
         progressBar = view.findViewById(R.id.progressBar);
-        errorTextView = view.findViewById(R.id.errorText);
+        btnRefresh = view.findViewById(R.id.btn_refresh);
+        frameError = view.findViewById(R.id.frame_error);
 
         if (savedInstanceState != null) {
             currentQuery = savedInstanceState.getString(CURRENT_QUERY);
@@ -70,12 +81,17 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         initBottomNavigation(view);
         initList();
         listViewModel.observeMovies().observe(this, searchResult -> {
+
+
             if (searchResult != null) {
                 handleResult(listAdapter, searchResult);
             }
         });
         listViewModel.searchMoviesByTitle(currentQuery, 1);
         showProgressBar();
+
+
+        btnRefresh.setOnClickListener(event -> listViewModel.searchMoviesByTitle(currentQuery, 1));
     }
 
     private void initBottomNavigation(@NonNull View view) {
@@ -114,7 +130,8 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     }
 
     private void showError() {
-        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(errorTextView));
+        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(frameError));
+
     }
 
     private void handleResult(@NonNull ListAdapter listAdapter, @NonNull SearchResult searchResult) {
@@ -162,8 +179,18 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         showProgressBar();
     }
 
+
     @Override
-    public void onItemClick(String imdbID) {
-        //TODO handle click events
+    public void onItemClick(ListItem item) {
+
+        //go to the DETAIL
+
+        Uri uri = Uri.parse("app://movies/detail?imdbID=" + item.getImdbID());
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.setPackage(requireContext().getPackageName());
+
+        startActivity(intent);
+
+
     }
 }

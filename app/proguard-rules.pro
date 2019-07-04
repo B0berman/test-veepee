@@ -23,6 +23,8 @@
 # Retrofit does reflection on generic parameters and InnerClass is required to use Signature.
 -keepattributes Signature, InnerClasses
 
+-keepattributes *Annotation*, Signature, Exception
+
 # Retain service method parameters when optimizing.
 -keepclassmembers,allowshrinking,allowobfuscation interface * {
     @retrofit2.http.* <methods>;
@@ -45,3 +47,20 @@
 
 # OkHttp platform used only on JVM and when Conscrypt dependency is available.
 -dontwarn okhttp3.internal.platform.ConscryptPlatform
+
+-keep class okio.** { *; }
+
+-dontwarn javax.annotation.Nullable
+-dontwarn javax.annotation.ParametersAreNonnullByDefault
+
+
+-keep class android.arch.lifecycle.** {*;}
+-keep public class * extends android.app.Activity
+-keep public class com.vp.list.** { *; }
+-keep public class com.vp.favorites.** { *; }
+-keep public class com.vp.detail.** { *; }
+
+
+
+-dontwarn javax.annotation.Nullable
+-dontwarn javax.annotation.ParametersAreNonnullByDefault

@@ -11,6 +11,10 @@ android {
 
     }
 
+    dataBinding {
+        enabled = true
+    }
+
     buildTypes {
         debug {
             minifyEnabled false
@@ -31,8 +35,22 @@ dependencies {
     //support
     implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
 
+    //architecture components
+    implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle"
+
+    //support library
+    implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
+    implementation "androidx.recyclerview:recyclerview:$rootProject.supportLibraryVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayout"
+    implementation "com.google.android.material:material:$rootProject.supportLibraryVersion"
+
+
+
     //tests
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    implementation project(path: ':features:detail')
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+
 }

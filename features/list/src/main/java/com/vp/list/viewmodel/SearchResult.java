@@ -12,6 +12,8 @@ public class SearchResult {
     private int totalResult;
     private ListState listState;
 
+    public final String TAG="SearchResult";
+
     private SearchResult(List<ListItem> items, int totalResult, ListState listState) {
         this.items = items;
         this.listState = listState;

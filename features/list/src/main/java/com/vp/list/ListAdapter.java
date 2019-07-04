@@ -16,8 +16,10 @@ import java.util.List;
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder> {
     private static final String NO_IMAGE = "N/A";
     private List<ListItem> listItems = Collections.emptyList();
+
     private OnItemClickListener EMPTY_ON_ITEM_CLICK_LISTENER = imdbID -> {
         //empty listener
+
     };
     private OnItemClickListener onItemClickListener = EMPTY_ON_ITEM_CLICK_LISTENER;
 
@@ -76,11 +78,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
 
         @Override
         public void onClick(View v) {
-            onItemClickListener.onItemClick(listItems.get(getAdapterPosition()).getImdbID());
+            onItemClickListener.onItemClick(listItems.get(getAdapterPosition()));
         }
     }
 
     interface OnItemClickListener {
-        void onItemClick(String imdbID);
+        void onItemClick(ListItem item);
     }
 }
