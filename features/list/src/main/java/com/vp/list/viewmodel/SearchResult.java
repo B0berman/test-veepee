@@ -42,6 +42,8 @@ public class SearchResult {
         return new SearchResult(Collections.emptyList(), 0, ListState.IN_PROGRESS);
     }
 
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

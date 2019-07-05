@@ -10,10 +10,13 @@ import static java.util.Collections.emptyList;
 
 public class SearchResponse {
     private static final String POSITIVE_RESPONSE = "True";
+
     @SerializedName("Search")
     private List<ListItem> search;
 
+    @SerializedName("totalResults")
     private int totalResults;
+
     @SerializedName("Response")
     private String response;
 

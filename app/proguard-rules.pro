@@ -45,3 +45,10 @@
 
 # OkHttp platform used only on JVM and when Conscrypt dependency is available.
 -dontwarn okhttp3.internal.platform.ConscryptPlatform
+
+#Proguard config for reducing size of apk
+-keep class com.vp.detail.model.** { *; }
+-keep class com.vp.list.model.** { *; }
+-keepattributes *Annotation*, Signature, Exception
+-repackageclasses
+-ignorewarnings

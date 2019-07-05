@@ -14,12 +14,17 @@ android {
         applicationId "com.vp.movies"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        buildConfigField "String", "API_KEY", localProperties['apiKey']
+
+        //Api Key to allow request the movies data
+        buildConfigField("String", "API_KEY", localProperties['apiKey'])
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         debug {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debugProguard {
             initWith buildTypes.debug
