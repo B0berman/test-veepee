@@ -1,13 +1,14 @@
 package com.vp.list;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.widget.SearchView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import javax.inject.Inject;
 
@@ -18,11 +19,13 @@ import dagger.android.support.HasSupportFragmentInjector;
 
 public class MovieListActivity extends AppCompatActivity implements HasSupportFragmentInjector {
     private static final String IS_SEARCH_VIEW_ICONIFIED = "is_search_view_iconified";
+    private static final String CURRENT_QUERY = "current_query";
 
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingActivityInjector;
     private SearchView searchView;
     private boolean searchViewExpanded = true;
+    private String currentQuery = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,7 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
                     .commit();
         } else {
             searchViewExpanded = savedInstanceState.getBoolean(IS_SEARCH_VIEW_ICONIFIED);
+            currentQuery = savedInstanceState.getString(CURRENT_QUERY);
         }
     }
 
@@ -49,11 +53,13 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
         searchView = (SearchView) menuItem.getActionView();
         searchView.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         searchView.setIconified(searchViewExpanded);
+        searchView.setQuery(currentQuery, false);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 ListFragment listFragment = (ListFragment) getSupportFragmentManager().findFragmentByTag(ListFragment.TAG);
                 listFragment.submitSearchQuery(query);
+                currentQuery = query;
                 return true;
             }
 
@@ -70,6 +76,7 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(IS_SEARCH_VIEW_ICONIFIED, searchView.isIconified());
+        outState.putString(CURRENT_QUERY, currentQuery);
     }
 
     @Override

@@ -23,6 +23,7 @@ public class ListViewModel extends ViewModel {
     private SearchService searchService;
 
     private String currentTitle = "";
+    private int currentPage = 1;
     private List<ListItem> aggregatedItems = new ArrayList<>();
 
     @Inject
@@ -35,6 +36,8 @@ public class ListViewModel extends ViewModel {
     }
 
     public void searchMoviesByTitle(@NonNull String title, int page) {
+
+        currentPage = page;
 
         if (page == 1 && !title.equals(currentTitle)) {
             aggregatedItems.clear();
@@ -49,6 +52,7 @@ public class ListViewModel extends ViewModel {
 
                 if (result != null) {
                     aggregatedItems.addAll(result.getSearch());
+                    liveData.setValue(SearchResult.success(aggregatedItems, result.getTotalResults()));
                 }
             }
 
@@ -57,5 +61,9 @@ public class ListViewModel extends ViewModel {
                 liveData.setValue(SearchResult.error());
             }
         });
+    }
+
+    public void refreshList() {
+        searchMoviesByTitle(currentTitle, currentPage);
     }
 }

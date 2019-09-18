@@ -3,6 +3,7 @@ package com.vp.list.viewmodel;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.Observer;
 
+import com.google.gson.Gson;
 import com.vp.list.model.SearchResponse;
 import com.vp.list.service.SearchService;
 
@@ -52,6 +53,47 @@ public class ListViewModelTest {
 
         //then
         verify(mockObserver).onChanged(SearchResult.inProgress());
+    }
+
+    @Test
+    public void shouldReturnLoadedState() {
+        //given
+        String jsonResponse = "{\n" +
+                "    \"Response\": \"True\",\n" +
+                "    \"Search\": [\n" +
+                "        {\n" +
+                "            \"Poster\": \"https://m.media-amazon.com/images/M/MV5BNDg0MzcwNTczMl5BMl5BanBnXkFtZTcwMDM1NjI4OA@@._V1_SX300.jpg\",\n" +
+                "            \"Title\": \"The Interview\",\n" +
+                "            \"Type\": \"movie\",\n" +
+                "            \"Year\": \"2013\",\n" +
+                "            \"imdbID\": \"tt2533492\"\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"Poster\": \"https://m.media-amazon.com/images/M/MV5BNGM2YjE0ZTQtOTA3YS00MDJmLWExM2UtODk3NTgyYzJhYTgwXkEyXkFqcGdeQXVyMzM2OTQwMDY@._V1_SX300.jpg\",\n" +
+                "            \"Title\": \"Interview with a Serial Killer\",\n" +
+                "            \"Type\": \"movie\",\n" +
+                "            \"Year\": \"2014\",\n" +
+                "            \"imdbID\": \"tt3421418\"\n" +
+                "        }\n" +
+                "    ],\n" +
+                "    \"totalResults\": \"1070\"\n" +
+                "}";
+        SearchResponse searchResponse = new Gson().fromJson(jsonResponse, SearchResponse.class);
+
+        SearchService searchService = mock(SearchService.class);
+        when(searchService.search(anyString(), anyInt())).thenReturn(Calls.response(searchResponse));
+        ListViewModel listViewModel = new ListViewModel(searchService);
+        Observer<SearchResult> mockObserver = (Observer<SearchResult>) mock(Observer.class);
+        listViewModel.observeMovies().observeForever(mockObserver);
+
+        //when
+        listViewModel.searchMoviesByTitle("title", 1);
+
+        //then
+        SearchResult searchResult = listViewModel.observeMovies().getValue();
+        assertThat(searchResult.getItems().size()).isEqualTo(searchResponse.getSearch().size());
+        assertThat(searchResult.getItems()).isEqualTo(searchResponse.getSearch());
+
     }
 
 }
