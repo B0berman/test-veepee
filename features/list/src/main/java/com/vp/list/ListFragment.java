@@ -162,8 +162,19 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         showProgressBar();
     }
 
+    //TODO: The Lost Event
     @Override
     public void onItemClick(String imdbID) {
-        //TODO handle click events
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("app")
+                .authority("movies")
+                .appendPath("detail")
+                .appendQueryParameter("imdbID",imdbID);
+        Uri uri = builder.build();
+
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.setPackage(requireContext().getPackageName());
+
+        startActivity(intent);
     }
 }
