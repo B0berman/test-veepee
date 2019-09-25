@@ -1,13 +1,14 @@
 package com.vp.list;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.widget.SearchView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import javax.inject.Inject;
 
