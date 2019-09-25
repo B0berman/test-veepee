@@ -25,6 +25,11 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
     private SearchView searchView;
     private boolean searchViewExpanded = true;
 
+    //TODO: The Lost State (1)
+    private static final String SEARCH_QUERY_TEXT_KEY = "search_query_text";
+    private String searchQuerySaved;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AndroidInjection.inject(this);
@@ -38,6 +43,8 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
                     .commit();
         } else {
             searchViewExpanded = savedInstanceState.getBoolean(IS_SEARCH_VIEW_ICONIFIED);
+            //TODO: The Lost State (4)
+            searchQuerySaved = savedInstanceState.getString(SEARCH_QUERY_TEXT_KEY);
         }
     }
 
@@ -50,6 +57,12 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
         searchView = (SearchView) menuItem.getActionView();
         searchView.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         searchView.setIconified(searchViewExpanded);
+
+        //TODO: The Lost State (5)
+        if(searchQuerySaved != null){
+            searchView.setQuery(searchQuerySaved, false);
+        }
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -60,6 +73,9 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                //TODO: The Lost State (2)
+                searchQuerySaved = newText;
+
                 return false;
             }
         });
@@ -71,6 +87,8 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(IS_SEARCH_VIEW_ICONIFIED, searchView.isIconified());
+        //TODO: The Lost State (3)
+        outState.putString(SEARCH_QUERY_TEXT_KEY, searchQuerySaved);
     }
 
     @Override
