@@ -2,11 +2,14 @@ package com.vp.list.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ListItem {
+import java.io.Serializable;
+
+public class ListItem  implements Serializable {
     @SerializedName("Title")
     private String title;
     @SerializedName("Year")
     private String year;
+    @SerializedName("imdbID")
     private String imdbID;
     @SerializedName("Poster")
     private String poster;
@@ -19,7 +22,7 @@ public class ListItem {
         return year;
     }
 
-    public String getImdbID() {
+    public String getID() {
         return imdbID;
     }
 

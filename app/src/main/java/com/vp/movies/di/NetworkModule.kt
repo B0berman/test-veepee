@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -33,18 +34,22 @@ class NetworkModule {
 
     @Provides
     @Named("apiKeyInterceptor")
-    fun providesApiKeyInterceptor(): Interceptor = Interceptor {
-        val original = it.request()
-        val originalHttpUrl = original.url()
+    fun providesApiKeyInterceptor(): Interceptor {
+        val interceptor: Interceptor = Interceptor {
+            val original = it.request()
+            val originalHttpUrl = original.url()
 
-        val url = originalHttpUrl.newBuilder()
-                .addQueryParameter("apiKey", BuildConfig.API_KEY)
-                .build()
-        val requestBuilder = original.newBuilder()
-                .url(url)
+            val url = originalHttpUrl.newBuilder()
+                    .addQueryParameter("apiKey", BuildConfig.API_KEY)
+                    .build()
+            val requestBuilder = original.newBuilder()
+                    .url(url)
 
-        val request = requestBuilder.build()
-        it.proceed(request)
+            val request = requestBuilder.build()
+            it.proceed (request)
+
+        }
+        return interceptor
     }
 
     @Provides

@@ -1,13 +1,15 @@
-package com.vp.list;
+package com.vp.favorites;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.vp.list.GlideApp;
 import com.vp.list.model.ListItem;
 
 import java.util.Collections;
@@ -16,15 +18,19 @@ import java.util.List;
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder> {
     private static final String NO_IMAGE = "N/A";
     private List<ListItem> listItems = Collections.emptyList();
-    private OnItemClickListener EMPTY_ON_ITEM_CLICK_LISTENER = id -> {
-        //empty listener
+    private OnItemClickListener EMPTY_ON_ITEM_CLICK_LISTENER = new OnItemClickListener() {
+        @Override
+        public void onItemClick(String imdbID) {
+            //empty listener
+        }
     };
     private OnItemClickListener onItemClickListener = EMPTY_ON_ITEM_CLICK_LISTENER;
+
 
     @NonNull
     @Override
     public ListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ListViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list, parent, false));
+        return new ListViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_favorite, parent, false));
     }
 
     @Override
@@ -71,24 +77,16 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         ListViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            image = itemView.findViewById(R.id.poster);
+            image = itemView.findViewById(com.vp.list.R.id.poster);
         }
 
         @Override
         public void onClick(View v) {
-            System.out.println("onItemClick la getAdapterPosition " + getAdapterPosition());
-            ListItem item = listItems.get(getAdapterPosition());
-
-            System.out.println("onItemClick la getID " + listItems.get(getAdapterPosition()).getID());
-            System.out.println("onItemClick la item1 " + item.getID());
-            System.out.println("onItemClick la item1 " + item.getPoster());
-            System.out.println("onItemClick la item1 " + item.getTitle());
-            System.out.println("onItemClick la size " + listItems.size());
             onItemClickListener.onItemClick(listItems.get(getAdapterPosition()).getID());
         }
     }
 
     interface OnItemClickListener {
-        void onItemClick(String id);
+        void onItemClick(String imdbID);
     }
 }

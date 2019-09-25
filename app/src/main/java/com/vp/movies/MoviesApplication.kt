@@ -10,8 +10,11 @@ import javax.inject.Inject
 class MoviesApplication : Application(), HasActivityInjector {
     @Inject
     lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Activity>
-
+    companion object {
+        val FAVOURITES = "FAVOURITES"
+    }
     override fun onCreate() {
+        System.out.println("MoviesApplication onCreate")
         super.onCreate()
         DaggerAppComponent.builder()
                 .application(this)
