@@ -5,7 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.vp.detail.DetailActivity
 import com.vp.detail.model.MovieDetail
+import com.vp.detail.model.MovieDetailRealm
 import com.vp.detail.service.DetailService
+import io.realm.Realm
+import io.realm.RealmResults
 import retrofit2.Call
 import retrofit2.Response
 import javax.inject.Inject
@@ -41,6 +44,32 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
                 loadingState.value = LoadingState.ERROR
             }
         })
+    }
+
+    fun storeFavoriteMovie() {
+        val realm: Realm = Realm.getDefaultInstance()
+        realm.beginTransaction()
+
+        val movieRealm = MovieDetailRealm()
+        movieRealm.imdbId = DetailActivity.queryProvider.getMovieId()
+        movieRealm.title = details.value?.title
+        movieRealm.year = details.value?.year
+        movieRealm.runtime = details.value?.runtime
+        movieRealm.director = details.value?.director
+        movieRealm.plot = details.value?.plot
+        movieRealm.poster = details.value?.poster
+
+        realm.copyToRealmOrUpdate(movieRealm)
+        realm.commitTransaction()
+    }
+
+    fun removeFavoriteMovie() {
+        val realm: Realm = Realm.getDefaultInstance()
+        realm.beginTransaction()
+        val favoriteMovie = realm.where(MovieDetailRealm::class.java).equalTo("imdbId", DetailActivity.queryProvider.getMovieId()).findAll()
+        favoriteMovie.deleteAllFromRealm()
+        realm.commitTransaction()
+//        realm.delete(favoriteMovie);
     }
 
     enum class LoadingState {
