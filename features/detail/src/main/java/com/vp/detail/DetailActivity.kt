@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
+import androidx.core.content.ContextCompat
 import com.vp.detail.databinding.ActivityDetailBinding
 import com.vp.detail.viewmodel.DetailsViewModel
 import dagger.android.support.DaggerAppCompatActivity
@@ -16,6 +18,9 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
+
+    var menu: Menu? = null
+    var favoriteSelected: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +37,22 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.detail_menu, menu)
+        this.menu = menu
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        val id = item?.itemId
+        if (id == R.id.star) {
+            if (favoriteSelected) {
+                menu?.findItem(R.id.star)?.setIcon(ContextCompat.getDrawable(applicationContext, R.drawable.ic_star))
+                favoriteSelected = false
+            }
+            else {
+                menu?.findItem(R.id.star)?.setIcon(ContextCompat.getDrawable(applicationContext, R.drawable.ic_star_selected))
+                favoriteSelected = true
+            }
+        }
         return true
     }
 
