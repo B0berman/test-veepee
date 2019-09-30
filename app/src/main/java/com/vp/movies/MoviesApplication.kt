@@ -5,6 +5,7 @@ import android.app.Application
 import com.vp.movies.di.DaggerAppComponent
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
+import io.realm.Realm
 import javax.inject.Inject
 
 class MoviesApplication : Application(), HasActivityInjector {
@@ -13,6 +14,7 @@ class MoviesApplication : Application(), HasActivityInjector {
 
     override fun onCreate() {
         super.onCreate()
+        Realm.init(this)
         DaggerAppComponent.builder()
                 .application(this)
                 .build()
