@@ -45,3 +45,6 @@
 
 # OkHttp platform used only on JVM and when Conscrypt dependency is available.
 -dontwarn okhttp3.internal.platform.ConscryptPlatform
+
+# Keeping the Detail.ListItem model from obsuficating to fix the empty Detail view
+-keep class com.vp.list.model.ListItem {*;}
