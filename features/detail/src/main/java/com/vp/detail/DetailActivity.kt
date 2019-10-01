@@ -88,7 +88,12 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        queryProvider = null
+    }
+
     companion object {
-        lateinit var queryProvider: QueryProvider
+        var queryProvider: QueryProvider? = null
     }
 }
