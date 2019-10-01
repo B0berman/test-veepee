@@ -88,11 +88,13 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
         }
     }
 
+    //TODO: Memory Leaks Bonus Task (2)
     override fun onDestroy() {
         super.onDestroy()
         queryProvider = null
     }
 
+    //TODO: Memory Leaks Bonus Task (1)
     companion object {
         var queryProvider: QueryProvider? = null
     }

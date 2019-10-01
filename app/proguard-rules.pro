@@ -46,5 +46,7 @@
 # OkHttp platform used only on JVM and when Conscrypt dependency is available.
 -dontwarn okhttp3.internal.platform.ConscryptPlatform
 
+#TODO: The Shrink (1)
+#TODO: The Shrink (2) - Deleted the unused "poster.jpg" ressource
 # Keeping the Detail.ListItem model from obsuficating to fix the empty Detail view
 -keep class com.vp.list.model.ListItem {*;}
