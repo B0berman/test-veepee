@@ -1,8 +1,12 @@
 package com.vp.detail.viewmodel
 
+import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.vp.database.AppDatabase
+import com.vp.database.entity.FavoriteEntity
 import com.vp.detail.DetailActivity
 import com.vp.detail.model.MovieDetail
 import com.vp.detail.service.DetailService
@@ -10,8 +14,9 @@ import retrofit2.Call
 import retrofit2.Response
 import javax.inject.Inject
 import javax.security.auth.callback.Callback
+import kotlin.concurrent.thread
 
-class DetailsViewModel @Inject constructor(private val detailService: DetailService) : ViewModel() {
+class DetailsViewModel @Inject constructor(private val detailService: DetailService, private val application: Application) : ViewModel() {
 
     private val details: MutableLiveData<MovieDetail> = MutableLiveData()
     private val title: MutableLiveData<String> = MutableLiveData()
@@ -41,6 +46,30 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
                 loadingState.value = LoadingState.ERROR
             }
         })
+    }
+
+    fun saveFavorite(){
+        thread {
+            val detailsValue = details.value
+            if(detailsValue != null){
+                val movie = FavoriteEntity(DetailActivity.queryProvider.getMovieId(), detailsValue.title, detailsValue.poster)
+                AppDatabase.getDatabase(application)?.favoriteDao()?.insert(movie)
+            }
+        }
+    }
+
+    fun removeFavorite(){
+        thread {
+            val detailsValue = details.value
+            if(detailsValue != null){
+                val movie = FavoriteEntity(DetailActivity.queryProvider.getMovieId(), detailsValue.title, detailsValue.poster)
+                AppDatabase.getDatabase(application)?.favoriteDao()?.delete(movie)
+            }
+        }
+    }
+
+    fun getFavorite() : LiveData<List<FavoriteEntity>>? {
+        return AppDatabase.getDatabase(application)?.favoriteDao()?.isFavorite(DetailActivity.queryProvider.getMovieId())
     }
 
     enum class LoadingState {
