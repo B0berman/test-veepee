@@ -58,6 +58,20 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
         }
     }
 
+    fun removeFavorite(){
+        thread {
+            val detailsValue = details.value
+            if(detailsValue != null){
+                val movie = FavoriteEntity(DetailActivity.queryProvider.getMovieId(), detailsValue.title, detailsValue.poster)
+                AppDatabase.getDatabase(application)?.favoriteDao()?.delete(movie)
+            }
+        }
+    }
+
+    fun getFavorite() : LiveData<List<FavoriteEntity>>? {
+        return AppDatabase.getDatabase(application)?.favoriteDao()?.isFavorite(DetailActivity.queryProvider.getMovieId())
+    }
+
     enum class LoadingState {
         IN_PROGRESS, LOADED, ERROR
     }
