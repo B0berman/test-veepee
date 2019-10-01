@@ -5,10 +5,11 @@ import android.app.Application
 import com.vp.database.AppDatabase
 import com.vp.database.dao.FavoriteDao
 import com.vp.database.entity.FavoriteEntity
+import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class FavoriteRepository internal constructor(application: Application) {
+class FavoriteRepository @Inject internal constructor(application: Application) {
 
     private var mFavoriteDao: FavoriteDao?
     private var favoriteMovies : LiveData<List<FavoriteEntity>>?

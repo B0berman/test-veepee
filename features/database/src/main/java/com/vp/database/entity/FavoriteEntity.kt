@@ -6,19 +6,12 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "favorite_movies")
 data class FavoriteEntity(
-        @PrimaryKey
+        @PrimaryKey(autoGenerate = true)
+        var id : Int,
         @ColumnInfo(name = "imdb_id")
-        var imdbID: Int,
+        var imdbID: String,
         @ColumnInfo(name = "title")
         var title: String?,
-        @ColumnInfo(name = "year")
-        var year: String?,
         @ColumnInfo(name = "poster")
-        var poster: String?,
-        @ColumnInfo(name = "runtime")
-        var runtime: String?,
-        @ColumnInfo(name = "director")
-        var director: String?,
-        @ColumnInfo(name = "plot")
-        var plot: String?
+        var poster: String?
 )
