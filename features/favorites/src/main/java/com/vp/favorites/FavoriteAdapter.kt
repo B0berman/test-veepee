@@ -27,7 +27,6 @@ class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>
                     .with(holder.image)
                     .load(movieItem.poster)
                     .into(holder.image)
-            holder.title.text = movieItem.title
         } else {
             holder.image.visibility = View.GONE
         }
@@ -56,12 +55,10 @@ class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>
 
     inner class FavoriteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         var image: ImageView
-        var title: TextView
 
         init {
             itemView.setOnClickListener(this)
             image = itemView.findViewById(R.id.poster)
-            title = itemView.findViewById(R.id.title)
         }
 
         override fun onClick(v: View) {
