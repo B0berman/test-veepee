@@ -13,6 +13,9 @@ interface FavoriteDao {
     @Query("SELECT * FROM favorite_movies")
     fun getAll(): LiveData<List<FavoriteEntity>>
 
+    @Query("SELECT * FROM favorite_movies WHERE imdb_id = :imdbID")
+    fun isFavorite(imdbID : String) : LiveData<List<FavoriteEntity>>
+
     @Insert(onConflict = REPLACE)
     fun insert(favoriteMovie : FavoriteEntity)
 

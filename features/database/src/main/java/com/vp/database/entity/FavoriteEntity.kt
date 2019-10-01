@@ -6,8 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "favorite_movies")
 data class FavoriteEntity(
-        @PrimaryKey(autoGenerate = true)
-        var id : Int,
+        @PrimaryKey
         @ColumnInfo(name = "imdb_id")
         var imdbID: String,
         @ColumnInfo(name = "title")
