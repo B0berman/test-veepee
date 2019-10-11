@@ -2,6 +2,8 @@ package com.vp.list;
 
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewAnimator;
 
 import com.vp.list.viewmodel.SearchResult;
@@ -29,6 +32,7 @@ import dagger.android.support.AndroidSupportInjection;
 public class ListFragment extends Fragment implements GridPagingScrollListener.LoadMoreItemsListener, ListAdapter.OnItemClickListener {
     public static final String TAG = "ListFragment";
     private static final String CURRENT_QUERY = "current_query";
+    private static final String  DETAIL_DEEPLINK = "app://movies/detail?imdbID=";
 
     @Inject
     ViewModelProvider.Factory factory;
@@ -164,6 +168,17 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
 
     @Override
     public void onItemClick(String imdbID) {
-        //TODO handle click events
+        makeDetailIntent(imdbID);
+    }
+
+    /**
+     * Displays the detail activity.
+     * @param imdbID the ID of the movie to display.
+     */
+    private void makeDetailIntent(String imdbID) {
+        String deeplink = DETAIL_DEEPLINK + imdbID;
+        Intent intent = new Intent (Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(deeplink));
+        startActivity(intent);
     }
 }
