@@ -1,10 +1,14 @@
 package com.vp.detail.model
 
 import com.google.gson.annotations.SerializedName
+import io.realm.RealmModel
+import io.realm.annotations.RealmClass
 
-data class MovieDetail(@SerializedName("Title") val title: String,
-                       @SerializedName("Year") val year: String,
-                       @SerializedName("Runtime") val runtime: String,
-                       @SerializedName("Director") val director: String,
-                       @SerializedName("Plot") val plot: String,
-                       @SerializedName("Poster") val poster: String)
+@RealmClass
+open class MovieDetail(@SerializedName("Title") var title: String = "",
+                       @SerializedName("Year") var year: String = "",
+                       @SerializedName("Runtime") var runtime: String = "",
+                       @SerializedName("Director") var director: String = "",
+                       @SerializedName("Plot") var plot: String = "",
+                       @SerializedName("Poster") var poster: String = "") : RealmModel
+

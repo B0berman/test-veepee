@@ -11,6 +11,7 @@ import com.vp.detail.databinding.ActivityDetailBinding
 import com.vp.detail.model.MovieDetail
 import com.vp.detail.viewmodel.DetailsViewModel
 import dagger.android.support.DaggerAppCompatActivity
+import io.realm.Realm
 import javax.inject.Inject
 import kotlin.run
 
@@ -43,7 +44,7 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when {
-            R.id.star.equals(item?.itemId) -> addMovieToFavorites()
+            R.id.star.equals(item?.itemId) -> saveOrDeleteFromFavorites()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -54,8 +55,43 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
         }
     }
 
-    fun addMovieToFavorites() {
-        //TODO
+    fun saveOrDeleteFromFavorites() {
+
+        val realm = Realm.getDefaultInstance()
+        val resultMovie = realm.where(MovieDetail::class.java)
+                .contains("title", movieDetail.title).findFirst()
+
+        if (resultMovie == null) {
+            addMoviewToFavorites()
+        } else {
+            removeMovieFromFavorites()
+        }
+        realm.close()
+    }
+
+    fun addMoviewToFavorites() {
+        val realm = Realm.getDefaultInstance()
+        realm.beginTransaction()
+
+        val movie = realm.createObject(MovieDetail::class.java)
+        movie.title = movieDetail.title
+        movie.director = movieDetail.director
+        movie.plot = movieDetail.plot
+        movie.poster = movieDetail.poster
+        movie.runtime = movieDetail.runtime
+        movie.year = movieDetail.year
+
+        realm.commitTransaction()
+        realm.close()
+    }
+
+    fun removeMovieFromFavorites() {
+        val realm = Realm.getDefaultInstance()
+        realm.executeTransaction { realm ->
+            val result = realm.where(MovieDetail::class.java).equalTo("title", movieDetail.title).findAll()
+            result.deleteAllFromRealm()
+            realm.close()
+        }
     }
 
     companion object {
