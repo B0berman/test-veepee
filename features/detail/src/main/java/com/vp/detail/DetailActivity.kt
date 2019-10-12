@@ -45,7 +45,7 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
     private fun findMovieInRealm(): MovieDetail? {
         val realm = Realm.getDefaultInstance()
         val realmMovie =  realm.where(MovieDetail::class.java)
-                .contains(TITLE, movieDetail.title).findFirst()
+                .contains(IMDBID, getMovieId()).findFirst()
         realm.close()
         return realmMovie
     }
@@ -97,6 +97,7 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
         movie.poster = movieDetail.poster
         movie.runtime = movieDetail.runtime
         movie.year = movieDetail.year
+        movie.imdbID = getMovieId()
 
         realm.commitTransaction()
         realm.close()
@@ -108,7 +109,7 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
     private fun removeMovieFromFavorites() {
         val realm = Realm.getDefaultInstance()
         realm.executeTransaction { realm ->
-            val result = realm.where(MovieDetail::class.java).equalTo(TITLE, movieDetail.title).findAll()
+            val result = realm.where(MovieDetail::class.java).equalTo(IMDBID, getMovieId()).findAll()
             result.deleteAllFromRealm()
         }
         realm.close()
@@ -116,7 +117,6 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
 
     companion object {
         lateinit var queryProvider: QueryProvider
-        private const val TITLE: String = "title"
         private const val IMDBID: String = "imdbID"
     }
 }

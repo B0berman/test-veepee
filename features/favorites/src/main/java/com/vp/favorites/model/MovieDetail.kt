@@ -1,4 +1,4 @@
-package com.vp.detail.model
+package com.vp.favorites.model
 
 import com.google.gson.annotations.SerializedName
 import io.realm.RealmModel
@@ -10,6 +10,5 @@ open class MovieDetail(@SerializedName("Title") var title: String = "",
                        @SerializedName("Runtime") var runtime: String = "",
                        @SerializedName("Director") var director: String = "",
                        @SerializedName("Plot") var plot: String = "",
-                       @SerializedName("Poster") var poster: String = "",
-                        var imdbID: String = "") : RealmModel
+                       @SerializedName("Poster") var poster: String = "") : RealmModel
 
