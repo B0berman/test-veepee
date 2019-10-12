@@ -10,5 +10,6 @@ open class MovieDetail(@SerializedName("Title") var title: String = "",
                        @SerializedName("Runtime") var runtime: String = "",
                        @SerializedName("Director") var director: String = "",
                        @SerializedName("Plot") var plot: String = "",
-                       @SerializedName("Poster") var poster: String = "") : RealmModel
+                       @SerializedName("Poster") var poster: String = "",
+                        var imdbID: String = "") : RealmModel
 

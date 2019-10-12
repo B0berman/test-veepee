@@ -15,7 +15,7 @@ import com.vp.list.GlideApp;
 import java.util.Collections;
 import java.util.List;
 
-public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder> {
+public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.ListViewHolder> {
     private static final String NO_IMAGE = "N/A";
     private List<MovieDetail> listItems = Collections.emptyList();
     private OnItemClickListener EMPTY_ON_ITEM_CLICK_LISTENER = new OnItemClickListener() {
@@ -58,10 +58,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         notifyDataSetChanged();
     }
 
-    public void clearItems() {
-        listItems.clear();
-    }
-
     public void setOnItemClickListener(@Nullable OnItemClickListener onItemClickListener) {
         if (onItemClickListener != null) {
             this.onItemClickListener = onItemClickListener;
@@ -81,8 +77,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
 
         @Override
         public void onClick(View v) {
-            //TODO
-            //onItemClickListener.onItemClick(listItems.get(getAdapterPosition()).getImdbID());
+            onItemClickListener.onItemClick(listItems.get(getAdapterPosition()).getImdbID());
         }
     }
 
