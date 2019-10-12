@@ -20,6 +20,7 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var movieDetail: MovieDetail
+    lateinit var menuItem: MenuItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,41 +35,57 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
         })
         detailViewModel.details().observe(this, Observer {
             movieDetail = it
+            val resultMovie = this.findMovieInRealm()
+            if (resultMovie != null) {
+                menuItem.setIcon(R.drawable.ic_star_selected)
+            }
         } )
+    }
+
+    private fun findMovieInRealm(): MovieDetail? {
+        val realm = Realm.getDefaultInstance()
+        val realmMovie =  realm.where(MovieDetail::class.java)
+                .contains(TITLE, movieDetail.title).findFirst()
+        realm.close()
+        return realmMovie
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.detail_menu, menu)
+        menuItem = menu?.findItem(R.id.star)!!
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when {
-            R.id.star.equals(item?.itemId) -> saveOrDeleteFromFavorites()
+            R.id.star.equals(item?.itemId) -> saveOrDeleteFromFavorites(item)
         }
         return super.onOptionsItemSelected(item)
     }
 
     override fun getMovieId(): String {
-        return intent?.data?.getQueryParameter("imdbID") ?: run {
+        return intent?.data?.getQueryParameter(IMDBID) ?: run {
             throw IllegalStateException("You must provide movie id to display details")
         }
     }
 
-    fun saveOrDeleteFromFavorites() {
-
-        val realm = Realm.getDefaultInstance()
-        val resultMovie = realm.where(MovieDetail::class.java)
-                .contains("title", movieDetail.title).findFirst()
-
+    /**
+     * Manage Movie state in Realm DB
+     */
+    private fun saveOrDeleteFromFavorites(item: MenuItem?) {
+        val resultMovie = this.findMovieInRealm()
         if (resultMovie == null) {
+            item?.setIcon(R.drawable.ic_star_selected)
             addMoviewToFavorites()
         } else {
+            item?.setIcon(R.drawable.ic_star)
             removeMovieFromFavorites()
         }
-        realm.close()
     }
 
+    /**
+     * Store movie in Realm DB to de displayed in FavoritesActivity
+     */
     fun addMoviewToFavorites() {
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
@@ -85,16 +102,21 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
         realm.close()
     }
 
-    fun removeMovieFromFavorites() {
+    /**
+     * Remove movie from Realm DB.
+     */
+    private fun removeMovieFromFavorites() {
         val realm = Realm.getDefaultInstance()
         realm.executeTransaction { realm ->
-            val result = realm.where(MovieDetail::class.java).equalTo("title", movieDetail.title).findAll()
+            val result = realm.where(MovieDetail::class.java).equalTo(TITLE, movieDetail.title).findAll()
             result.deleteAllFromRealm()
-            realm.close()
         }
+        realm.close()
     }
 
     companion object {
         lateinit var queryProvider: QueryProvider
+        private const val TITLE: String = "title"
+        private const val IMDBID: String = "imdbID"
     }
 }
