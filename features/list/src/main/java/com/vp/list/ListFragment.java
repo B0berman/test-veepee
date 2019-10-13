@@ -136,6 +136,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     }
 
     private void handleResult(@NonNull ListAdapter listAdapter, @NonNull SearchResult searchResult) {
+        swipeRefreshLayout.setRefreshing(false);
         switch (searchResult.getListState()) {
             case LOADED: {
                 setItemsData(listAdapter, searchResult);
@@ -169,6 +170,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
 
     @Override
     public void loadMoreItems(int page) {
+        swipeRefreshLayout.setRefreshing(true);
         gridPagingScrollListener.markLoading(true);
         listViewModel.searchMoviesByTitle(currentQuery, page);
     }
