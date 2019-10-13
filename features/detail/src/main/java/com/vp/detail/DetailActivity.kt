@@ -19,8 +19,8 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
-    lateinit var movieDetail: MovieDetail
-    lateinit var menuItem: MenuItem
+    private lateinit var movieDetail: MovieDetail
+    private lateinit var menuItem: MenuItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +42,10 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
         } )
     }
 
+    /**
+     * Search movie by ID
+     * @return the movie
+     */
     private fun findMovieInRealm(): MovieDetail? {
         val realm = Realm.getDefaultInstance()
         val realmMovie =  realm.where(MovieDetail::class.java)
@@ -63,6 +67,10 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
         return super.onOptionsItemSelected(item)
     }
 
+    /**
+     * Get movie ID from intent
+     * @return the movie ID
+     */
     override fun getMovieId(): String {
         return intent?.data?.getQueryParameter(IMDBID) ?: run {
             throw IllegalStateException("You must provide movie id to display details")
@@ -86,7 +94,7 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
     /**
      * Store movie in Realm DB to de displayed in FavoritesActivity
      */
-    fun addMoviewToFavorites() {
+    private fun addMoviewToFavorites() {
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
 

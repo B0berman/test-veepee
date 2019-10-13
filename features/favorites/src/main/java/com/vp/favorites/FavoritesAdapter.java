@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.vp.favorites.model.MovieDetail;
+import com.vp.detail.model.MovieDetail;
 import com.vp.list.GlideApp;
 
 import java.util.Collections;
@@ -36,7 +36,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.List
     public void onBindViewHolder(@NonNull ListViewHolder holder, int position) {
         MovieDetail listItem = listItems.get(position);
 
-        if (listItem.getPoster() != null && !NO_IMAGE.equals(listItem.getPoster())) {
+        if (!NO_IMAGE.equals(listItem.getPoster())) {
             final float density = holder.image.getResources().getDisplayMetrics().density;
             GlideApp
                     .with(holder.image)
@@ -53,12 +53,12 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.List
         return listItems.size();
     }
 
-    public void setItems(List<MovieDetail> listItems) {
+    void setItems(List<MovieDetail> listItems) {
         this.listItems = listItems;
         notifyDataSetChanged();
     }
 
-    public void setOnItemClickListener(@Nullable OnItemClickListener onItemClickListener) {
+    void setOnItemClickListener(@Nullable OnItemClickListener onItemClickListener) {
         if (onItemClickListener != null) {
             this.onItemClickListener = onItemClickListener;
         } else {

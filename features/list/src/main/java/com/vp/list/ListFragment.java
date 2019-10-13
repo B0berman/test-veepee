@@ -30,9 +30,8 @@ import javax.inject.Inject;
 import dagger.android.support.AndroidSupportInjection;
 
 public class ListFragment extends Fragment implements GridPagingScrollListener.LoadMoreItemsListener, ListAdapter.OnItemClickListener {
-    public static final String TAG = "ListFragment";
+    static final String TAG = "ListFragment";
     private static final String CURRENT_QUERY = "current_query";
-    private static final String  DETAIL_DEEPLINK = "app://movies/detail?imdbID=";
 
     @Inject
     ViewModelProvider.Factory factory;
@@ -174,7 +173,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         listViewModel.searchMoviesByTitle(currentQuery, page);
     }
 
-    public void submitSearchQuery(@NonNull final String query) {
+    void submitSearchQuery(@NonNull final String query) {
         currentQuery = query;
         listAdapter.clearItems();
         listViewModel.searchMoviesByTitle(query, 1);
@@ -191,7 +190,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
      * @param imdbID the ID of the movie to display.
      */
     private void makeDetailIntent(String imdbID) {
-        String deeplink = DETAIL_DEEPLINK + imdbID;
+        String deeplink = getResources().getString(R.string.detail_deeplink) + imdbID;
         Intent intent = new Intent (Intent.ACTION_VIEW);
         intent.setData(Uri.parse(deeplink));
         startActivity(intent);
