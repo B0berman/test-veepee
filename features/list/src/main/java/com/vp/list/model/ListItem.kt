@@ -1,14 +1,11 @@
 package com.vp.list.model
 
-import com.google.gson.annotations.SerializedName
+abstract class ListItem {
 
-class ListItem {
-    @SerializedName("Title")
-    val title: String = ""
-    @SerializedName("Year")
-    val year: String = ""
-    @SerializedName("imdbID")
-    val imdbID: String = ""
-    @SerializedName("Poster")
-    val poster: String? = ""
+    companion object {
+        const val DATA_ITEM = 1
+        const val PROGRESS_ITEM = 0
+    }
+
+    abstract val type: Int
 }

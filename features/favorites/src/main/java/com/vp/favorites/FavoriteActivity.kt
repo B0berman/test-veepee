@@ -45,8 +45,11 @@ class FavoriteActivity : DaggerAppCompatActivity() {
         listAdapter.onItemClickListener = {
             openDetails(it.imdbID)
         }
-        val layoutManager = GridLayoutManager(this,
-                if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 3)
+        val spanCount = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            GRID_PORTRAIT_ORIENTATION_SPAN_COUNT
+        } else GRID_LANDSCAPE_ORIENTATION_SPAN_COUNT
+
+        val layoutManager = GridLayoutManager(this, spanCount)
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = listAdapter
     }
@@ -55,5 +58,10 @@ class FavoriteActivity : DaggerAppCompatActivity() {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("app://movies/detail?imdbID=$imdbID"))
         intent.setPackage(packageName)
         startActivity(intent)
+    }
+
+    companion object {
+        private const val GRID_PORTRAIT_ORIENTATION_SPAN_COUNT = 2
+        private const val GRID_LANDSCAPE_ORIENTATION_SPAN_COUNT = 3
     }
 }

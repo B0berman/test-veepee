@@ -13,6 +13,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.vp.list.model.ListItem
+import com.vp.list.model.MovieItem
 import com.vp.list.viewmodel.ListState
 import com.vp.list.viewmodel.ListViewModel
 import com.vp.list.viewmodel.SearchResult
@@ -84,8 +86,12 @@ class ListFragment : Fragment() {
         }
         recyclerView.adapter = listAdapter
         recyclerView.setHasFixedSize(true)
-        val layoutManager = GridLayoutManager(context,
-                if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 3)
+
+        val spanCount = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            GRID_PORTRAIT_ORIENTATION_SPAN_COUNT
+        } else GRID_LANDSCAPE_ORIENTATION_SPAN_COUNT
+
+        val layoutManager = GridLayoutManager(context, spanCount)
 
         recyclerView.layoutManager = layoutManager
 
@@ -93,7 +99,7 @@ class ListFragment : Fragment() {
         gridPagingScrollListener = GridPagingScrollListener(layoutManager).also {
             it.loadMoreItemsListener = { page ->
                 it.markLoading(true)
-                swipeRefreshLayout.isRefreshing = true
+                listAdapter?.addLoadingItem()
                 listViewModel.searchMoviesByTitle(currentQuery, page)
             }
         }
@@ -120,7 +126,7 @@ class ListFragment : Fragment() {
 
     private fun handleResult(listAdapter: ListAdapter?, searchResult: SearchResult) {
         hideRefreshingProgress()
-
+        listAdapter?.removeLoadingItem()
         when (searchResult.listState) {
             ListState.LOADED -> {
                 setItemsData(listAdapter, searchResult)
@@ -137,9 +143,11 @@ class ListFragment : Fragment() {
     }
 
     private fun setItemsData(listAdapter: ListAdapter?, searchResult: SearchResult) {
-        listAdapter?.let {
-            it.listItems = searchResult.items
-            if (searchResult.totalResult <= it.itemCount) {
+        listAdapter?.let {adapter ->
+            adapter.items = searchResult.items.map {
+                MovieItem(it)
+            }.toMutableList()
+            if (searchResult.totalResult <= adapter.itemCount) {
                 gridPagingScrollListener?.markLastPage(true)
             }
         }
@@ -166,5 +174,7 @@ class ListFragment : Fragment() {
     companion object {
         const val TAG = "ListFragment"
         private const val CURRENT_QUERY = "current_query"
+        private const val GRID_PORTRAIT_ORIENTATION_SPAN_COUNT = 2
+        private const val GRID_LANDSCAPE_ORIENTATION_SPAN_COUNT = 3
     }
 }

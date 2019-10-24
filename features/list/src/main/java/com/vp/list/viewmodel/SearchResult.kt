@@ -1,9 +1,9 @@
 package com.vp.list.viewmodel
 
-import com.vp.list.model.ListItem
+import com.vp.list.model.Movie
 import java.util.*
 
-class SearchResult private constructor(val items: List<ListItem>, val totalResult: Int, val listState: ListState) {
+class SearchResult private constructor(val items: List<Movie>, val totalResult: Int, val listState: ListState) {
 
     override fun equals(o: Any?): Boolean {
         if (this === o) return true
@@ -24,7 +24,7 @@ class SearchResult private constructor(val items: List<ListItem>, val totalResul
             return SearchResult(emptyList(), 0, ListState.ERROR)
         }
 
-        fun success(items: List<ListItem>, totalResult: Int): SearchResult {
+        fun success(items: List<Movie>, totalResult: Int): SearchResult {
             return SearchResult(items, totalResult, ListState.LOADED)
         }
 

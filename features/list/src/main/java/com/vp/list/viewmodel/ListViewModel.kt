@@ -4,17 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-import com.vp.list.model.ListItem
+import com.vp.list.model.Movie
 import com.vp.list.model.SearchResponse
 import com.vp.list.service.SearchService
-
-import java.util.ArrayList
 
 import javax.inject.Inject
 
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 class ListViewModel @Inject constructor(
         private val searchService: SearchService
@@ -22,7 +21,7 @@ class ListViewModel @Inject constructor(
     private val liveData = MutableLiveData<SearchResult>()
 
     private var currentTitle = ""
-    private val aggregatedItems = ArrayList<ListItem>()
+    private val aggregatedItems = ArrayList<Movie>()
 
     fun observeMovies(): LiveData<SearchResult> {
         return liveData
@@ -39,7 +38,7 @@ class ListViewModel @Inject constructor(
                 val result = response.body()
 
                 if (result != null) {
-                    aggregatedItems.addAll(result.search)
+                    aggregatedItems.addAll(result.searches)
                     liveData.value = SearchResult.success(aggregatedItems, result.totalResults)
                 }
             }

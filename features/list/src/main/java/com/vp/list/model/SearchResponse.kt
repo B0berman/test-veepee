@@ -6,7 +6,7 @@ import java.util.Collections.emptyList
 
 data class SearchResponse (
         @SerializedName("Search")
-        val search: List<ListItem> = emptyList(),
+        val searches: List<Movie> = emptyList(),
         @SerializedName("totalResults")
         val totalResults: Int = 0,
         @SerializedName("Response")
