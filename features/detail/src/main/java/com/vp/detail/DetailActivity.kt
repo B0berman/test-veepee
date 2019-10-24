@@ -17,6 +17,8 @@ class DetailActivity : DaggerAppCompatActivity() {
 
     private lateinit var detailViewModel: DetailsViewModel
 
+    private var menu: Menu? = null
+
     @Inject
     lateinit var factory: ViewModelProvider.Factory
 
@@ -31,15 +33,23 @@ class DetailActivity : DaggerAppCompatActivity() {
         detailViewModel.title().observe(this, Observer {
             supportActionBar?.title = it
         })
+        detailViewModel.isFavorite().observe(this, Observer { isFavorite ->
+            if (isFavorite) {
+                menu?.findItem(R.id.star)?.setIcon(R.drawable.ic_star_filled)
+            } else {
+                menu?.findItem(R.id.star)?.setIcon(R.drawable.ic_star)
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.detail_menu, menu)
+        this.menu = menu
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when(item?.itemId) {
+        return when (item?.itemId) {
             R.id.star -> {
                 detailViewModel.favoriteClicked()
                 true

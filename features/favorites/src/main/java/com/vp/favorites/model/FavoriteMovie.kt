@@ -6,5 +6,6 @@ data class FavoriteMovie (
         val runtime: String,
         val director: String,
         val plot: String,
-        val poster: String
+        val poster: String?,
+        val imdbID: String
 )

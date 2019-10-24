@@ -27,6 +27,7 @@ class DetailsViewModel @Inject constructor(
     private val details: MutableLiveData<MovieDetail> = MutableLiveData()
     private val title: MutableLiveData<String> = MutableLiveData()
     private val loadingState: MutableLiveData<LoadingState> = MutableLiveData()
+    private val isFavorite: MutableLiveData<Boolean> = MutableLiveData()
 
     fun title(): LiveData<String> = title
 
@@ -34,7 +35,16 @@ class DetailsViewModel @Inject constructor(
 
     fun state(): LiveData<LoadingState> = loadingState
 
+    fun isFavorite(): LiveData<Boolean> = isFavorite.apply { value = false }
+
+    private fun checkFavorite(imdbID: String) {
+        launch {
+            movieDao.findMovieByTitle(imdbID)?.let { isFavorite.value = true }
+        }
+    }
+
     fun fetchDetails(imdbID: String) {
+        checkFavorite(imdbID)
         loadingState.value = LoadingState.IN_PROGRESS
         detailService.getMovie(imdbID).enqueue(object : Callback, retrofit2.Callback<MovieDetail> {
             override fun onResponse(call: Call<MovieDetail>?, response: Response<MovieDetail>?) {
@@ -55,9 +65,15 @@ class DetailsViewModel @Inject constructor(
     }
 
     fun favoriteClicked() {
-        details.value?.let {movieDetail ->
+        details.value?.let { movieDetail ->
             launch {
-                movieDao.insertMovie(movieDetail.toMovieDBEntity())
+                if (movieDao.findMovieByTitle(movieDetail.imdbID) == null) {
+                    isFavorite.value = true
+                    movieDao.insertMovie(movieDetail.toMovieDBEntity())
+                } else {
+                    isFavorite.value = false
+                    movieDao.deleteMovie(movieDetail.toMovieDBEntity())
+                }
             }
         }
     }

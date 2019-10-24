@@ -6,12 +6,13 @@ import androidx.room.PrimaryKey
 
 @Entity(indices = [Index(value = ["title"], unique = true)])
 data class MovieDetailDB (
-        @PrimaryKey(autoGenerate = true)
-        val id: Long = 0,
+        @PrimaryKey
+        val imdbID: String,
+
         val title: String,
         val year: String,
         val runtime: String,
         val director: String,
         val plot: String,
-        val poster: String
+        val poster: String?
 )

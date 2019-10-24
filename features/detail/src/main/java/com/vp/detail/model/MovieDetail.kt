@@ -8,7 +8,8 @@ data class MovieDetail(@SerializedName("Title") val title: String,
                        @SerializedName("Runtime") val runtime: String,
                        @SerializedName("Director") val director: String,
                        @SerializedName("Plot") val plot: String,
-                       @SerializedName("Poster") val poster: String)
+                       @SerializedName("Poster") val poster: String,
+                       @SerializedName("imdbID") val imdbID: String)
 
 fun MovieDetail.toMovieDBEntity() =
         this.let {
@@ -18,6 +19,7 @@ fun MovieDetail.toMovieDBEntity() =
                     runtime = it.runtime,
                     director = it.director,
                     plot = it.plot,
-                    poster = it.poster
+                    poster = it.poster,
+                    imdbID = it.imdbID
             )
         }

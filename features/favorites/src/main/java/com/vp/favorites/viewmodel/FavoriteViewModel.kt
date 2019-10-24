@@ -33,7 +33,8 @@ class FavoriteViewModel @Inject constructor(
                             runtime = it.runtime,
                             director = it.director,
                             plot = it.plot,
-                            poster = it.poster
+                            poster = it.poster,
+                            imdbID = it.imdbID
                     )
                 }
             }
