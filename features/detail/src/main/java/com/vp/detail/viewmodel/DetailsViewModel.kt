@@ -7,15 +7,22 @@ import com.vp.detail.model.MovieDetail
 import com.vp.detail.model.toMovieDBEntity
 import com.vp.detail.service.DetailService
 import com.vp.storage.MoviesDao
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Response
 import javax.inject.Inject
 import javax.security.auth.callback.Callback
+import kotlin.coroutines.CoroutineContext
 
 class DetailsViewModel @Inject constructor(
         private val detailService: DetailService,
         private val movieDao: MoviesDao
-) : ViewModel() {
+) : ViewModel(), CoroutineScope {
+
+    private val job = SupervisorJob()
 
     private val details: MutableLiveData<MovieDetail> = MutableLiveData()
     private val title: MutableLiveData<String> = MutableLiveData()
@@ -48,10 +55,20 @@ class DetailsViewModel @Inject constructor(
     }
 
     fun favoriteClicked() {
-        details.value?.let {
-            movieDao.insertMovie(it.toMovieDBEntity())
+        details.value?.let {movieDetail ->
+            launch {
+                movieDao.insertMovie(movieDetail.toMovieDBEntity())
+            }
         }
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        job.cancel()
+    }
+
+    override val coroutineContext: CoroutineContext
+        get() = job + Dispatchers.Main
 
     enum class LoadingState {
         IN_PROGRESS, LOADED, ERROR

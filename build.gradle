@@ -13,7 +13,7 @@ buildscript {
         //dependencies
         kotlin = '1.3.41'
         supportLibraryVersion = '1.0.0'
-        constraintLayout = '1.1.2'
+        constraintLayout = '1.1.3'
         retrofit = '2.4.0'
         lifecycle = '2.1.0'
         gson = '2.8.2'
