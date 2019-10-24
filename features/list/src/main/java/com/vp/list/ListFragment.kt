@@ -86,16 +86,19 @@ class ListFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
         val layoutManager = GridLayoutManager(context,
                 if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 3)
+
         recyclerView.layoutManager = layoutManager
 
         // Pagination
-        gridPagingScrollListener = GridPagingScrollListener(layoutManager).apply {
-            loadMoreItemsListener = { page ->
-                markLoading(true)
+        gridPagingScrollListener = GridPagingScrollListener(layoutManager).also {
+            it.loadMoreItemsListener = { page ->
+                it.markLoading(true)
                 listViewModel.searchMoviesByTitle(currentQuery, page)
             }
         }
-        gridPagingScrollListener?.let { recyclerView.addOnScrollListener(it) }
+        gridPagingScrollListener?.let {
+            recyclerView.addOnScrollListener(it)
+        }
     }
 
     private fun showProgressBar() {
@@ -160,7 +163,7 @@ class ListFragment : Fragment() {
     }
 
     companion object {
-        val TAG = "ListFragment"
-        private val CURRENT_QUERY = "current_query"
+        const val TAG = "ListFragment"
+        private const val CURRENT_QUERY = "current_query"
     }
 }

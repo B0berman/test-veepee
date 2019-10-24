@@ -3,7 +3,8 @@ package com.vp.list
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class GridPagingScrollListener internal constructor(private val layoutManager: GridLayoutManager) : RecyclerView.OnScrollListener() {
+class GridPagingScrollListener constructor(private val layoutManager: GridLayoutManager)
+    : RecyclerView.OnScrollListener() {
 
     var loadMoreItemsListener: (Int) -> Unit = {}
 
@@ -48,6 +49,6 @@ class GridPagingScrollListener internal constructor(private val layoutManager: G
     }
 
     companion object {
-        private val PAGE_SIZE = 10
+        private const val PAGE_SIZE = 10
     }
 }

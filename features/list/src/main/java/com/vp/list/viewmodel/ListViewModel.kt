@@ -40,7 +40,7 @@ class ListViewModel @Inject constructor(
 
                 if (result != null) {
                     aggregatedItems.addAll(result.search)
-                    liveData.value = SearchResult.success(aggregatedItems, aggregatedItems.size)
+                    liveData.value = SearchResult.success(aggregatedItems, result.totalResults)
                 }
             }
 
