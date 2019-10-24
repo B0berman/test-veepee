@@ -93,6 +93,7 @@ class ListFragment : Fragment() {
         gridPagingScrollListener = GridPagingScrollListener(layoutManager).also {
             it.loadMoreItemsListener = { page ->
                 it.markLoading(true)
+                swipeRefreshLayout.isRefreshing = true
                 listViewModel.searchMoviesByTitle(currentQuery, page)
             }
         }
