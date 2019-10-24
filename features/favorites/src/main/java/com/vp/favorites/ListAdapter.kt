@@ -33,11 +33,9 @@ class ListAdapter : RecyclerView.Adapter<ListAdapter.ViewHolder>() {
             itemView.setOnClickListener { onItemClickListener.invoke(item) }
 
             if (item.poster != null && NO_IMAGE != item.poster) {
-                val density = itemView.poster.resources.displayMetrics.density
-                GlideApp
+                Glide
                         .with(itemView.poster)
                         .load(item.poster)
-                        .override((300 * density).toInt(), (600 * density).toInt())
                         .into(itemView.poster)
             } else {
                 itemView.poster.setImageResource(R.drawable.placeholder)

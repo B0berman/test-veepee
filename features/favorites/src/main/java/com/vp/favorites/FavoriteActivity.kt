@@ -1,6 +1,7 @@
 package com.vp.favorites
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import androidx.lifecycle.Observer
@@ -19,18 +20,24 @@ class FavoriteActivity : DaggerAppCompatActivity() {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
 
+    private var favoriteViewModel: FavoriteViewModel? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_favorite)
 
         initList()
 
-        val favoriteViewModel = ViewModelProviders.of(this, factory).get(FavoriteViewModel::class.java)
+        favoriteViewModel = ViewModelProviders.of(this, factory).get(FavoriteViewModel::class.java)
 
-        favoriteViewModel.fetchMovies()
-        favoriteViewModel.favoriteMovies().observe(this, Observer {
+        favoriteViewModel?.favoriteMovies()?.observe(this, Observer {
             listAdapter.movies = it
         })
+    }
+
+    override fun onStart() {
+        super.onStart()
+        favoriteViewModel?.fetchMovies()
     }
 
     private fun initList() {
@@ -38,7 +45,9 @@ class FavoriteActivity : DaggerAppCompatActivity() {
         listAdapter.onItemClickListener = {
             openDetails(it.imdbID)
         }
-        recyclerView.layoutManager = GridLayoutManager(this, 2)
+        val layoutManager = GridLayoutManager(this,
+                if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 3)
+        recyclerView.layoutManager = layoutManager
         recyclerView.adapter = listAdapter
     }
 
