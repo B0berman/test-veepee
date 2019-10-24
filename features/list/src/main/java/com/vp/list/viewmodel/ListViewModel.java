@@ -35,11 +35,9 @@ public class ListViewModel extends ViewModel {
     }
 
     public void searchMoviesByTitle(@NonNull String title, int page) {
-
         if (page == 1 && !title.equals(currentTitle)) {
             aggregatedItems.clear();
             currentTitle = title;
-            liveData.setValue(SearchResult.inProgress());
         }
         searchService.search(title, page).enqueue(new Callback<SearchResponse>() {
             @Override
@@ -49,6 +47,7 @@ public class ListViewModel extends ViewModel {
 
                 if (result != null) {
                     aggregatedItems.addAll(result.getSearch());
+                    liveData.setValue(SearchResult.success(aggregatedItems, aggregatedItems.size()));
                 }
             }
 

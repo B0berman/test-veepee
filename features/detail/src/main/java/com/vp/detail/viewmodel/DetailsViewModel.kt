@@ -3,15 +3,19 @@ package com.vp.detail.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.vp.detail.DetailActivity
 import com.vp.detail.model.MovieDetail
+import com.vp.detail.model.toMovieDBEntity
 import com.vp.detail.service.DetailService
+import com.vp.storage.MoviesDao
 import retrofit2.Call
 import retrofit2.Response
 import javax.inject.Inject
 import javax.security.auth.callback.Callback
 
-class DetailsViewModel @Inject constructor(private val detailService: DetailService) : ViewModel() {
+class DetailsViewModel @Inject constructor(
+        private val detailService: DetailService,
+        private val movieDao: MoviesDao
+) : ViewModel() {
 
     private val details: MutableLiveData<MovieDetail> = MutableLiveData()
     private val title: MutableLiveData<String> = MutableLiveData()
@@ -23,9 +27,9 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
 
     fun state(): LiveData<LoadingState> = loadingState
 
-    fun fetchDetails() {
+    fun fetchDetails(imdbID: String) {
         loadingState.value = LoadingState.IN_PROGRESS
-        detailService.getMovie(DetailActivity.queryProvider.getMovieId()).enqueue(object : Callback, retrofit2.Callback<MovieDetail> {
+        detailService.getMovie(imdbID).enqueue(object : Callback, retrofit2.Callback<MovieDetail> {
             override fun onResponse(call: Call<MovieDetail>?, response: Response<MovieDetail>?) {
                 details.postValue(response?.body())
 
@@ -41,6 +45,12 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
                 loadingState.value = LoadingState.ERROR
             }
         })
+    }
+
+    fun favoriteClicked() {
+        details.value?.let {
+            movieDao.insertMovie(it.toMovieDBEntity())
+        }
     }
 
     enum class LoadingState {
