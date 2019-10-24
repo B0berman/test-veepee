@@ -45,6 +45,9 @@ dependencies {
     implementation project(':dagger.addons')
     implementation project(':storage')
 
+    //memory leak analyzer
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-3'
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin"
 
     //support
