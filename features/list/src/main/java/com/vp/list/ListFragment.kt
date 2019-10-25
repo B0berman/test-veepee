@@ -20,6 +20,7 @@ import com.vp.list.viewmodel.ListViewModel
 import com.vp.list.viewmodel.SearchResult
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_list.*
+import java.lang.UnsupportedOperationException
 import javax.inject.Inject
 
 class ListFragment : Fragment() {
@@ -50,7 +51,7 @@ class ListFragment : Fragment() {
             currentQuery = savedInstanceState.getString(CURRENT_QUERY)
         }
 
-        initBottomNavigation(view)
+        initBottomNavigation()
         initList()
         initSwipeRefreshLayout()
 
@@ -64,12 +65,11 @@ class ListFragment : Fragment() {
     }
 
     private fun initSwipeRefreshLayout() {
-        swipeRefreshLayout!!.setOnRefreshListener { listViewModel.searchMoviesByTitle(currentQuery, 1) }
+        swipeRefreshLayout.setOnRefreshListener { listViewModel.searchMoviesByTitle(currentQuery, 1) }
     }
 
-    private fun initBottomNavigation(view: View) {
-        val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottomNavigation)
-        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+    private fun initBottomNavigation() {
+        bottomNavigation.setOnNavigationItemSelectedListener { item ->
             if (item.itemId == R.id.favorites) {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse("app://movies/favorites"))
                 intent.setPackage(requireContext().packageName)
@@ -93,7 +93,18 @@ class ListFragment : Fragment() {
 
         val layoutManager = GridLayoutManager(context, spanCount)
 
+        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return when (listAdapter?.getItemViewType(position)) {
+                    ListItem.PROGRESS_ITEM -> 2
+                    ListItem.DATA_ITEM -> 1 //number of columns of the grid
+                    else -> throw UnsupportedOperationException()
+                }
+            }
+        }
+
         recyclerView.layoutManager = layoutManager
+
         // Pagination
         gridPagingScrollListener = GridPagingScrollListener(layoutManager).also {
             it.loadMoreItemsListener = { page ->
