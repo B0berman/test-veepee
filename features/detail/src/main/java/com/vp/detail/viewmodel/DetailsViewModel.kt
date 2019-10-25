@@ -67,7 +67,7 @@ class DetailsViewModel @Inject constructor(
     fun favoriteClicked() {
         details.value?.let { movieDetail ->
             launch {
-                if (movieDao.findMovieByTitle(movieDetail.imdbID) == null) {
+                if (isDBContainsMovie(movieDetail.imdbID)) {
                     isFavorite.value = true
                     movieDao.insertMovie(movieDetail.toMovieDBEntity())
                 } else {
@@ -77,6 +77,8 @@ class DetailsViewModel @Inject constructor(
             }
         }
     }
+
+    private suspend fun isDBContainsMovie(imdbID: String) =  movieDao.findMovieByTitle(imdbID) == null
 
     override fun onCleared() {
         super.onCleared()
