@@ -2,7 +2,6 @@ package com.vp.list.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.vp.list.TestObserver
 
 import com.vp.list.model.SearchResponse
 import com.vp.list.service.SearchService
