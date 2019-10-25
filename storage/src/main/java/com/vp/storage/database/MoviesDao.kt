@@ -1,6 +1,7 @@
-package com.vp.storage
+package com.vp.storage.database
 
 import androidx.room.*
+import com.vp.storage.model.MovieDetailDB
 
 @Dao
 interface MoviesDao {

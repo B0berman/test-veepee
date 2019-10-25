@@ -1,7 +1,7 @@
 package com.vp.detail.model
 
 import com.google.gson.annotations.SerializedName
-import com.vp.storage.MovieDetailDB
+import com.vp.storage.model.MovieDetailDB
 
 data class MovieDetail(@SerializedName("Title") val title: String,
                        @SerializedName("Year") val year: String,

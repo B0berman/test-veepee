@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.vp.detail.model.MovieDetail
 import com.vp.detail.model.toMovieDBEntity
 import com.vp.detail.service.DetailService
-import com.vp.storage.MoviesDao
+import com.vp.storage.database.MoviesDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

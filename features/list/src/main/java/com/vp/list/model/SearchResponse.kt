@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 import java.util.Collections.emptyList
 
-data class SearchResponse (
+open class SearchResponse (
         @SerializedName("Search")
         val searches: List<Movie> = emptyList(),
         @SerializedName("totalResults")

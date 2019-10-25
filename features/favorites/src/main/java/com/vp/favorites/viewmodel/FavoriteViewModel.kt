@@ -4,8 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.vp.favorites.model.FavoriteMovie
-import com.vp.storage.MovieDetailDB
-import com.vp.storage.MoviesDao
+import com.vp.storage.database.MoviesDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

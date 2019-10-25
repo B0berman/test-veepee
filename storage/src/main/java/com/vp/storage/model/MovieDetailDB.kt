@@ -1,4 +1,4 @@
-package com.vp.storage
+package com.vp.storage.model
 
 import androidx.room.Entity
 import androidx.room.Index

@@ -31,6 +31,7 @@ class ListViewModel @Inject constructor(
         if (page == 1 && title != currentTitle) {
             aggregatedItems.clear()
             currentTitle = title
+            liveData.value = SearchResult.inProgress()
         }
         searchService.search(title, page).enqueue(object : Callback<SearchResponse> {
             override fun onResponse(call: Call<SearchResponse>, response: Response<SearchResponse>) {

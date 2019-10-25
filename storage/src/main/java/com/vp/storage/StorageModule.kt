@@ -2,6 +2,8 @@ package com.vp.storage
 
 import android.app.Application
 import androidx.room.Room
+import com.vp.storage.database.MovieDatabase
+import com.vp.storage.database.MoviesDao
 import dagger.Module
 import dagger.Provides
 
