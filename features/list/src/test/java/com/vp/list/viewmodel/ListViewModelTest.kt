@@ -43,11 +43,12 @@ class ListViewModelTest {
 
     @Test
     fun shouldReturnInProgressState() {
+        val testResponse = SearchResponse()
         //given
         val searchService = mock(SearchService::class.java)
-        `when`<Call<SearchResponse>>(searchService.search(anyString(), anyInt())).thenReturn(Calls.response(mock(SearchResponse::class.java)))
+        `when`<Call<SearchResponse>>(searchService.search(anyString(), anyInt())).thenReturn(Calls.response(testResponse))
         val listViewModel = ListViewModel(searchService)
-        val mockObserver = TestObserver<SearchResult>()
+        val mockObserver = mock(Observer::class.java) as Observer<SearchResult>
         listViewModel.observeMovies().observeForever(mockObserver)
 
         //when
