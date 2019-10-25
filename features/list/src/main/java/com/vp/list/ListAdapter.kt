@@ -52,7 +52,7 @@ class ListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     fun hideLoadingIndicator() {
         if (items.isNotEmpty() && items.last() is ProgressItem){
             items.remove(items.last())
-            notifyItemRemoved(items.lastIndex + 1)
+            notifyItemRemoved(items.lastIndex)
         }
     }
 
