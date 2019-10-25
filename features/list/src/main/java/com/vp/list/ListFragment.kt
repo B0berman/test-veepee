@@ -94,12 +94,11 @@ class ListFragment : Fragment() {
         val layoutManager = GridLayoutManager(context, spanCount)
 
         recyclerView.layoutManager = layoutManager
-
         // Pagination
         gridPagingScrollListener = GridPagingScrollListener(layoutManager).also {
             it.loadMoreItemsListener = { page ->
                 it.markLoading(true)
-                listAdapter?.addLoadingItem()
+                listAdapter?.showLoadingIndicator()
                 listViewModel.searchMoviesByTitle(currentQuery, page)
             }
         }
@@ -126,7 +125,7 @@ class ListFragment : Fragment() {
 
     private fun handleResult(listAdapter: ListAdapter?, searchResult: SearchResult) {
         hideRefreshingProgress()
-        listAdapter?.removeLoadingItem()
+        listAdapter?.hideLoadingIndicator()
         when (searchResult.listState) {
             ListState.LOADED -> {
                 setItemsData(listAdapter, searchResult)

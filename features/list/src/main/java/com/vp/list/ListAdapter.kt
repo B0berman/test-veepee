@@ -10,6 +10,7 @@ import com.vp.list.model.MovieItem
 import com.vp.list.model.ProgressItem
 import kotlinx.android.synthetic.main.item_list.view.*
 
+
 class ListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     internal var items: MutableList<ListItem> = mutableListOf()
@@ -23,7 +24,8 @@ class ListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType) {
             ListItem.PROGRESS_ITEM -> ProgressViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_progress, parent, false))
-            else -> ListViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_list, parent, false))
+            ListItem.DATA_ITEM -> ListViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_list, parent, false))
+            else -> throw UnsupportedOperationException("Not valid view type")
         }
     }
 
@@ -42,13 +44,15 @@ class ListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         items.clear()
     }
 
-    fun addLoadingItem() {
-        items.add(ProgressItem())
+    fun showLoadingIndicator() {
+        items.add(items.lastIndex + 1, ProgressItem())
+        notifyItemInserted(items.lastIndex + 1)
     }
 
-    fun removeLoadingItem() {
+    fun hideLoadingIndicator() {
         if (items.isNotEmpty() && items.last() is ProgressItem){
             items.remove(items.last())
+            notifyItemRemoved(items.lastIndex + 1)
         }
     }
 
