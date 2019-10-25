@@ -91,14 +91,15 @@ class ListFragment : Fragment() {
             GRID_PORTRAIT_ORIENTATION_SPAN_COUNT
         } else GRID_LANDSCAPE_ORIENTATION_SPAN_COUNT
 
-        val layoutManager = GridLayoutManager(context, spanCount)
+        val layoutManager = GridLayoutManager(context, spanCount).also {
 
-        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return when (listAdapter?.getItemViewType(position)) {
-                    ListItem.PROGRESS_ITEM -> 2
-                    ListItem.DATA_ITEM -> 1 //number of columns of the grid
-                    else -> throw UnsupportedOperationException()
+            it.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return when (listAdapter?.getItemViewType(position)) {
+                        ListItem.PROGRESS_ITEM -> GRID_DATA_SPAN_COUNT
+                        ListItem.DATA_ITEM -> GRID_PROGRESS_SPAN_COUNT //number of columns of the grid
+                        else -> throw UnsupportedOperationException()
+                    }
                 }
             }
         }
@@ -153,7 +154,7 @@ class ListFragment : Fragment() {
     }
 
     private fun setItemsData(listAdapter: ListAdapter?, searchResult: SearchResult) {
-        listAdapter?.let {adapter ->
+        listAdapter?.let { adapter ->
             adapter.items = searchResult.items.map {
                 MovieItem(it)
             }.toMutableList()
@@ -186,5 +187,7 @@ class ListFragment : Fragment() {
         private const val CURRENT_QUERY = "current_query"
         private const val GRID_PORTRAIT_ORIENTATION_SPAN_COUNT = 2
         private const val GRID_LANDSCAPE_ORIENTATION_SPAN_COUNT = 3
+        private const val GRID_DATA_SPAN_COUNT = 2
+        private const val GRID_PROGRESS_SPAN_COUNT = 1
     }
 }
