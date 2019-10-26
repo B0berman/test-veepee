@@ -32,7 +32,10 @@ android {
 dependencies {
     implementation project(':dagger.addons')
     implementation project(':navigation')
-    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.2.60'
+
+    implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayout"
+
     //glide
     implementation "com.github.bumptech.glide:glide:$rootProject.glide"
     kapt "com.github.bumptech.glide:compiler:$rootProject.glide"
@@ -48,13 +51,11 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle"
 
     //support library
-    implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
     implementation "androidx.recyclerview:recyclerview:$rootProject.supportLibraryVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayout"
     implementation "com.google.android.material:material:$rootProject.supportLibraryVersion"
 
     //api
-    api "com.squareup.retrofit2:retrofit:$rootProject.retrofit"
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit"
     implementation "com.google.code.gson:gson:$rootProject.gson"
 
     //test

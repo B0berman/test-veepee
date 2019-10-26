@@ -3,6 +3,8 @@ package com.vp.detail.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.vp.db.MovieDB
+import com.vp.db.MovieDao
 import com.vp.detail.DetailActivity
 import com.vp.detail.model.MovieDetail
 import com.vp.detail.service.DetailService
@@ -11,7 +13,10 @@ import retrofit2.Response
 import javax.inject.Inject
 import javax.security.auth.callback.Callback
 
-class DetailsViewModel @Inject constructor(private val detailService: DetailService) : ViewModel() {
+class DetailsViewModel @Inject constructor(
+        private val detailService: DetailService,
+        private val movieDAO: MovieDao
+) : ViewModel() {
 
     private val details: MutableLiveData<MovieDetail> = MutableLiveData()
     private val title: MutableLiveData<String> = MutableLiveData()
@@ -22,6 +27,20 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
     fun details(): LiveData<MovieDetail> = details
 
     fun state(): LiveData<LoadingState> = loadingState
+
+    fun addToFavorite() {
+        details.value?.let {
+            movieDAO.insert(MovieDB(
+                    DetailActivity.queryProvider.getMovieId(),
+                    it.title,
+                    it.year,
+                    it.runtime,
+                    it.director,
+                    it.plot,
+                    it.poster
+            ))
+        }
+    }
 
     fun fetchDetails() {
         loadingState.value = LoadingState.IN_PROGRESS
