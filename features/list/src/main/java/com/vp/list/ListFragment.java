@@ -114,6 +114,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
 
     private void showProgressBar() {
         swipeRefreshLayout.setRefreshing(true);
+//        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(swipeRefreshLayout));
     }
 
     private void showList() {
