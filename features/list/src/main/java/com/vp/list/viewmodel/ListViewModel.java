@@ -34,8 +34,12 @@ public class ListViewModel extends ViewModel {
         return liveData;
     }
 
-    public void searchMoviesByTitle(@NonNull String title, int page) {
+    public void refresh() {
+        aggregatedItems.clear();
+        searchMoviesByTitle(currentTitle, 1);
+    }
 
+    public void searchMoviesByTitle(@NonNull String title, int page) {
         if (page == 1 && !title.equals(currentTitle)) {
             aggregatedItems.clear();
             currentTitle = title;
@@ -44,11 +48,12 @@ public class ListViewModel extends ViewModel {
         searchService.search(title, page).enqueue(new Callback<SearchResponse>() {
             @Override
             public void onResponse(@NonNull Call<SearchResponse> call, @NonNull Response<SearchResponse> response) {
-
                 SearchResponse result = response.body();
-
                 if (result != null) {
                     aggregatedItems.addAll(result.getSearch());
+                    liveData.setValue(SearchResult.success(aggregatedItems, aggregatedItems.size()));
+                } else {
+                    liveData.setValue(SearchResult.error());
                 }
             }
 

@@ -12,6 +12,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import android.widget.ViewAnimator;
 
 import com.vp.list.viewmodel.SearchResult;
 import com.vp.list.viewmodel.ListViewModel;
+import com.vp.navigation.NavigationHelper;
 
 import javax.inject.Inject;
 
@@ -32,13 +35,15 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
 
     @Inject
     ViewModelProvider.Factory factory;
+    @Inject
+    NavigationHelper navigationHelper;
 
     private ListViewModel listViewModel;
     private GridPagingScrollListener gridPagingScrollListener;
     private ListAdapter listAdapter;
     private ViewAnimator viewAnimator;
     private RecyclerView recyclerView;
-    private ProgressBar progressBar;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private TextView errorTextView;
     private String currentQuery = "Interview";
 
@@ -59,13 +64,15 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.recyclerView);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         viewAnimator = view.findViewById(R.id.viewAnimator);
-        progressBar = view.findViewById(R.id.progressBar);
         errorTextView = view.findViewById(R.id.errorText);
 
         if (savedInstanceState != null) {
             currentQuery = savedInstanceState.getString(CURRENT_QUERY);
         }
+
+        swipeRefreshLayout.setOnRefreshListener(() -> listViewModel.refresh());
 
         initBottomNavigation(view);
         initList();
@@ -106,14 +113,17 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     }
 
     private void showProgressBar() {
-        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(progressBar));
+        swipeRefreshLayout.setRefreshing(true);
+//        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(swipeRefreshLayout));
     }
 
     private void showList() {
-        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(recyclerView));
+        swipeRefreshLayout.setRefreshing(false);
+        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(swipeRefreshLayout));
     }
 
     private void showError() {
+        swipeRefreshLayout.setRefreshing(false);
         viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(errorTextView));
     }
 
@@ -164,6 +174,6 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
 
     @Override
     public void onItemClick(String imdbID) {
-        //TODO handle click events
+        navigationHelper.launchDetail(imdbID);
     }
 }
