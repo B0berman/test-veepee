@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.annotation.NonNull;
 
+import com.vp.db.MovieDao;
 import com.vp.list.model.ListItem;
 import com.vp.list.model.SearchResponse;
 import com.vp.list.service.SearchService;
@@ -19,14 +20,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ListViewModel extends ViewModel {
+
     private MutableLiveData<SearchResult> liveData = new MutableLiveData<>();
     private SearchService searchService;
+    private MovieDao movieDao;
 
     private String currentTitle = "";
     private List<ListItem> aggregatedItems = new ArrayList<>();
 
     @Inject
-    ListViewModel(@NonNull SearchService searchService) {
+    ListViewModel(@NonNull SearchService searchService, @NonNull MovieDao movieDao) {
         this.searchService = searchService;
     }
 
