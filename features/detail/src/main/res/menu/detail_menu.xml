@@ -2,9 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/star"
-        android:icon="@drawable/ic_star"
-        app:showAsAction="always"
-        android:title="@string/favorite" />
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/star"
+            android:icon="@drawable/ic_star"
+            android:title="@string/favorite"
+            app:showAsAction="always" />
+    </group>
 </menu>

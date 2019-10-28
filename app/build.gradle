@@ -25,6 +25,16 @@ android {
             initWith buildTypes.debug
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             minifyEnabled true
+            shrinkResources true
+        }
+    }
+
+    splits {
+        // Configures multiple APKs based on ABI.
+        abi {
+            enable true
+            reset()
+            include "x86"
         }
     }
 

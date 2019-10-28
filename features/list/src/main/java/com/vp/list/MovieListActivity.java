@@ -1,32 +1,30 @@
 package com.vp.list;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.widget.SearchView;
 
-import javax.inject.Inject;
+import androidx.fragment.app.Fragment;
 
-import dagger.android.AndroidInjection;
-import dagger.android.AndroidInjector;
-import dagger.android.DispatchingAndroidInjector;
-import dagger.android.support.HasSupportFragmentInjector;
+import com.vp.detail.DetailActivity;
+import com.vp.list.navigation.ContentNavigation;
 
-public class MovieListActivity extends AppCompatActivity implements HasSupportFragmentInjector {
+import dagger.android.support.DaggerAppCompatActivity;
+
+public class MovieListActivity extends DaggerAppCompatActivity implements ContentNavigation {
+
     private static final String IS_SEARCH_VIEW_ICONIFIED = "is_search_view_iconified";
+    private static final String SEARCH_QUERY = "search_query";
 
-    @Inject
-    DispatchingAndroidInjector<Fragment> dispatchingActivityInjector;
     private SearchView searchView;
     private boolean searchViewExpanded = true;
+    private String searchQuery = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_list);
 
@@ -37,6 +35,7 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
                     .commit();
         } else {
             searchViewExpanded = savedInstanceState.getBoolean(IS_SEARCH_VIEW_ICONIFIED);
+            searchQuery = savedInstanceState.getString(SEARCH_QUERY);
         }
     }
 
@@ -49,11 +48,21 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
         searchView = (SearchView) menuItem.getActionView();
         searchView.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         searchView.setIconified(searchViewExpanded);
+        searchView.setQuery(searchQuery, false);
+        searchView.setOnCloseListener(() -> {
+            Fragment fragment = getFragmentByTag(ListFragment.TAG);
+            if (fragment instanceof SearchHandler) {
+                ((SearchHandler) fragment).resetSearchQuery();
+            }
+            return true;
+        });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                ListFragment listFragment = (ListFragment) getSupportFragmentManager().findFragmentByTag(ListFragment.TAG);
-                listFragment.submitSearchQuery(query);
+                Fragment fragment = getFragmentByTag(ListFragment.TAG);
+                if (fragment instanceof SearchHandler) {
+                    ((SearchHandler) fragment).submitSearchQuery(query);
+                }
                 return true;
             }
 
@@ -69,11 +78,16 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putString(SEARCH_QUERY, searchView.getQuery().toString());
         outState.putBoolean(IS_SEARCH_VIEW_ICONIFIED, searchView.isIconified());
     }
 
     @Override
-    public AndroidInjector<Fragment> supportFragmentInjector() {
-        return dispatchingActivityInjector;
+    public void navigateToMovieDetail(String movieID) {
+        startActivity(DetailActivity.Companion.generateIntent(this, movieID));
+    }
+
+    private Fragment getFragmentByTag(String tag) {
+        return getSupportFragmentManager().findFragmentByTag(tag);
     }
 }

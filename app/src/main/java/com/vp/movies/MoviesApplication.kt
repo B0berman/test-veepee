@@ -1,23 +1,12 @@
 package com.vp.movies
 
-import android.app.Activity
-import android.app.Application
 import com.vp.movies.di.DaggerAppComponent
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasActivityInjector
-import javax.inject.Inject
+import dagger.android.AndroidInjector
+import dagger.android.DaggerApplication
 
-class MoviesApplication : Application(), HasActivityInjector {
-    @Inject
-    lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Activity>
+class MoviesApplication : DaggerApplication() {
 
-    override fun onCreate() {
-        super.onCreate()
-        DaggerAppComponent.builder()
-                .application(this)
-                .build()
-                .inject(this)
+    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
+        return DaggerAppComponent.builder().application(this).build()
     }
-
-    override fun activityInjector(): DispatchingAndroidInjector<Activity>? = dispatchingActivityInjector
 }

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="main_color">#ec008c</color>
+    <color name="light_black_opacity_75">#BF181818</color>
+    <color name="light_gray_01">#BDC1C6</color>
+    <color name="light_black">#181818</color>
+
+    <color name="base_divider">@color/light_gray_01</color>
+    <color name="base_strong_text">@color/light_black</color>
+</resources>
