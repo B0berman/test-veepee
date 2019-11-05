@@ -28,8 +28,9 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
         queryProvider = this
         binding.setLifecycleOwner(this)
         detailViewModel.fetchDetails()
-        detailViewModel.title().observe(this, Observer {
-            supportActionBar?.title = it
+        detailViewModel.checkIfFavorites()
+        detailViewModel.movie.observe(this, Observer {
+            supportActionBar?.title = it.title
         })
     }
 

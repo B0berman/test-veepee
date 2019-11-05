@@ -6,6 +6,6 @@ import dagger.android.ContributesAndroidInjector
 
 @Module
 abstract class DetailActivityModule {
-    @ContributesAndroidInjector(modules = [DetailDBModule::class, DetailViewModelsModule::class, DetailNetworkModule::class])
+    @ContributesAndroidInjector(modules = [DetailViewModelsModule::class])
     abstract fun bindDetailActivity(): DetailActivity
 }

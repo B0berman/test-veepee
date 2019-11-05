@@ -3,63 +3,109 @@ package com.vp.detail.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.vp.db.MovieDB
-import com.vp.db.MovieDao
 import com.vp.detail.DetailActivity
 import com.vp.detail.model.MovieDetail
-import com.vp.detail.service.DetailService
-import retrofit2.Call
-import retrofit2.Response
+import com.vp.movies.data.model.MovieEntity
+import com.vp.movies.data.remote.repository.MovieRepository
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
-import javax.security.auth.callback.Callback
 
 class DetailsViewModel @Inject constructor(
-        private val detailService: DetailService,
-        private val movieDAO: MovieDao
+        private val movieRepository: MovieRepository
 ) : ViewModel() {
 
-    private val details: MutableLiveData<MovieDetail> = MutableLiveData()
-    private val title: MutableLiveData<String> = MutableLiveData()
-    private val loadingState: MutableLiveData<LoadingState> = MutableLiveData()
+    private val compositeDisposable = CompositeDisposable()
 
-    fun title(): LiveData<String> = title
+    private val mFavorite = MutableLiveData<Boolean>()
+    val favorite: LiveData<Boolean> = mFavorite
 
-    fun details(): LiveData<MovieDetail> = details
+    private val mMovie = MutableLiveData<MovieDetail>()
+    val movie: LiveData<MovieDetail> = mMovie
 
-    fun state(): LiveData<LoadingState> = loadingState
+    private val mState = MutableLiveData<LoadingState>()
+    val state: MutableLiveData<LoadingState> = mState
 
-    fun addToFavorite() {
-        details.value?.let {
-            movieDAO.insert(MovieDB(
-                    DetailActivity.queryProvider.getMovieId(),
-                    it.title,
-                    it.year,
-                    it.runtime,
-                    it.director,
-                    it.plot,
-                    it.poster
-            ))
+    override fun onCleared() {
+        compositeDisposable.dispose()
+        super.onCleared()
+    }
+
+    fun toogleFavorite() {
+        mMovie.value?.let {
+            if (mFavorite.value == true) {
+                removeFromFavorites(DetailActivity.queryProvider.getMovieId())
+            } else {
+                addToFavorites(it)
+            }
         }
     }
 
+    fun removeFromFavorites() {
+        mMovie.value?.let { removeFromFavorites(DetailActivity.queryProvider.getMovieId()) }
+    }
+
+    fun checkIfFavorites() {
+        movieRepository.isFavorite(DetailActivity.queryProvider.getMovieId())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(
+                        onComplete = { mFavorite.value = false },
+                        onSuccess = { mFavorite.value = true },
+                        onError = { mFavorite.value = false }
+                )
+                .addTo(compositeDisposable)
+    }
+
     fun fetchDetails() {
-        loadingState.value = LoadingState.IN_PROGRESS
-        detailService.getMovie(DetailActivity.queryProvider.getMovieId()).enqueue(object : Callback, retrofit2.Callback<MovieDetail> {
-            override fun onResponse(call: Call<MovieDetail>?, response: Response<MovieDetail>?) {
-                details.postValue(response?.body())
+        state.value = LoadingState.IN_PROGRESS
+        movieRepository.get(DetailActivity.queryProvider.getMovieId())
+                .map { MovieDetail(it) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(
+                        onSuccess = {
+                            mMovie.value = it
+                            state.value = LoadingState.LOADED
+                        },
+                        onError = {
+                            mMovie.value = null
+                            state.value = LoadingState.ERROR
+                        }
+                )
+                .addTo(compositeDisposable)
+    }
 
-                response?.body()?.title?.let {
-                    title.postValue(it)
-                }
+    private fun addToFavorites(movie: MovieDetail) {
+        movieRepository.addToFavorites(
+                MovieEntity(
+                        imdbID = DetailActivity.queryProvider.getMovieId(),
+                        title = movie.title,
+                        year = movie.year,
+                        runtime = movie.runtime,
+                        director = movie.director,
+                        plot = movie.plot,
+                        poster = movie.poster
+                ))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(
+                        onComplete = { mFavorite.value = true }
+                )
+                .addTo(compositeDisposable)
+    }
 
-                loadingState.value = LoadingState.LOADED
-            }
-
-            override fun onFailure(call: Call<MovieDetail>?, t: Throwable?) {
-                details.postValue(null)
-                loadingState.value = LoadingState.ERROR
-            }
-        })
+    private fun removeFromFavorites(imdbID: String) {
+        movieRepository.removeFromFavorites(imdbID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(
+                        onComplete = { mFavorite.value = false }
+                )
+                .addTo(compositeDisposable)
     }
 
     enum class LoadingState {

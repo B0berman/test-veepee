@@ -13,6 +13,6 @@ abstract class MovieListActivityModule {
     @Binds
     abstract fun activity(activity: MovieListActivity): Activity
 
-    @ContributesAndroidInjector(modules = [NavigationModule::class, ListFragmentModule::class, ListNetworkModule::class, ListViewModelsModule::class])
+    @ContributesAndroidInjector(modules = [NavigationModule::class, ListFragmentModule::class, ListViewModelsModule::class])
     abstract fun bindMovieListActivity(): MovieListActivity
 }

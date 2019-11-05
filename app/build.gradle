@@ -41,11 +41,16 @@ android {
 }
 
 dependencies {
+    implementation project(':data:model')
+    implementation project(':data:local')
+    implementation project(':data:remote')
+    implementation project(':data:repository')
+
     implementation project(':features:list')
     implementation project(':features:detail')
     implementation project(':features:favorites')
+
     implementation project(':navigation')
-    implementation project(':db')
     implementation project(':dagger.addons')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin"
@@ -59,16 +64,16 @@ dependencies {
     kapt "androidx.room:room-compiler:$rootProject.room"
     implementation "androidx.room:room-ktx:$rootProject.room"
 
-    //dagger
-    implementation "com.google.dagger:dagger:$rootProject.dagger"
+    // DAGGER
+    implementation("com.google.dagger:dagger-android-support:$rootProject.dagger")
     kapt "com.google.dagger:dagger-compiler:$rootProject.dagger"
-    implementation "com.google.dagger:dagger-android:$rootProject.dagger"
-    implementation "com.google.dagger:dagger-android-support:$rootProject.dagger"
     kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
 
     //api
-    implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp"
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$rootProject.retrofit"
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofit"
+    implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp"
 
     //test
     testImplementation 'junit:junit:4.12'

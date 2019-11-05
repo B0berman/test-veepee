@@ -27,10 +27,16 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    androidExtensions {
+        experimental = true
+    }
 }
 
 dependencies {
     implementation project(':dagger.addons')
+    implementation project(':data:model')
+    implementation project(':data:repository')
     implementation project(':navigation')
 
     implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
@@ -40,11 +46,9 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$rootProject.glide"
     kapt "com.github.bumptech.glide:compiler:$rootProject.glide"
 
-    //dagger
-    implementation "com.google.dagger:dagger:$rootProject.dagger"
-    kapt "com.google.dagger:dagger-compiler:$rootProject.dagger"
-    implementation "com.google.dagger:dagger-android:$rootProject.dagger"
+    // DAGGER
     implementation("com.google.dagger:dagger-android-support:$rootProject.dagger")
+    kapt "com.google.dagger:dagger-compiler:$rootProject.dagger"
     kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
 
     //architecture components
@@ -54,9 +58,8 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:$rootProject.supportLibraryVersion"
     implementation "com.google.android.material:material:$rootProject.supportLibraryVersion"
 
-    //api
-    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit"
-    implementation "com.google.code.gson:gson:$rootProject.gson"
+    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxAndroid"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rootProject.rxKotlin"
 
     //test
     testImplementation "org.assertj:assertj-core:3.11.1"
