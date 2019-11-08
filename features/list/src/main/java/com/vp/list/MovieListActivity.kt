@@ -6,8 +6,6 @@ import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 
 import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.inputmethod.EditorInfo
 import android.widget.SearchView
 
@@ -30,8 +28,9 @@ class MovieListActivity : AppCompatActivity(), HasSupportFragmentInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_movie_list)
+        setContentView(R.layout.movie_activity_list)
 
+        //todo recuperar fragment
         if (savedInstanceState == null) {
             supportFragmentManager
                     .beginTransaction()

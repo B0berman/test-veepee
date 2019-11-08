@@ -1,4 +1,4 @@
-package com.vp.list
+package com.vp.favorites
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -6,15 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.vp.common.GlideApp
-import com.vp.list.model.ListItem
+import com.vp.favorites.model.FavoriteListItem
 
-class ListAdapter : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
+class FavoriteListAdapter : RecyclerView.Adapter<FavoriteListAdapter.ListViewHolder>() {
 
-    private var listItems: MutableList<ListItem> = mutableListOf()
+    private var listItems: MutableList<FavoriteListItem> = mutableListOf()
     private var onItemClickListener: OnItemClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
-        return ListViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.movie_item_list, parent, false))
+        return ListViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.favorite_item_list, parent, false))
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
@@ -36,7 +36,7 @@ class ListAdapter : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
         return listItems.size
     }
 
-    fun setItems(listItems: MutableList<ListItem>) {
+    fun setItems(listItems: MutableList<FavoriteListItem>) {
         this.listItems = listItems
         notifyDataSetChanged()
     }

@@ -3,6 +3,7 @@ package com.vp.movies.data.local.dao
 import androidx.room.*
 import com.vp.movies.data.model.MovieEntity
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Single
 
@@ -13,7 +14,7 @@ import io.reactivex.Single
 interface MovieDao {
 
     @Query("SELECT * FROM movie")
-    fun findAll(): Single<List<MovieEntity>>
+    fun findAll(): Flowable<List<MovieEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(vararg movie: MovieEntity): Completable

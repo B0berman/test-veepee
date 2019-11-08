@@ -4,6 +4,7 @@ import com.vp.movies.data.local.dao.MovieDao
 import com.vp.movies.data.model.MovieEntity
 import com.vp.movies.data.remote.retrofit.service.MovieService
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import javax.inject.Inject
@@ -11,6 +12,7 @@ import javax.inject.Inject
 interface MovieRepository {
     fun search(query: String, page: Int): Single<List<MovieEntity>>
     fun get(imdbID: String): Single<MovieEntity>
+    fun getFavorites(): Flowable<List<MovieEntity>>
     fun addToFavorites(entity: MovieEntity): Completable
     fun removeFromFavorites(imdbID: String): Completable
     fun isFavorite(imdbID: String): Maybe<MovieEntity>
@@ -27,6 +29,10 @@ class MovieRepositoryImpl @Inject internal constructor(
 
     override fun get(imdbID: String): Single<MovieEntity> {
         return movieService.get(imdbID)
+    }
+
+    override fun getFavorites(): Flowable<List<MovieEntity>> {
+        return movieDao.findAll()
     }
 
     override fun isFavorite(imdbID: String): Maybe<MovieEntity> {

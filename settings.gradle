@@ -1,1 +1,1 @@
-include ':app', ':features:list', ':features:favorites', ':dagger.addons', ':navigation', ':data:model', ':data:remote', ':data:local', ':data:repository', 'features:detail'
+include ':app', ':features:list', ':features:favorites', ':dagger.addons', ':navigation', ':data:model', ':data:remote', ':data:local', ':data:repository', ':features:common', 'features:detail'

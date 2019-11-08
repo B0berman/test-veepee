@@ -1,8 +1,9 @@
 package com.vp.movies.di
 
 import android.app.Application
-import com.vp.detail.di.DetailActivityModule
-import com.vp.list.di.MovieListActivityModule
+import com.vp.detail.di.DetailModule
+import com.vp.favorites.di.FavoriteListModule
+import com.vp.list.di.MovieListModule
 import com.vp.movies.MoviesApplication
 import dagger.BindsInstance
 import dagger.Component
@@ -16,8 +17,9 @@ import javax.inject.Singleton
     LocalModule::class,
     NetworkModule::class,
     RepositoryModule::class,
-    MovieListActivityModule::class,
-    DetailActivityModule::class
+    MovieListModule::class,
+    DetailModule::class,
+    FavoriteListModule::class
 ])
 interface AppComponent {
 

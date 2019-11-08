@@ -37,6 +37,7 @@ dependencies {
     implementation project(':dagger.addons')
     implementation project(':data:model')
     implementation project(':data:repository')
+    implementation project(':features:common')
     implementation project(':navigation')
 
     implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
