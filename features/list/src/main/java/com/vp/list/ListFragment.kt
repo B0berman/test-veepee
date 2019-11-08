@@ -98,8 +98,10 @@ class ListFragment : Fragment(),
 
         // Pagination
         gridPagingScrollListener = GridPagingScrollListener(layoutManager)
-        gridPagingScrollListener!!.setLoadMoreItemsListener(this)
-        recyclerView?.addOnScrollListener(gridPagingScrollListener!!)
+        gridPagingScrollListener?.let {
+            it.setLoadMoreItemsListener(this)
+            recyclerView?.addOnScrollListener(it)
+        }
     }
 
     private fun showProgressBar() {

@@ -47,13 +47,13 @@ class ListViewModel @Inject constructor(
             mMovies.value = SearchResult.inProgress()
         }
         movieRepository.search(title, page)
-                .map { list -> list.map { ListItem(it) } }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
                         onSuccess = {
-                            aggregatedItems.addAll(it)
-                            mMovies.value = SearchResult.success(aggregatedItems, aggregatedItems.size)
+                            val results = it.search?.map { item -> ListItem(item) } ?: emptyList()
+                            aggregatedItems.addAll(results)
+                            mMovies.value = SearchResult.success(aggregatedItems, it.totalResults)
                         },
                         onError = { mMovies.value = SearchResult.error() }
                 )
