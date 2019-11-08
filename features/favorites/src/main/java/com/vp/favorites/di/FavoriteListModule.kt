@@ -8,11 +8,15 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
 @Module
-abstract class FavoriteListActivityModule {
+abstract class FavoriteListModule {
 
-    @Binds
-    abstract fun activity(activity: FavoriteListActivity): Activity
+    @ContributesAndroidInjector(modules = [FavoriteListActivityModule::class])
+    internal abstract fun bindFavoriteListActivity(): FavoriteListActivity
 
-    @ContributesAndroidInjector(modules = [NavigationModule::class, FavoriteListFragmentModule::class, FavoriteListViewModelsModule::class])
-    abstract fun bindMovieListActivity(): FavoriteListActivity
+    @Module(includes = [NavigationModule::class, FavoriteListFragmentModule::class, FavoriteListViewModelsModule::class])
+    abstract class FavoriteListActivityModule {
+
+        @Binds
+        internal abstract fun activity(activity: FavoriteListActivity): Activity
+    }
 }
