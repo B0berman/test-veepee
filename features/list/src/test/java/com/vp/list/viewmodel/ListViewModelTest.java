@@ -47,7 +47,7 @@ public class ListViewModelTest {
         listViewModel.searchMoviesByTitle("title", 1);
 
         //then
-        verify(mockObserver).onChanged(SearchResult.success(fakeItems, fakeItems.size()));
+        verify(mockObserver).onChanged(SearchResult.Companion.success(fakeItems, fakeItems.size()));
         assertThat(listViewModel.observeMovies().getValue().getListState()).isEqualTo(ListState.LOADED);
     }
 
@@ -78,7 +78,7 @@ public class ListViewModelTest {
         listViewModel.searchMoviesByTitle("title", 1);
 
         //then
-        verify(mockObserver).onChanged(SearchResult.inProgress());
+        verify(mockObserver).onChanged(SearchResult.Companion.inProgress());
     }
 
 }

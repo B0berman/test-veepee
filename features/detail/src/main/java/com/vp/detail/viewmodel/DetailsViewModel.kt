@@ -34,7 +34,7 @@ class DetailsViewModel @Inject constructor(
         super.onCleared()
     }
 
-    fun toogleFavorite() {
+    fun toggleFavorite() {
         mMovie.value?.let {
             if (mFavorite.value == true) {
                 removeFromFavorites(DetailActivity.queryProvider.getMovieId())
@@ -42,10 +42,6 @@ class DetailsViewModel @Inject constructor(
                 addToFavorites(it)
             }
         }
-    }
-
-    fun removeFromFavorites() {
-        mMovie.value?.let { removeFromFavorites(DetailActivity.queryProvider.getMovieId()) }
     }
 
     fun checkIfFavorites() {
@@ -60,7 +56,7 @@ class DetailsViewModel @Inject constructor(
                 .addTo(compositeDisposable)
     }
 
-    fun fetchDetails() {
+    fun fetchDetail() {
         state.value = LoadingState.IN_PROGRESS
         movieRepository.get(DetailActivity.queryProvider.getMovieId())
                 .map { MovieDetail(it) }

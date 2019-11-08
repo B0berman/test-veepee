@@ -5,8 +5,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.core.content.ContextCompat
 import com.vp.detail.databinding.ActivityDetailBinding
 import com.vp.detail.viewmodel.DetailsViewModel
 import dagger.android.support.DaggerAppCompatActivity
@@ -19,6 +21,7 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
     lateinit var factory: ViewModelProvider.Factory
 
     lateinit var detailViewModel: DetailsViewModel
+    var starMenuItem: MenuItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,8 +30,10 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
         binding.viewModel = detailViewModel
         queryProvider = this
         binding.setLifecycleOwner(this)
-        detailViewModel.fetchDetails()
+
+        detailViewModel.fetchDetail()
         detailViewModel.checkIfFavorites()
+
         detailViewModel.movie.observe(this, Observer {
             supportActionBar?.title = it.title
         })
@@ -36,13 +41,23 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.detail_menu, menu)
+        starMenuItem = menu?.findItem(R.id.star)
+
+        detailViewModel.favorite.observe(this, Observer {
+            starMenuItem?.icon = when (it) {
+                true -> ContextCompat.getDrawable(this, R.drawable.ic_star_selected)
+                else -> ContextCompat.getDrawable(this, R.drawable.ic_star)
+            }
+            starMenuItem?.isEnabled = true
+        })
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.star -> {
-                detailViewModel.addToFavorite()
+                starMenuItem?.isEnabled = false
+                detailViewModel.toggleFavorite()
             }
         }
         return super.onOptionsItemSelected(item)

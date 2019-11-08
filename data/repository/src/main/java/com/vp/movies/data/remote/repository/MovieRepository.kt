@@ -13,7 +13,7 @@ interface MovieRepository {
     fun get(imdbID: String): Single<MovieEntity>
     fun addToFavorites(entity: MovieEntity): Completable
     fun removeFromFavorites(imdbID: String): Completable
-    fun isFavorite(imdbID: String): Maybe<Boolean>
+    fun isFavorite(imdbID: String): Maybe<MovieEntity>
 }
 
 class MovieRepositoryImpl @Inject internal constructor(
@@ -29,8 +29,8 @@ class MovieRepositoryImpl @Inject internal constructor(
         return movieService.get(imdbID)
     }
 
-    override fun isFavorite(imdbID: String): Maybe<Boolean> {
-        return movieDao.find(imdbID).map { true }
+    override fun isFavorite(imdbID: String): Maybe<MovieEntity> {
+        return movieDao.find(imdbID)
     }
 
     override fun addToFavorites(entity: MovieEntity): Completable {

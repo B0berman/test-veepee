@@ -22,10 +22,10 @@ class ListViewModel @Inject constructor(
         private val movieRepository: MovieRepository
 ) : ViewModel() {
 
+    private val compositeDisposable = CompositeDisposable()
+
     private val mMovies = MutableLiveData<SearchResult>()
     val movies: LiveData<SearchResult> = mMovies
-
-    private val compositeDisposable = CompositeDisposable()
 
     private var currentTitle = ""
     private val aggregatedItems = ArrayList<ListItem>()
