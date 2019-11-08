@@ -61,7 +61,7 @@ class FavoriteListFragment : Fragment(),
         swipeRefreshLayout?.setOnRefreshListener { listViewModel.refresh() }
 
         initList()
-        listViewModel.movies.observe(this, Observer { searchResult ->
+        listViewModel.movies.observe(viewLifecycleOwner, Observer { searchResult ->
             if (searchResult != null) {
                 listAdapter?.let { handleResult(it, searchResult) }
             }

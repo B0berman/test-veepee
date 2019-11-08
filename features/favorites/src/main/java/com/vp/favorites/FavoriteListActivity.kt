@@ -22,7 +22,6 @@ class FavoriteListActivity : AppCompatActivity(), HasSupportFragmentInjector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.favorite_activity)
 
-        // todo recuperar el fragment de savedInstanceState
         if (savedInstanceState == null) {
             supportFragmentManager
                     .beginTransaction()

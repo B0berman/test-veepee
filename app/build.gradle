@@ -1,42 +1,18 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
+apply from: '../android_commons.gradle'
 
 def localProperties = new Properties()
 localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
 android {
-    compileSdkVersion rootProject.compileSdkVersion
+
     defaultConfig {
         applicationId "com.vp.movies"
-        minSdkVersion rootProject.minSdkVersion
-        targetSdkVersion rootProject.targetSdkVersion
         buildConfigField "String", "API_KEY", localProperties['apiKey']
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-    buildTypes {
-        debug {
-            minifyEnabled false
-        }
-        debugProguard {
-            initWith buildTypes.debug
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            minifyEnabled true
-        }
-    }
-    
+
     packagingOptions {
         exclude 'META-INF/proguard/coroutines.pro'
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    dataBinding {
-        enabled = true
     }
 }
 
@@ -53,6 +29,8 @@ dependencies {
     implementation project(':navigation')
     implementation project(':dagger.addons')
 
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-3'
+    
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin"
 
     //support

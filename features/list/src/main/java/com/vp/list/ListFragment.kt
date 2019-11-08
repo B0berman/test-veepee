@@ -70,7 +70,7 @@ class ListFragment : Fragment(),
 
         initBottomNavigation(view)
         initList()
-        listViewModel.movies.observe(this, Observer { searchResult ->
+        listViewModel.movies.observe(viewLifecycleOwner, Observer { searchResult ->
             if (searchResult != null) {
                 listAdapter?.let { handleResult(it, searchResult) }
             }

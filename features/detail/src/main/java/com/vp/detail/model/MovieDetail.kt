@@ -3,6 +3,7 @@ package com.vp.detail.model
 import com.vp.movies.data.model.MovieEntity
 
 data class MovieDetail(
+        val id: String,
         val title: String,
         val year: String,
         val runtime: String,
@@ -12,6 +13,7 @@ data class MovieDetail(
 ) {
 
     constructor(entity: MovieEntity) : this(
+            entity.imdbID,
             entity.title ?: "",
             entity.year ?: "",
             entity.runtime ?: "",

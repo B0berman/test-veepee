@@ -1,9 +1,9 @@
 package com.vp.detail.viewmodel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.vp.detail.DetailActivity
 import com.vp.detail.model.MovieDetail
 import com.vp.movies.data.model.MovieEntity
 import com.vp.movies.data.remote.repository.MovieRepository
@@ -19,33 +19,43 @@ class DetailsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
+    private val mMovieId = MutableLiveData<String>()
 
-    private val mFavorite = MutableLiveData<Boolean>()
+    private val mFavorite = MediatorLiveData<Boolean>()
     val favorite: LiveData<Boolean> = mFavorite
 
-    private val mMovie = MutableLiveData<MovieDetail>()
+    private val mMovie = MediatorLiveData<MovieDetail>()
     val movie: LiveData<MovieDetail> = mMovie
 
     private val mState = MutableLiveData<LoadingState>()
     val state: MutableLiveData<LoadingState> = mState
+
+    init {
+        mFavorite.addSource(mMovieId) { mMovieId.value?.let { id -> checkIfFavorite(id) } }
+        mMovie.addSource(mMovieId) { mMovieId.value?.let { id -> fetchMovie(id) } }
+    }
 
     override fun onCleared() {
         compositeDisposable.dispose()
         super.onCleared()
     }
 
+    fun setMovieId(movieId: String) {
+        mMovieId.value = movieId
+    }
+
     fun toggleFavorite() {
         mMovie.value?.let {
             if (mFavorite.value == true) {
-                removeFromFavorites(DetailActivity.queryProvider.getMovieId())
+                removeFromFavorites(it.id)
             } else {
                 addToFavorites(it)
             }
         }
     }
 
-    fun checkIfFavorites() {
-        movieRepository.isFavorite(DetailActivity.queryProvider.getMovieId())
+    private fun checkIfFavorite(movieId: String) {
+        movieRepository.isFavorite(movieId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
@@ -56,12 +66,12 @@ class DetailsViewModel @Inject constructor(
                 .addTo(compositeDisposable)
     }
 
-    fun fetchDetail() {
-        state.value = LoadingState.IN_PROGRESS
-        movieRepository.get(DetailActivity.queryProvider.getMovieId())
+    private fun fetchMovie(movieId: String) {
+        movieRepository.get(movieId)
                 .map { MovieDetail(it) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { state.value = LoadingState.IN_PROGRESS }
                 .subscribeBy(
                         onSuccess = {
                             mMovie.value = it
@@ -78,7 +88,7 @@ class DetailsViewModel @Inject constructor(
     private fun addToFavorites(movie: MovieDetail) {
         movieRepository.addToFavorites(
                 MovieEntity(
-                        imdbID = DetailActivity.queryProvider.getMovieId(),
+                        imdbID = movie.id,
                         title = movie.title,
                         year = movie.year,
                         runtime = movie.runtime,
@@ -88,9 +98,7 @@ class DetailsViewModel @Inject constructor(
                 ))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy(
-                        onComplete = { mFavorite.value = true }
-                )
+                .subscribeBy(onComplete = { mFavorite.value = true })
                 .addTo(compositeDisposable)
     }
 
@@ -98,9 +106,7 @@ class DetailsViewModel @Inject constructor(
         movieRepository.removeFromFavorites(imdbID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy(
-                        onComplete = { mFavorite.value = false }
-                )
+                .subscribeBy(onComplete = { mFavorite.value = false })
                 .addTo(compositeDisposable)
     }
 

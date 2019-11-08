@@ -30,7 +30,6 @@ class MovieListActivity : AppCompatActivity(), HasSupportFragmentInjector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.movie_activity_list)
 
-        //todo recuperar fragment
         if (savedInstanceState == null) {
             supportFragmentManager
                     .beginTransaction()
