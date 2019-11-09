@@ -7,5 +7,6 @@ class SearchResultEntity<T : Any>(
     val response: String? = null,
     @SerializedName("Search")
     val search: List<T>? = null,
+    @SerializedName("totalResults")
     val totalResults: Int = 0
 )

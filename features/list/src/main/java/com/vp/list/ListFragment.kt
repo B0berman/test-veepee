@@ -107,13 +107,17 @@ class ListFragment : Fragment(),
         swipeRefreshLayout?.isRefreshing = true
     }
 
-    private fun showList() {
+    private fun hideProgressBar() {
         swipeRefreshLayout?.isRefreshing = false
+    }
+
+    private fun showList() {
+        hideProgressBar()
         viewAnimator?.let { it.displayedChild = it.indexOfChild(swipeRefreshLayout) }
     }
 
     private fun showError() {
-        swipeRefreshLayout?.isRefreshing = false
+        hideProgressBar()
         viewAnimator?.let { it.displayedChild = it.indexOfChild(errorTextView) }
     }
 
@@ -147,6 +151,7 @@ class ListFragment : Fragment(),
     }
 
     override fun loadMoreItems(page: Int) {
+        showProgressBar()
         gridPagingScrollListener?.markLoading(true)
         listViewModel.searchMoviesByTitle(currentQuery, page)
     }
