@@ -14,6 +14,24 @@ android {
     packagingOptions {
         exclude 'META-INF/proguard/coroutines.pro'
     }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+        }
+        debugProguard {
+            initWith buildTypes.debug
+            proguardFiles getDefaultProguardFile(
+                    'proguard-android-optimize.txt'),
+                    'proguard-rules.pro',
+                    './proguard/gson.pro',
+                    './proguard/okhttp3.pro',
+                    './proguard/retrofit2.pro'
+            minifyEnabled true
+            shrinkResources true
+            // android.enableR8.fullMode ACTIVATED in gradle.properties
+        }
+    }
 }
 
 dependencies {

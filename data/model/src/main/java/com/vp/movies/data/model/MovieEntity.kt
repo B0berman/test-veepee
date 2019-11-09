@@ -11,6 +11,7 @@ data class MovieEntity(
     @SerializedName("Year")
     val year: String? = null,
     @PrimaryKey
+    @SerializedName("imdbID")
     val imdbID: String,
     @SerializedName("Poster")
     val poster: String? = null,
