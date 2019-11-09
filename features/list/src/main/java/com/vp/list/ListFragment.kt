@@ -1,7 +1,6 @@
 package com.vp.list
 
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import android.content.res.Configuration
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -36,7 +35,7 @@ class ListFragment : Fragment(),
     lateinit var navigationHelper: NavigationHelper
 
     private val listViewModel: ListViewModel by lazy {
-        ViewModelProviders.of(this, factory).get(ListViewModel::class.java)
+        ViewModelProvider(this, factory).get(ListViewModel::class.java)
     }
     private var gridPagingScrollListener: GridPagingScrollListener? = null
     private var listAdapter: ListAdapter? = null
@@ -149,7 +148,7 @@ class ListFragment : Fragment(),
 
     override fun loadMoreItems(page: Int) {
         gridPagingScrollListener?.markLoading(true)
-        listViewModel.searchMoviesByTitle(currentQuery!!, page)
+        listViewModel.searchMoviesByTitle(currentQuery, page)
     }
 
     fun submitSearchQuery(query: String) {

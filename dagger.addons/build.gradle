@@ -4,9 +4,6 @@ apply from: '../android_commons.gradle'
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin"
 
-    //architecture components
-    implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle"
-
     //support
     implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
 

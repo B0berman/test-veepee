@@ -1,7 +1,6 @@
 package com.vp.favorites
 
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -33,7 +32,7 @@ class FavoriteListFragment : Fragment(),
     lateinit var navigationHelper: NavigationHelper
 
     private val listViewModel: FavoriteListViewModel by lazy {
-        ViewModelProviders.of(this, factory).get(FavoriteListViewModel::class.java)
+        ViewModelProvider(this, factory).get(FavoriteListViewModel::class.java)
     }
     private var listAdapter: FavoriteListAdapter? = null
     private var swipeRefreshLayout: SwipeRefreshLayout? = null

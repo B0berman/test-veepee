@@ -19,9 +19,6 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$rootProject.dagger"
     kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
 
-    //architecture components
-    implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle"
-
     //support library
     implementation "androidx.recyclerview:recyclerview:$rootProject.supportLibraryVersion"
     implementation "com.google.android.material:material:$rootProject.supportLibraryVersion"
