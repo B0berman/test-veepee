@@ -1,12 +1,15 @@
 package com.vp.movies.di
 
 import com.vp.movies.BuildConfig
+import com.vp.movies.data.remote.retrofit.adapter.RxErrorHandlingCallAdapterFactory
+import com.vp.movies.data.remote.retrofit.service.MovieService
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
 import javax.inject.Singleton
@@ -17,6 +20,8 @@ class NetworkModule {
     @Singleton
     @Provides
     fun providesRetrofit(okHttpClient: OkHttpClient) = Retrofit.Builder()
+            .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl("https://www.omdbapi.com/")
             .client(okHttpClient)
@@ -53,4 +58,10 @@ class NetworkModule {
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         return interceptor
     }
+
+    @Provides
+    @Singleton
+    fun movieService(
+            retrofit: Retrofit
+    ): MovieService = retrofit.create(MovieService::class.java)
 }

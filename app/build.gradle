@@ -1,65 +1,75 @@
 apply plugin: 'com.android.application'
-
-apply plugin: 'kotlin-android'
-
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
+apply from: '../android_commons.gradle'
 
 def localProperties = new Properties()
 localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
 android {
-    compileSdkVersion rootProject.compileSdkVersion
+
     defaultConfig {
         applicationId "com.vp.movies"
-        minSdkVersion rootProject.minSdkVersion
-        targetSdkVersion rootProject.targetSdkVersion
         buildConfigField "String", "API_KEY", localProperties['apiKey']
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    packagingOptions {
+        exclude 'META-INF/proguard/coroutines.pro'
+    }
+
     buildTypes {
         debug {
             minifyEnabled false
         }
         debugProguard {
             initWith buildTypes.debug
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile(
+                    'proguard-android-optimize.txt'),
+                    'proguard-rules.pro',
+                    './proguard/gson.pro',
+                    './proguard/okhttp3.pro',
+                    './proguard/retrofit2.pro'
             minifyEnabled true
+            shrinkResources true
+            // android.enableR8.fullMode ACTIVATED in gradle.properties
         }
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    dataBinding {
-        enabled = true
     }
 }
 
 dependencies {
+    implementation project(':data:model')
+    implementation project(':data:local')
+    implementation project(':data:remote')
+    implementation project(':data:repository')
+
     implementation project(':features:list')
     implementation project(':features:detail')
     implementation project(':features:favorites')
+
+    implementation project(':navigation')
     implementation project(':dagger.addons')
 
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-3'
+    
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin"
 
     //support
     implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayout"
 
-    //dagger
-    implementation "com.google.dagger:dagger:$rootProject.dagger"
+    //room
+    implementation "androidx.room:room-runtime:$rootProject.room"
+    kapt "androidx.room:room-compiler:$rootProject.room"
+    implementation "androidx.room:room-ktx:$rootProject.room"
+
+    // DAGGER
+    implementation("com.google.dagger:dagger-android-support:$rootProject.dagger")
     kapt "com.google.dagger:dagger-compiler:$rootProject.dagger"
-    implementation "com.google.dagger:dagger-android:$rootProject.dagger"
-    implementation "com.google.dagger:dagger-android-support:$rootProject.dagger"
     kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
 
     //api
-    implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp"
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$rootProject.retrofit"
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofit"
+    implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp"
 
     //test
     testImplementation 'junit:junit:4.12'

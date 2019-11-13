@@ -1,10 +1,24 @@
 package com.vp.detail.model
 
-import com.google.gson.annotations.SerializedName
+import com.vp.movies.data.model.MovieEntity
 
-data class MovieDetail(@SerializedName("Title") val title: String,
-                       @SerializedName("Year") val year: String,
-                       @SerializedName("Runtime") val runtime: String,
-                       @SerializedName("Director") val director: String,
-                       @SerializedName("Plot") val plot: String,
-                       @SerializedName("Poster") val poster: String)
+data class MovieDetail(
+        val id: String,
+        val title: String,
+        val year: String,
+        val runtime: String,
+        val director: String,
+        val plot: String,
+        val poster: String
+) {
+
+    constructor(entity: MovieEntity) : this(
+            entity.imdbID,
+            entity.title ?: "",
+            entity.year ?: "",
+            entity.runtime ?: "",
+            entity.director ?: "",
+            entity.plot ?: "",
+            entity.poster ?: ""
+    )
+}

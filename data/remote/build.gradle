@@ -1,0 +1,12 @@
+apply plugin: 'com.android.library'
+apply from: '../../android_commons.gradle'
+
+dependencies {
+    implementation project(":data:model")
+
+    // NETWORK
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$rootProject.retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofit"
+    implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp"
+}
