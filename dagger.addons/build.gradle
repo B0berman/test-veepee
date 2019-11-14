@@ -31,6 +31,8 @@ dependencies {
 
     //architecture components
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$rootProject.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$rootProject.lifecycle"
 
     //support
     implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"

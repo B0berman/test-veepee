@@ -10,16 +10,19 @@ buildscript {
         targetSdkVersion = 28
 
         //dependencies
-        kotlin = '1.2.60'
-        supportLibraryVersion = '1.0.0'
+        kotlin = '1.3.50'
+        supportLibraryVersion = '1.1.0'
         constraintLayout = '1.1.2'
+        recyclerView = '1.0.0'
+        material = '1.0.0'
         retrofit = '2.4.0'
-        lifecycle = '2.0.0'
+        lifecycle = '2.1.0'
         gson = '2.8.2'
         dagger = '2.16'
         glide = '4.8.0'
         okhttp = '3.10.0'
-        room = '2.0.0'
+        room = '2.1.0'
+        rx = '2.2.0'
     }
 
     repositories {

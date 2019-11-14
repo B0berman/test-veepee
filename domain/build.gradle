@@ -29,7 +29,7 @@ dependencies {
     implementation project(':abstraction')
     implementation project(':dagger.addons')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin"
-    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.2.60'
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$rootProject.kotlin"
 
     //dagger
     implementation "com.google.dagger:dagger:$rootProject.dagger"
@@ -38,6 +38,6 @@ dependencies {
     implementation("com.google.dagger:dagger-android-support:$rootProject.dagger")
     kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
 
-    //architecture components
-    implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle"
+    //rx
+    implementation "io.reactivex.rxjava2:rxkotlin:$rx"
 }

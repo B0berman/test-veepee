@@ -1,20 +1,17 @@
 package com.vp.movie.persistence.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.vp.movie.persistence.entities.MovieEntity
+import io.reactivex.Observable
+import io.reactivex.Single
 
 @Dao
-interface FavouriteMovieDao {
+interface FavouriteMovieDao : BaseDao<MovieEntity> {
 
     @Query("SELECT * FROM favourites")
-    fun getFavouriteMovies(): List<MovieEntity>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOrReplaceMovie(movie: MovieEntity): Long
-
+    fun getFavouriteMovies(): Observable<List<MovieEntity>>
 
 }
