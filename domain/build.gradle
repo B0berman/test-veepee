@@ -39,5 +39,5 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
 
     //rx
-    implementation "io.reactivex.rxjava2:rxkotlin:$rx"
+    implementation "io.reactivex.rxjava2:rxjava:$rx"
 }

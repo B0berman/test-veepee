@@ -31,8 +31,6 @@ dependencies {
 
     //architecture components
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$rootProject.lifecycle"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$rootProject.lifecycle"
 
     //support
     implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
@@ -40,8 +38,8 @@ dependencies {
     //dagger
     implementation "com.google.dagger:dagger:$rootProject.dagger"
     kapt "com.google.dagger:dagger-compiler:$rootProject.dagger"
-    implementation "com.google.dagger:dagger-android:$rootProject.dagger"
-    implementation "com.google.dagger:dagger-android-support:$rootProject.dagger"
+    implementation "com.google.dagger:dagger-android:$rootProject.daggerAndroid"
+    implementation "com.google.dagger:dagger-android-support:$rootProject.daggerAndroid"
     kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
 
     testImplementation 'junit:junit:4.12'

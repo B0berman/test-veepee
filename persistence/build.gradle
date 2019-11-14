@@ -45,5 +45,5 @@ dependencies {
     kapt "androidx.room:room-compiler:$rootProject.room"
 
     //rx
-    implementation "io.reactivex.rxjava2:rxkotlin:$rx"
+    implementation "io.reactivex.rxjava2:rxjava:$rx"
 }

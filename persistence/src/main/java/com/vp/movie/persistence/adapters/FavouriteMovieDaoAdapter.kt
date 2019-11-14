@@ -16,7 +16,7 @@ class FavouriteMovieDaoAdapter(private val favouriteMovieDao: FavouriteMovieDao)
     }
 
     override fun addMovieToFavourite(movie: Movie): Single<Long> {
-        return favouriteMovieDao.insertOrReplaceMovie(
+        return favouriteMovieDao.insertOrReplace(
                 MovieEntity(
                         movie.title,
                         movie.year,

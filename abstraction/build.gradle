@@ -29,5 +29,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin"
 
     //rx
-    implementation "io.reactivex.rxjava2:rxkotlin:$rx"
+    implementation "io.reactivex.rxjava2:rxjava:$rx"
+
 }
