@@ -11,10 +11,10 @@ import com.vp.movie.persistence.entities.MovieEntity
 interface FavouriteMovieDao {
 
     @Query("SELECT * FROM favourites")
-    fun getFavouriteMovies(): LiveData<List<MovieEntity>>
+    fun getFavouriteMovies(): List<MovieEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOrReplaceMovie(movie: MovieEntity): LiveData<Long>
+    fun insertOrReplaceMovie(movie: MovieEntity): Long
 
 
 }

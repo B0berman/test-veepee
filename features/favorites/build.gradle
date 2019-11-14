@@ -45,10 +45,6 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$rootProject.glide"
     kapt "com.github.bumptech.glide:compiler:$rootProject.glide"
 
-    //persistence
-    implementation "androidx.room:room-runtime:$rootProject.room"
-    implementation "androidx.room:room-compiler:$rootProject.room"
-
     //architecture components
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle"
 

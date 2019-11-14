@@ -10,11 +10,11 @@ import com.vp.movie.persistence.entities.MovieEntity
 class FavouriteMovieDaoAdapter(private val favouriteMovieDao: FavouriteMovieDao) : FavouriteMovieDaoPort {
 
 
-    override fun getFavouriteMovies(): LiveData<List<Movie>> {
-        return map(favouriteMovieDao.getFavouriteMovies()) { list -> list.map { item -> item as Movie } }
+    override fun getFavouriteMovies(): List<Movie> {
+        return favouriteMovieDao.getFavouriteMovies().map { item -> item as Movie }
     }
 
-    override fun addMovieToFavourite(movie: Movie): LiveData<Long> {
+    override fun addMovieToFavourite(movie: Movie): Long {
         return favouriteMovieDao.insertOrReplaceMovie(
                 MovieEntity(
                         movie.title,

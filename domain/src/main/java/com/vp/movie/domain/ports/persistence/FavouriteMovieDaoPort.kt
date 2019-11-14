@@ -5,7 +5,7 @@ import com.vp.movie.abstraction.dto.Movie
 
 interface FavouriteMovieDaoPort {
 
-    fun getFavouriteMovies(): LiveData<List<Movie>>
+    fun getFavouriteMovies(): List<Movie>
 
-    fun addMovieToFavourite(movie: Movie): LiveData<Long>
+    fun addMovieToFavourite(movie: Movie): Long
 }
