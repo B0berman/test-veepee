@@ -5,7 +5,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import androidx.lifecycle.ViewModel
 import com.vp.detail.databinding.ActivityDetailBinding
 import com.vp.detail.viewmodel.DetailsViewModel
 import dagger.android.support.DaggerAppCompatActivity
@@ -17,10 +21,13 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
 
+    private val detailViewModel by lazy { ViewModelProviders.of(this, factory).get(DetailsViewModel::class.java) }
+
+    private var starView: MenuItem? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding: ActivityDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
-        val detailViewModel = ViewModelProviders.of(this, factory).get(DetailsViewModel::class.java)
         binding.viewModel = detailViewModel
         queryProvider = this
         binding.setLifecycleOwner(this)
@@ -28,10 +35,23 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
         detailViewModel.title().observe(this, Observer {
             supportActionBar?.title = it
         })
+        detailViewModel.isFavourite().observe(this, Observer {
+            starView?.icon = getDrawable(if (it) R.drawable.ic_start_selected else R.drawable.ic_star_not_selected)
+        })
+//        detailViewModel.checkFavouriteMovie()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.detail_menu, menu)
+
+        starView = menu?.findItem(R.id.star)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        item?.let {
+            detailViewModel.favouriteButtonClicked()
+        }
         return true
     }
 

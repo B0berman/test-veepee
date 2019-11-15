@@ -17,8 +17,4 @@ class DomainModule {
     fun providesFavouriteMovieRepository(favouriteMovieDao: FavouriteMovieDaoPort): FavouriteMovieRepository =
             FavouriteMoviePersistenceAdapter(favouriteMovieDao)
 
-    @Singleton
-    @Provides
-    fun providesFavoutiteMovieUseCase(favouriteMovieRepository: FavouriteMovieRepository): FavouriteMovieUseCase =
-            FavouriteMovieUseCaseImp(favouriteMovieRepository)
 }

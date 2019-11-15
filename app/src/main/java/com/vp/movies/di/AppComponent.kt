@@ -16,9 +16,9 @@ import javax.inject.Singleton
     AndroidSupportInjectionModule::class,
     NetworkModule::class,
     MovieListActivityModule::class,
-    DetailActivityModule::class
-//    PersistenceModule::class,
-//    DomainModule::class
+    DetailActivityModule::class,
+    PersistenceModule::class,
+    DomainModule::class
 ])
 interface AppComponent {
 

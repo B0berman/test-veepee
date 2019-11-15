@@ -6,6 +6,7 @@ import com.vp.movie.persistence.dao.FavouriteMovieDao
 import com.vp.movie.persistence.entities.MovieEntity
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 
 class FavouriteMovieDaoAdapter(private val favouriteMovieDao: FavouriteMovieDao) : FavouriteMovieDaoPort {
 
@@ -13,6 +14,7 @@ class FavouriteMovieDaoAdapter(private val favouriteMovieDao: FavouriteMovieDao)
     override fun getFavouriteMovies(): Observable<List<Movie>> {
         return favouriteMovieDao.getFavouriteMovies()
                 .map { list -> list.map { it as Movie } }
+                .subscribeOn(Schedulers.computation())
     }
 
     override fun addMovieToFavourite(movie: Movie): Single<Long> {
@@ -23,8 +25,13 @@ class FavouriteMovieDaoAdapter(private val favouriteMovieDao: FavouriteMovieDao)
                         movie.imdbID,
                         movie.poster
                 )
-        )
+        ).subscribeOn(Schedulers.computation())
     }
 
+    override fun getFavouriteMovieById(imdbID: String): Single<Movie> {
+        return favouriteMovieDao.getFavouriteMovieById(imdbID)
+                .map { it as Movie }
+                .subscribeOn(Schedulers.computation())
+    }
 
 }

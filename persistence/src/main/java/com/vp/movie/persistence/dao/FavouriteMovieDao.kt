@@ -14,4 +14,7 @@ interface FavouriteMovieDao : BaseDao<MovieEntity> {
     @Query("SELECT * FROM favourites")
     fun getFavouriteMovies(): Observable<List<MovieEntity>>
 
+    @Query("SELECT * FROM favourites WHERE imdbID LIKE :imdbID")
+    fun getFavouriteMovieById(imdbID: String): Single<MovieEntity>
+
 }

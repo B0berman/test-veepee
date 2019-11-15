@@ -3,7 +3,7 @@ package com.vp.movie.persistence.entities
 import androidx.room.Entity
 import com.vp.movie.abstraction.dto.Movie
 
-@Entity(tableName = "favourites", primaryKeys = ["title", "imdbID"])
+@Entity(tableName = "favourites", primaryKeys = ["imdbID"])
 data class MovieEntity(
         override val title:String,
         override val year:String,

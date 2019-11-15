@@ -10,4 +10,6 @@ interface FavouriteMovieDaoPort {
     fun getFavouriteMovies(): Observable<List<Movie>>
 
     fun addMovieToFavourite(movie: Movie): Single<Long>
+
+    fun getFavouriteMovieById(imdbID: String): Single<Movie>
 }

@@ -10,10 +10,14 @@ import io.reactivex.Single
 class FavouriteMovieUseCaseImp(private val favouriteMovieRepository: FavouriteMovieRepository) : FavouriteMovieUseCase {
 
     override fun getFavouriteMovies(): Observable<List<Movie>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return favouriteMovieRepository.getFavouriteMovies()
     }
 
     override fun addMovieToFavourite(movie: Movie): Single<Long> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return favouriteMovieRepository.addMovieToFavourite(movie)
+    }
+
+    override fun getFavouriteMovieById(imdbID: String): Single<Movie> {
+        return favouriteMovieRepository.getFavouriteMovieById(imdbID)
     }
 }

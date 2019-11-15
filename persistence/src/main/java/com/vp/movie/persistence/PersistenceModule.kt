@@ -16,7 +16,7 @@ class PersistenceModule {
 
     @Singleton
     @Provides
-    fun providesRoom(application: Application) =
+    fun providesRoom(application: Application): MovieDatabase =
             Room.databaseBuilder(
                     application,
                     MovieDatabase::class.java,

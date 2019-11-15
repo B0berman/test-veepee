@@ -36,6 +36,8 @@ android {
 
 dependencies {
     implementation project(':dagger.addons')
+    implementation project(':domain')
+    implementation project(':abstraction')
     implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayout"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$rootProject.kotlin"
@@ -57,6 +59,10 @@ dependencies {
     implementation "com.google.dagger:dagger-android:$rootProject.daggerAndroid"
     implementation("com.google.dagger:dagger-android-support:$rootProject.dagger")
     kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
+
+    //rx
+    implementation "io.reactivex.rxjava2:rxjava:$rx"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rx"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
