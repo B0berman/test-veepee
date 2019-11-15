@@ -22,7 +22,6 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
     lateinit var factory: ViewModelProvider.Factory
 
     private val detailViewModel by lazy { ViewModelProviders.of(this, factory).get(DetailsViewModel::class.java) }
-
     private var starView: MenuItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,19 +37,17 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
         detailViewModel.isFavourite().observe(this, Observer {
             starView?.icon = getDrawable(if (it) R.drawable.ic_start_selected else R.drawable.ic_star_not_selected)
         })
-//        detailViewModel.checkFavouriteMovie()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.detail_menu, menu)
-
         starView = menu?.findItem(R.id.star)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        item?.let {
-            detailViewModel.favouriteButtonClicked()
+        when (item?.itemId) {
+            R.id.star -> detailViewModel.favouriteButtonClicked()
         }
         return true
     }

@@ -21,4 +21,8 @@ class FavouriteMoviePersistenceAdapter @Inject constructor(private val favourite
     override fun getFavouriteMovieById(imdbID: String): Single<Movie> {
         return favouriteMovieDaoPort.getFavouriteMovieById(imdbID)
     }
+
+    override fun removeMovieToFavouriteById(imdbID: String): Single<Int> {
+        return favouriteMovieDaoPort.removeMovieToFavouriteById(imdbID)
+    }
 }

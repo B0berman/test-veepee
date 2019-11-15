@@ -12,4 +12,6 @@ interface FavouriteMovieDaoPort {
     fun addMovieToFavourite(movie: Movie): Single<Long>
 
     fun getFavouriteMovieById(imdbID: String): Single<Movie>
+
+    fun removeMovieToFavouriteById(imdbID: String): Single<Int>
 }

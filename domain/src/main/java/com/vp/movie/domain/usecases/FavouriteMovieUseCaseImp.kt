@@ -20,4 +20,8 @@ class FavouriteMovieUseCaseImp(private val favouriteMovieRepository: FavouriteMo
     override fun getFavouriteMovieById(imdbID: String): Single<Movie> {
         return favouriteMovieRepository.getFavouriteMovieById(imdbID)
     }
+
+    override fun removeMovieToFavouriteById(imdbID: String): Single<Int> {
+        return favouriteMovieRepository.removeMovieToFavouriteById(imdbID)
+    }
 }

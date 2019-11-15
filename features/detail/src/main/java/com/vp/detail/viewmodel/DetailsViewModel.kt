@@ -3,7 +3,6 @@ package com.vp.detail.viewmodel
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.vp.detail.DetailActivity
 import com.vp.detail.model.MovieDetail
@@ -44,13 +43,17 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
                 response?.body()?.title?.let {
                     title.postValue(it)
                 }
+                response?.body()?.imdbID?.let {
+                    checkFavouriteMovie(it)
+                }
 
                 loadingState.value = LoadingState.LOADED
-                checkFavouriteMovie()
+
             }
 
             override fun onFailure(call: Call<MovieDetail>?, t: Throwable?) {
                 details.postValue(null)
+                isFavourite.postValue(false)
                 loadingState.value = LoadingState.ERROR
             }
         })
@@ -60,13 +63,13 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
         isFavourite.value?.let {
             when (it) {
                 false -> setMovieAsFavourite()
-                true -> removeMovieFromFavourite()
+                true -> removeMovieAsFavourite()
             }
         }
     }
 
-    fun checkFavouriteMovie() {
-        favouriteMovieUseCase.getFavouriteMovieById(DetailActivity.queryProvider.getMovieId())
+    private fun checkFavouriteMovie(imdbID: String) {
+        favouriteMovieUseCase.getFavouriteMovieById(imdbID)
                 .subscribeBy(
                         onSuccess = { isFavourite.postValue(true) },
                         onError = {
@@ -90,9 +93,18 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
         }
     }
 
-    private fun removeMovieFromFavourite() {
-        Log.d(TAG, "removeMovieFromFavourite: ")
-        isFavourite.postValue(false)
+    private fun removeMovieAsFavourite() {
+        Log.d(TAG, "removeMovieAsFavourite: ")
+        details.value?.let { movie ->
+            favouriteMovieUseCase.removeMovieToFavouriteById(movie.imdbID)
+                    .subscribeBy(
+                            onSuccess = {
+                                Log.d(TAG, "Movie removed with id $it")
+                                isFavourite.postValue(false)
+                            },
+                            onError = { Log.d(TAG, it.localizedMessage) }
+                    )
+        }
     }
 
     enum class LoadingState {

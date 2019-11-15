@@ -34,4 +34,9 @@ class FavouriteMovieDaoAdapter(private val favouriteMovieDao: FavouriteMovieDao)
                 .subscribeOn(Schedulers.computation())
     }
 
+    override fun removeMovieToFavouriteById(imdbID: String): Single<Int> {
+        return favouriteMovieDao.deleteFavouriteById(imdbID)
+                .subscribeOn(Schedulers.computation())
+    }
+
 }

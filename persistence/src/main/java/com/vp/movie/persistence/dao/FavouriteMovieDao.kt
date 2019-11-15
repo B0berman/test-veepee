@@ -17,4 +17,7 @@ interface FavouriteMovieDao : BaseDao<MovieEntity> {
     @Query("SELECT * FROM favourites WHERE imdbID LIKE :imdbID")
     fun getFavouriteMovieById(imdbID: String): Single<MovieEntity>
 
+    @Query("DELETE FROM favourites WHERE imdbID = :imdbID")
+    fun deleteFavouriteById(imdbID: String): Single<Int>
+
 }
