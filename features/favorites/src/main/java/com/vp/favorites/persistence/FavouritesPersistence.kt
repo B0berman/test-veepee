@@ -1,3 +1,0 @@
-package com.vp.favorites.persistence
-
-interface FavouritesPersistence

@@ -37,8 +37,9 @@ android {
 
 dependencies {
     implementation project(':dagger.addons')
-    implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayout"
+    implementation project(':domain')
+    implementation project(':abstraction')
+
     implementation "org.jetbrains.kotlin:kotlin-reflect:$rootProject.kotlin"
 
     //glide
@@ -48,12 +49,22 @@ dependencies {
     //architecture components
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle"
 
+    //support library
+    implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
+    implementation "androidx.recyclerview:recyclerview:$rootProject.recyclerView"
+    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayout"
+    implementation "com.google.android.material:material:$rootProject.material"
+
     //dagger
     implementation "com.google.dagger:dagger:$rootProject.dagger"
     kapt "com.google.dagger:dagger-compiler:$rootProject.dagger"
     implementation "com.google.dagger:dagger-android:$rootProject.daggerAndroid"
     implementation("com.google.dagger:dagger-android-support:$rootProject.dagger")
     kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
+
+    //rx
+    implementation "io.reactivex.rxjava2:rxjava:$rx"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rx"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'

@@ -1,8 +1,10 @@
 package com.vp.favorites.model
 
+import com.vp.movie.abstraction.dto.Movie
+
 data class FavouriteItem(
-        val title:String,
-        val year:String,
-        val imdbID:String,
-        val poster:String
-)
+        override val title: String,
+        override val year: String,
+        override val imdbID: String,
+        override val poster: String
+) : Movie
