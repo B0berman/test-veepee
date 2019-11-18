@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.vp.daggeraddons.di.GlideApp;
 import com.vp.favorites.model.FavouriteItem;
 
 import java.util.Collections;

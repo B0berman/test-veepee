@@ -11,11 +11,12 @@ import dagger.multibindings.IntoMap
 
 @Module
 abstract class FavouriteViewModelModule {
+
     @Binds
     abstract fun bindDaggerViewModelFactory(daggerViewModelFactory: DaggerViewModelFactory): ViewModelProvider.Factory
 
     @Binds
     @IntoMap
     @ViewModelKey(FavouriteViewModel::class)
-    abstract fun bindDetailViewModel(favouriteViewModel: FavouriteViewModel): ViewModel
+    abstract fun bindFavouriteViewModel(favouriteViewModel: FavouriteViewModel): ViewModel
 }

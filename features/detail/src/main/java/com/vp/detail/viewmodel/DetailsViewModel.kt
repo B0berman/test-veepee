@@ -8,6 +8,7 @@ import com.vp.detail.DetailActivity
 import com.vp.detail.model.MovieDetail
 import com.vp.detail.service.DetailService
 import com.vp.movie.abstraction.usecases.FavouriteMovieUseCase
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import retrofit2.Call
 import retrofit2.Response
@@ -21,6 +22,7 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
         val TAG = "DetailsViewModel"
     }
 
+    private val compositeDisposable by lazy { CompositeDisposable() }
     private val details: MutableLiveData<MovieDetail> = MutableLiveData()
     private val title: MutableLiveData<String> = MutableLiveData()
     private val isFavourite: MutableLiveData<Boolean> = MutableLiveData()
@@ -69,42 +71,47 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
     }
 
     private fun checkFavouriteMovie(imdbID: String) {
-        favouriteMovieUseCase.getFavouriteMovieById(imdbID)
+        compositeDisposable.add(favouriteMovieUseCase.getFavouriteMovieById(imdbID)
                 .subscribeBy(
                         onSuccess = { isFavourite.postValue(true) },
                         onError = {
                             Log.d(TAG, it.localizedMessage)
                             isFavourite.postValue(false)
                         }
-                )
+                ))
     }
 
     private fun setMovieAsFavourite() {
         Log.d(TAG, "setMovieAsFavourite: ")
         details.value?.let { movie ->
-            favouriteMovieUseCase.addMovieToFavourite(movie)
+            compositeDisposable.add(favouriteMovieUseCase.addMovieToFavourite(movie)
                     .subscribeBy(
                             onSuccess = {
                                 Log.d(TAG, "Movie saved with id $it")
                                 isFavourite.postValue(true)
                             },
                             onError = { Log.d(TAG, it.localizedMessage) }
-                    )
+                    ))
         }
     }
 
     private fun removeMovieAsFavourite() {
         Log.d(TAG, "removeMovieAsFavourite: ")
         details.value?.let { movie ->
-            favouriteMovieUseCase.removeMovieToFavouriteById(movie.imdbID)
+            compositeDisposable.add(favouriteMovieUseCase.removeMovieToFavouriteById(movie.imdbID)
                     .subscribeBy(
                             onSuccess = {
                                 Log.d(TAG, "Movie removed with id $it")
                                 isFavourite.postValue(false)
                             },
                             onError = { Log.d(TAG, it.localizedMessage) }
-                    )
+                    ))
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.dispose()
     }
 
     enum class LoadingState {

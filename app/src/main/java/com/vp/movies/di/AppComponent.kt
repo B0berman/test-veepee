@@ -2,6 +2,7 @@ package com.vp.movies.di
 
 import android.app.Application
 import com.vp.detail.di.DetailActivityModule
+import com.vp.favorites.di.FavoriteActivityModule
 import com.vp.list.di.MovieListActivityModule
 import com.vp.movie.domain.DomainModule
 import com.vp.movie.persistence.PersistenceModule
@@ -17,6 +18,7 @@ import javax.inject.Singleton
     NetworkModule::class,
     MovieListActivityModule::class,
     DetailActivityModule::class,
+    FavoriteActivityModule::class,
     PersistenceModule::class,
     DomainModule::class
 ])

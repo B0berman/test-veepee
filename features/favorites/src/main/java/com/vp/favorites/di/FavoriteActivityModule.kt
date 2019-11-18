@@ -1,11 +1,13 @@
 package com.vp.favorites.di
 
 import com.vp.favorites.FavoriteActivity
+import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
-abstract class FavouriteActivityModule {
+@Module
+abstract class FavoriteActivityModule {
     @ContributesAndroidInjector(modules = [
         FavouriteViewModelModule::class,
         FavouritesPersistenceModule::class])
-    abstract fun bindDetailActivity(): FavoriteActivity
+    abstract fun bindFavoriteActivity(): FavoriteActivity
 }

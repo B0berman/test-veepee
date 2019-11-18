@@ -3,7 +3,7 @@
 buildscript {
 
     ext {
-        androidPluginVersion = '3.5.0'
+        androidPluginVersion = '3.5.2'
         //sdk and tools
         compileSdkVersion = 28
         minSdkVersion = 21
