@@ -11,7 +11,7 @@ buildscript {
 
         //dependencies
         kotlin = '1.3.50'
-        supportLibraryVersion = '1.1.0'
+        supportLibraryVersion = '1.0.0'
         constraintLayout = '1.1.3'
         recyclerView = '1.0.0'
         material = '1.0.0'
