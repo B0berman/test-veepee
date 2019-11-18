@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.vp.daggeraddons.DaggerViewModelFactory
 import com.vp.daggeraddons.ViewModelKey
 import com.vp.detail.viewmodel.DetailsViewModel
+import com.vp.movie.abstraction.usecases.FavouriteMovieUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

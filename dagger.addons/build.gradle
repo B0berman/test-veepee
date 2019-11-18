@@ -35,11 +35,15 @@ dependencies {
     //support
     implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
 
+    //glide
+    implementation "com.github.bumptech.glide:glide:$rootProject.glide"
+    kapt "com.github.bumptech.glide:compiler:$rootProject.glide"
+
     //dagger
     implementation "com.google.dagger:dagger:$rootProject.dagger"
     kapt "com.google.dagger:dagger-compiler:$rootProject.dagger"
-    implementation "com.google.dagger:dagger-android:$rootProject.dagger"
-    implementation "com.google.dagger:dagger-android-support:$rootProject.dagger"
+    implementation "com.google.dagger:dagger-android:$rootProject.daggerAndroid"
+    implementation "com.google.dagger:dagger-android-support:$rootProject.daggerAndroid"
     kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
 
     testImplementation 'junit:junit:4.12'
