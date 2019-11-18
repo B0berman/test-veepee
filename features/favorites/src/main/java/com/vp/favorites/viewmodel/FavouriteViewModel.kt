@@ -1,5 +1,6 @@
 package com.vp.favorites.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +11,10 @@ import io.reactivex.rxkotlin.subscribeBy
 import javax.inject.Inject
 
 class FavouriteViewModel @Inject constructor(private val favouriteMovieUseCase: FavouriteMovieUseCase) : ViewModel() {
+
+    companion object {
+        val TAG = "FavouriteViewModel"
+    }
 
     private val compositeDisposable by lazy { CompositeDisposable() }
     private val favouriteMovieList = MutableLiveData<List<FavouriteItem>>()
@@ -24,11 +29,14 @@ class FavouriteViewModel @Inject constructor(private val favouriteMovieUseCase: 
                 .map { list -> list.map { item -> FavouriteItem(item.title, item.year, item.imdbID, item.poster) } }
                 .subscribeBy(
                         onNext = {
+                            Log.d(TAG, "${it.size} favourite movies found")
                             loadingState.postValue(LoadingState.LOADED)
                             favouriteMovieList.postValue(it)
                         },
-                        onError = { loadingState.postValue(LoadingState.ERROR) },
-                        onComplete = {}
+                        onError = {
+                            Log.d(TAG, it.localizedMessage)
+                            loadingState.postValue(LoadingState.ERROR)
+                        }
                 ))
 
     }

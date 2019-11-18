@@ -40,6 +40,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/data_loading_error" />
+
+            <TextView
+                android:id="@+id/emptyListText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/no_favourite_movies_yet" />
         </ViewAnimator>
     </FrameLayout>
 </layout>

@@ -13,7 +13,6 @@ import com.vp.favorites.databinding.ActivityFavoriteBinding
 import com.vp.favorites.model.FavouriteItem
 import com.vp.favorites.viewmodel.FavouriteViewModel
 import dagger.android.support.DaggerAppCompatActivity
-import kotlinx.android.synthetic.main.activity_favorite.*
 import javax.inject.Inject
 
 class FavoriteActivity : DaggerAppCompatActivity(), ListAdapter.OnItemClickListener {
@@ -32,9 +31,8 @@ class FavoriteActivity : DaggerAppCompatActivity(), ListAdapter.OnItemClickListe
         binding.lifecycleOwner = this
         initList()
 
-        favouriteViewModel.favouriteMovies().observe(this, Observer {
-            updateListView(it)
-        })
+        favouriteViewModel.favouriteMovies().observe(this, onListChange())
+        favouriteViewModel.state().observe(this, onStatusChange())
         favouriteViewModel.loadFavouriteMovies()
     }
 
@@ -47,14 +45,58 @@ class FavoriteActivity : DaggerAppCompatActivity(), ListAdapter.OnItemClickListe
         binding.recyclerView.layoutManager = layoutManager
     }
 
-    private fun updateListView(movies: List<FavouriteItem>?) {
-        with(listAdapter) {
-            clearItems()
-            setItems(movies)
+    private fun onListChange(): Observer<List<FavouriteItem>> {
+        return Observer {
+            updateListView(it)
         }
     }
 
-    override fun onItemClick(imdbID: String?) {
+    private fun onStatusChange(): Observer<in FavouriteViewModel.LoadingState> {
+        return Observer {
+            when (it) {
+                FavouriteViewModel.LoadingState.ERROR -> showError()
+                FavouriteViewModel.LoadingState.IN_PROGRESS -> showProgressBar()
+            }
+        }
+    }
+
+    private fun updateListView(movies: List<FavouriteItem>) {
+        if (movies.isNullOrEmpty()) {
+            showEmpty()
+        } else {
+            showList()
+            with(listAdapter) {
+                clearItems()
+                setItems(movies)
+            }
+        }
+    }
+
+    private fun showProgressBar() {
+        with(binding.viewAnimator) {
+            displayedChild = indexOfChild(binding.progressBar)
+        }
+    }
+
+    private fun showList() {
+        with(binding.viewAnimator) {
+            displayedChild = indexOfChild(binding.recyclerView)
+        }
+    }
+
+    private fun showError() {
+        with(binding.viewAnimator) {
+            displayedChild = indexOfChild(binding.errorText)
+        }
+    }
+
+    private fun showEmpty() {
+        with(binding.viewAnimator) {
+            displayedChild = indexOfChild(binding.emptyListText)
+        }
+    }
+
+    override fun onItemClick(imdbID: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("app://movies/details?imdbID=$imdbID"))
         intent.setPackage(packageName)
         startActivity(intent)
