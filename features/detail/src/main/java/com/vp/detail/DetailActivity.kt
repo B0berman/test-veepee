@@ -28,9 +28,8 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
         super.onCreate(savedInstanceState)
         val binding: ActivityDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
         binding.viewModel = detailViewModel
-        queryProvider = this
         binding.setLifecycleOwner(this)
-        detailViewModel.fetchDetails()
+        detailViewModel.fetchDetails(getMovieId())
         detailViewModel.title().observe(this, Observer {
             supportActionBar?.title = it
         })
@@ -56,9 +55,5 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
         return intent?.data?.getQueryParameter("imdbID") ?: run {
             throw IllegalStateException("You must provide movie id to display details")
         }
-    }
-
-    companion object {
-        lateinit var queryProvider: QueryProvider
     }
 }
