@@ -26,7 +26,7 @@ android {
 }
 
 dependencies {
-    implementation project(':abstraction')
+    api project(':abstraction')
     implementation project(':dagger.addons')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$rootProject.kotlin"
