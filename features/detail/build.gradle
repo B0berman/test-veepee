@@ -36,7 +36,6 @@ android {
 
 dependencies {
     implementation project(':dagger.addons')
-    implementation project(':domain')
     implementation project(':abstraction')
     implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayout"

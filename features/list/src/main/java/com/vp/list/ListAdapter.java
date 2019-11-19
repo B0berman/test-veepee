@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.vp.daggeraddons.di.GlideApp;
+import com.vp.daggeraddons.GlideApp;
 import com.vp.list.model.ListItem;
 
 import java.util.Collections;

@@ -37,7 +37,6 @@ android {
 
 dependencies {
     implementation project(':dagger.addons')
-    implementation project(':domain')
     implementation project(':abstraction')
 
     implementation "org.jetbrains.kotlin:kotlin-reflect:$rootProject.kotlin"

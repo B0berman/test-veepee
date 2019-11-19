@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 
-import com.vp.daggeraddons.di.GlideApp
+import com.vp.daggeraddons.GlideApp
 import com.vp.favorites.model.FavouriteItem
 
 import java.util.Collections

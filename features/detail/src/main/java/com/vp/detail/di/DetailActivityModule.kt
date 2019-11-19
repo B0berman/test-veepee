@@ -1,7 +1,6 @@
 package com.vp.detail.di
 
 import com.vp.detail.DetailActivity
-import com.vp.movie.domain.DomainModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -9,7 +8,6 @@ import dagger.android.ContributesAndroidInjector
 abstract class DetailActivityModule {
     @ContributesAndroidInjector(modules = [
         DetailViewModelsModule::class,
-        DetailNetworkModule::class,
-        DetailPersistenceModule::class])
+        DetailNetworkModule::class])
     abstract fun bindDetailActivity(): DetailActivity
 }

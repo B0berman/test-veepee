@@ -1,4 +1,4 @@
-package com.vp.daggeraddons.di;
+package com.vp.daggeraddons;
 
 import com.bumptech.glide.annotation.GlideModule;
 
