@@ -1,13 +1,13 @@
-package com.vp.favorites
+package com.vp.list
 
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.recyclerview.widget.RecyclerView
 
-import com.vp.daggeraddons.GlideApp
-import com.vp.favorites.model.FavouriteItem
+import com.vp.daggeraddons.di.GlideApp
+import com.vp.list.model.ListItem
 
 import java.util.Collections
 
@@ -17,7 +17,7 @@ class ListAdapter : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
         fun onItemClick(imdbID: String)
     }
 
-    private var listItems: MutableList<FavouriteItem> = mutableListOf()
+    private var listItems: MutableList<ListItem> = mutableListOf()
     private var onItemClickListener: OnItemClickListener? = null
 
     companion object {
@@ -47,7 +47,7 @@ class ListAdapter : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
         return listItems.size
     }
 
-    fun setItems(listItems: List<FavouriteItem>) {
+    fun setItems(listItems: List<ListItem>) {
         this.listItems = listItems.toMutableList()
         notifyDataSetChanged()
     }
