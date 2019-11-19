@@ -60,8 +60,6 @@ public class ListViewModelTest {
         SearchService searchService = mock(SearchService.class);
         when(searchService.search(anyString(), anyInt())).thenReturn(Calls.response(mock(SearchResponse.class)));
         ListViewModel listViewModel = new ListViewModel(searchService);
-        Observer<SearchResult> mockObserver = (Observer<SearchResult>) mock(Observer.class);
-        listViewModel.observeMovies().observeForever(mockObserver);
 
         //when
         listViewModel.searchMoviesByTitle("title", 1);
