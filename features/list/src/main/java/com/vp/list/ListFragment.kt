@@ -33,7 +33,7 @@ import javax.inject.Inject
 
 import dagger.android.support.AndroidSupportInjection
 
-class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener, ListAdapter.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
+class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener, ListAdapter.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener, GridPagingScrollListener.LastVisibleItemListener {
 
     companion object {
         val TAG = "ListFragment"
@@ -83,9 +83,7 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
             }
         })
         listViewModel.totalMovies().observe(this, onTotalMoviesChange())
-        listViewModel.downloadedMovies().observe(this, onDownloadedMoviesChange())
         listViewModel.searchMoviesByTitle(currentQuery, 1)
-        showProgressBar()
     }
 
     private fun initBottomNavigation(view: View) {
@@ -115,18 +113,16 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
         // Pagination
         gridPagingScrollListener = GridPagingScrollListener(layoutManager).apply {
             setLoadMoreItemsListener(this@ListFragment)
+            setLastItemVisibleListener(this@ListFragment)
             recyclerView?.addOnScrollListener(this)
         }
     }
 
-    private fun showProgressBar() {
+    private fun showProgressBar(isLoading: Boolean) {
         if (swipeRefreshLayout?.isRefreshing == true) {
             swipeRefreshLayout?.isRefreshing = false
         }
-//        viewAnimator?.let {
-//            it.displayedChild = it.indexOfChild(progressBar)
-//        }
-        progressBar?.isIndeterminate = true
+        progressBar?.isIndeterminate = isLoading
     }
 
     private fun showList() {
@@ -145,10 +141,14 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
         when (searchResult.listState) {
             ListState.LOADED -> {
                 setItemsData(listAdapter, searchResult)
+                showProgressBar(false)
                 showList()
             }
-            ListState.IN_PROGRESS -> showProgressBar()
-            else -> showError()
+            ListState.IN_PROGRESS -> showProgressBar(true)
+            else -> {
+                showProgressBar(false)
+                showError()
+            }
         }
         gridPagingScrollListener?.markLoading(false)
     }
@@ -175,7 +175,7 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
         currentQuery = query
         listAdapter.clearItems()
         listViewModel.searchMoviesByTitle(query, 1)
-        showProgressBar()
+        showProgressBar(true)
     }
 
     override fun onItemClick(imdbID: String) {
@@ -184,10 +184,15 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
         startActivity(intent)
     }
 
+    override fun onLastItemVisible(position: Int) {
+        Log.d(TAG, "Last visible movie $position")
+        progressBar?.progress = position
+    }
+
     override fun onRefresh() {
         listAdapter.clearItems()
-        listViewModel.searchMoviesByTitle(currentQuery, 1)
-        showProgressBar()
+        listViewModel.searchMoviesByTitle(currentQuery, 1, true)
+        showProgressBar(true)
     }
 
     private fun onTotalMoviesChange(): Observer<in Int> {
@@ -197,14 +202,6 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
                 bar.max = it
                 bar.progress = 0
             }
-        }
-    }
-
-    private fun onDownloadedMoviesChange(): Observer<in Int> {
-        return Observer {
-            Log.d(TAG, "Downloaded movies $it")
-            progressBar?.isIndeterminate = false
-            progressBar?.progress = it
         }
     }
 }

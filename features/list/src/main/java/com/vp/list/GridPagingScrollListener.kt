@@ -9,7 +9,16 @@ class GridPagingScrollListener(private val layoutManager: GridLayoutManager) : R
         private val PAGE_SIZE = 10
     }
 
+    interface LoadMoreItemsListener {
+        fun loadMoreItems(page: Int)
+    }
+
+    interface LastVisibleItemListener {
+        fun onLastItemVisible(position: Int)
+    }
+
     private var loadMoreItemsListener: LoadMoreItemsListener? = null
+    private var lastVisibleItemListener: LastVisibleItemListener? = null
     private var isLastPage = false
     private var isLoading = false
 
@@ -24,6 +33,7 @@ class GridPagingScrollListener(private val layoutManager: GridLayoutManager) : R
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
+        lastVisibleItemListener?.onLastItemVisible(layoutManager.childCount + layoutManager.findFirstVisibleItemPosition())
         if (shouldLoadNextPage()) {
             loadMoreItemsListener?.loadMoreItems(nextPageNumber)
         }
@@ -45,15 +55,15 @@ class GridPagingScrollListener(private val layoutManager: GridLayoutManager) : R
         this.loadMoreItemsListener = loadMoreItemsListener
     }
 
+    fun setLastItemVisibleListener(lastVisibleItemListener: LastVisibleItemListener) {
+        this.lastVisibleItemListener = lastVisibleItemListener
+    }
+
     fun markLoading(isLoading: Boolean) {
         this.isLoading = isLoading
     }
 
     fun markLastPage(isLastPage: Boolean) {
         this.isLastPage = isLastPage
-    }
-
-    interface LoadMoreItemsListener {
-        fun loadMoreItems(page: Int)
     }
 }

@@ -1,5 +1,6 @@
 package com.vp.list.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,7 +25,6 @@ class ListViewModel @Inject constructor(private val searchService: SearchService
 
     private val liveData = MutableLiveData<SearchResult>()
     private val totalMovies = MutableLiveData<Int>()
-    private val downloadedMovies = MutableLiveData<Int>()
 
     private var currentTitle = ""
     private val aggregatedItems = ArrayList<ListItem>()
@@ -33,25 +33,22 @@ class ListViewModel @Inject constructor(private val searchService: SearchService
 
     fun totalMovies(): LiveData<Int> = totalMovies
 
-    fun downloadedMovies(): LiveData<Int> = downloadedMovies
-
-    fun searchMoviesByTitle(title: String, page: Int) {
+    fun searchMoviesByTitle(title: String, page: Int, isRefreshing: Boolean = false) {
         liveData.value = SearchResult.inProgress()
-        if (page == 1 && title != currentTitle) {
+        if ((page == 1 && title != currentTitle) && isRefreshing) {
             aggregatedItems.clear()
             currentTitle = title
             totalMovies.value = 0
-            downloadedMovies.value = 0
         }
         searchService.search(title, page).enqueue(object : Callback<SearchResponse> {
             override fun onResponse(call: Call<SearchResponse>, response: Response<SearchResponse>) {
                 response.body()?.let {
                     aggregatedItems.addAll(it.search?.asIterable() ?: emptyList())
+                    Log.d(TAG, "there are ${aggregatedItems.size}")
                     liveData.value = SearchResult.success(aggregatedItems, it.totalResults)
                     if (page == 1) {
                         totalMovies.value = it.totalResults
                     }
-                    downloadedMovies.value = aggregatedItems.size
                 }
             }
 
