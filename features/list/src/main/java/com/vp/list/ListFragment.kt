@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -19,7 +20,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.ViewAnimator
@@ -28,8 +28,6 @@ import com.vp.list.viewmodel.ListState
 
 import com.vp.list.viewmodel.SearchResult
 import com.vp.list.viewmodel.ListViewModel
-
-import java.lang.reflect.Field
 
 import javax.inject.Inject
 
@@ -84,6 +82,8 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
                 handleResult(listAdapter, searchResult)
             }
         })
+        listViewModel.totalMovies().observe(this, onTotalMoviesChange())
+        listViewModel.downloadedMovies().observe(this, onDownloadedMoviesChange())
         listViewModel.searchMoviesByTitle(currentQuery, 1)
         showProgressBar()
     }
@@ -123,9 +123,10 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
         if (swipeRefreshLayout?.isRefreshing == true) {
             swipeRefreshLayout?.isRefreshing = false
         }
-        viewAnimator?.let {
-            it.displayedChild = it.indexOfChild(progressBar)
-        }
+//        viewAnimator?.let {
+//            it.displayedChild = it.indexOfChild(progressBar)
+//        }
+        progressBar?.isIndeterminate = true
     }
 
     private fun showList() {
@@ -187,5 +188,23 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
         listAdapter.clearItems()
         listViewModel.searchMoviesByTitle(currentQuery, 1)
         showProgressBar()
+    }
+
+    private fun onTotalMoviesChange(): Observer<in Int> {
+        return Observer {
+            Log.d(TAG, "Total movies $it")
+            progressBar?.let { bar ->
+                bar.max = it
+                bar.progress = 0
+            }
+        }
+    }
+
+    private fun onDownloadedMoviesChange(): Observer<in Int> {
+        return Observer {
+            Log.d(TAG, "Downloaded movies $it")
+            progressBar?.isIndeterminate = false
+            progressBar?.progress = it
+        }
     }
 }
