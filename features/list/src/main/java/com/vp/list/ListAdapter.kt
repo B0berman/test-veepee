@@ -9,8 +9,6 @@ import android.widget.ImageView
 import com.vp.daggeraddons.GlideApp
 import com.vp.list.model.ListItem
 
-import java.util.Collections
-
 class ListAdapter : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
 
     interface OnItemClickListener {

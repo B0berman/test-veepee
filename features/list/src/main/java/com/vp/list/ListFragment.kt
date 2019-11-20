@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -19,7 +20,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.ViewAnimator
@@ -29,13 +29,11 @@ import com.vp.list.viewmodel.ListState
 import com.vp.list.viewmodel.SearchResult
 import com.vp.list.viewmodel.ListViewModel
 
-import java.lang.reflect.Field
-
 import javax.inject.Inject
 
 import dagger.android.support.AndroidSupportInjection
 
-class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener, ListAdapter.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
+class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener, ListAdapter.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener, GridPagingScrollListener.VisibleItemListener {
 
     companion object {
         val TAG = "ListFragment"
@@ -54,6 +52,7 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
     private var progressBar: ProgressBar? = null
     private var errorTextView: TextView? = null
     private var currentQuery: String = "Interview"
+    private var layoutChildCount: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,8 +83,8 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
                 handleResult(listAdapter, searchResult)
             }
         })
+        listViewModel.totalMovies().observe(this, onTotalMoviesChange())
         listViewModel.searchMoviesByTitle(currentQuery, 1)
-        showProgressBar()
     }
 
     private fun initBottomNavigation(view: View) {
@@ -105,6 +104,7 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
 
         val layoutManager = GridLayoutManager(context,
                 if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 3)
+        layoutChildCount = layoutManager.childCount
 
         recyclerView?.let {
             it.adapter = listAdapter
@@ -115,17 +115,17 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
         // Pagination
         gridPagingScrollListener = GridPagingScrollListener(layoutManager).apply {
             setLoadMoreItemsListener(this@ListFragment)
+            setLastItemVisibleListener(this@ListFragment)
             recyclerView?.addOnScrollListener(this)
+            recyclerView?.addOnChildAttachStateChangeListener(this)
         }
     }
 
-    private fun showProgressBar() {
+    private fun showProgressBar(isLoading: Boolean) {
         if (swipeRefreshLayout?.isRefreshing == true) {
             swipeRefreshLayout?.isRefreshing = false
         }
-        viewAnimator?.let {
-            it.displayedChild = it.indexOfChild(progressBar)
-        }
+        progressBar?.isIndeterminate = isLoading
     }
 
     private fun showList() {
@@ -144,10 +144,14 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
         when (searchResult.listState) {
             ListState.LOADED -> {
                 setItemsData(listAdapter, searchResult)
+                showProgressBar(false)
                 showList()
             }
-            ListState.IN_PROGRESS -> showProgressBar()
-            else -> showError()
+            ListState.IN_PROGRESS -> showProgressBar(true)
+            else -> {
+                showProgressBar(false)
+                showError()
+            }
         }
         gridPagingScrollListener?.markLoading(false)
     }
@@ -155,9 +159,7 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
     private fun setItemsData(listAdapter: ListAdapter, searchResult: SearchResult) {
         listAdapter.setItems(searchResult.items)
 
-        if (searchResult.totalResult <= listAdapter.itemCount) {
-            gridPagingScrollListener?.markLastPage(true)
-        }
+        gridPagingScrollListener?.markLastPage(searchResult.totalResult <= listAdapter.itemCount)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -167,6 +169,7 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
 
     override fun loadMoreItems(page: Int) {
         gridPagingScrollListener?.markLoading(true)
+        showProgressBar(true)
         listViewModel.searchMoviesByTitle(currentQuery, page)
     }
 
@@ -174,7 +177,6 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
         currentQuery = query
         listAdapter.clearItems()
         listViewModel.searchMoviesByTitle(query, 1)
-        showProgressBar()
     }
 
     override fun onItemClick(imdbID: String) {
@@ -183,9 +185,27 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
         startActivity(intent)
     }
 
+    override fun onLastItemVisible(position: Int) {
+        Log.d(TAG, "Last visible movie $position")
+        progressBar?.progress = position
+    }
+
+    override fun onChildVisibleChange(visibleItems: Int) {
+        layoutChildCount = visibleItems
+    }
+
     override fun onRefresh() {
         listAdapter.clearItems()
-        listViewModel.searchMoviesByTitle(currentQuery, 1)
-        showProgressBar()
+        listViewModel.searchMoviesByTitle(currentQuery, 1, true)
+    }
+
+    private fun onTotalMoviesChange(): Observer<in Int> {
+        return Observer {
+            Log.d(TAG, "Total movies $it")
+            progressBar?.let { bar ->
+                bar.max = it
+                bar.progress = layoutChildCount
+            }
+        }
     }
 }

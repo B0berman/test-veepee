@@ -1,15 +1,27 @@
 package com.vp.list
 
+import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class GridPagingScrollListener(private val layoutManager: GridLayoutManager) : RecyclerView.OnScrollListener() {
+class GridPagingScrollListener(private val layoutManager: GridLayoutManager) : RecyclerView.OnScrollListener(), RecyclerView.OnChildAttachStateChangeListener {
 
     companion object {
         private val PAGE_SIZE = 10
     }
 
+    interface LoadMoreItemsListener {
+        fun loadMoreItems(page: Int)
+    }
+
+    interface VisibleItemListener {
+        fun onLastItemVisible(position: Int)
+
+        fun onChildVisibleChange(visibleItems: Int)
+    }
+
     private var loadMoreItemsListener: LoadMoreItemsListener? = null
+    private var visibleItemListener: VisibleItemListener? = null
     private var isLastPage = false
     private var isLoading = false
 
@@ -27,6 +39,15 @@ class GridPagingScrollListener(private val layoutManager: GridLayoutManager) : R
         if (shouldLoadNextPage()) {
             loadMoreItemsListener?.loadMoreItems(nextPageNumber)
         }
+        visibleItemListener?.onLastItemVisible(layoutManager.childCount + layoutManager.findFirstVisibleItemPosition())
+    }
+
+    override fun onChildViewAttachedToWindow(view: View) {
+        visibleItemListener?.onChildVisibleChange(layoutManager.childCount)
+    }
+
+    override fun onChildViewDetachedFromWindow(view: View) {
+
     }
 
     private fun shouldLoadNextPage(): Boolean {
@@ -45,15 +66,15 @@ class GridPagingScrollListener(private val layoutManager: GridLayoutManager) : R
         this.loadMoreItemsListener = loadMoreItemsListener
     }
 
+    fun setLastItemVisibleListener(lastVisibleItemListener: VisibleItemListener) {
+        this.visibleItemListener = lastVisibleItemListener
+    }
+
     fun markLoading(isLoading: Boolean) {
         this.isLoading = isLoading
     }
 
     fun markLastPage(isLastPage: Boolean) {
         this.isLastPage = isLastPage
-    }
-
-    interface LoadMoreItemsListener {
-        fun loadMoreItems(page: Int)
     }
 }

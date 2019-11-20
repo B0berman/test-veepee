@@ -24,17 +24,21 @@ class ListViewModel @Inject constructor(private val searchService: SearchService
     }
 
     private val liveData = MutableLiveData<SearchResult>()
+    private val totalMovies = MutableLiveData<Int>()
 
     private var currentTitle = ""
     private val aggregatedItems = ArrayList<ListItem>()
 
     fun observeMovies(): LiveData<SearchResult> = liveData
 
-    fun searchMoviesByTitle(title: String, page: Int) {
+    fun totalMovies(): LiveData<Int> = totalMovies
 
-        if (page == 1 && title != currentTitle) {
+    fun searchMoviesByTitle(title: String, page: Int, isRefreshing: Boolean = false) {
+
+        if ((page == 1 && title != currentTitle) || isRefreshing) {
             aggregatedItems.clear()
             currentTitle = title
+            totalMovies.value = 0
             liveData.value = SearchResult.inProgress()
         }
         searchService.search(title, page).enqueue(object : Callback<SearchResponse> {
@@ -42,6 +46,9 @@ class ListViewModel @Inject constructor(private val searchService: SearchService
                 response.body()?.let {
                     aggregatedItems.addAll(it.search?.asIterable() ?: emptyList())
                     liveData.value = SearchResult.success(aggregatedItems, it.totalResults)
+                    if (page == 1) {
+                        totalMovies.value = it.totalResults
+                    }
                 }
             }
 
