@@ -33,7 +33,7 @@ import javax.inject.Inject
 
 import dagger.android.support.AndroidSupportInjection
 
-class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener, ListAdapter.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener, GridPagingScrollListener.LastVisibleItemListener {
+class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener, ListAdapter.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener, GridPagingScrollListener.VisibleItemListener {
 
     companion object {
         val TAG = "ListFragment"
@@ -52,6 +52,7 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
     private var progressBar: ProgressBar? = null
     private var errorTextView: TextView? = null
     private var currentQuery: String = "Interview"
+    private var layoutChildCount: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,6 +104,7 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
 
         val layoutManager = GridLayoutManager(context,
                 if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 3)
+        layoutChildCount = layoutManager.childCount
 
         recyclerView?.let {
             it.adapter = listAdapter
@@ -115,6 +117,7 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
             setLoadMoreItemsListener(this@ListFragment)
             setLastItemVisibleListener(this@ListFragment)
             recyclerView?.addOnScrollListener(this)
+            recyclerView?.addOnChildAttachStateChangeListener(this)
         }
     }
 
@@ -156,9 +159,7 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
     private fun setItemsData(listAdapter: ListAdapter, searchResult: SearchResult) {
         listAdapter.setItems(searchResult.items)
 
-        if (searchResult.totalResult <= listAdapter.itemCount) {
-            gridPagingScrollListener?.markLastPage(true)
-        }
+        gridPagingScrollListener?.markLastPage(searchResult.totalResult <= listAdapter.itemCount)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -175,7 +176,6 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
         currentQuery = query
         listAdapter.clearItems()
         listViewModel.searchMoviesByTitle(query, 1)
-        showProgressBar(true)
     }
 
     override fun onItemClick(imdbID: String) {
@@ -189,10 +189,13 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
         progressBar?.progress = position
     }
 
+    override fun onChildVisibleChange(visibleItems: Int) {
+        layoutChildCount = visibleItems
+    }
+
     override fun onRefresh() {
         listAdapter.clearItems()
         listViewModel.searchMoviesByTitle(currentQuery, 1, true)
-        showProgressBar(true)
     }
 
     private fun onTotalMoviesChange(): Observer<in Int> {
@@ -200,7 +203,7 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
             Log.d(TAG, "Total movies $it")
             progressBar?.let { bar ->
                 bar.max = it
-                bar.progress = 0
+                bar.progress = layoutChildCount
             }
         }
     }

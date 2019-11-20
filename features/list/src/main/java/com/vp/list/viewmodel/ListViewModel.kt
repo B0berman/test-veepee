@@ -34,17 +34,17 @@ class ListViewModel @Inject constructor(private val searchService: SearchService
     fun totalMovies(): LiveData<Int> = totalMovies
 
     fun searchMoviesByTitle(title: String, page: Int, isRefreshing: Boolean = false) {
-        liveData.value = SearchResult.inProgress()
+
         if ((page == 1 && title != currentTitle) || isRefreshing) {
             aggregatedItems.clear()
             currentTitle = title
             totalMovies.value = 0
+            liveData.value = SearchResult.inProgress()
         }
         searchService.search(title, page).enqueue(object : Callback<SearchResponse> {
             override fun onResponse(call: Call<SearchResponse>, response: Response<SearchResponse>) {
                 response.body()?.let {
                     aggregatedItems.addAll(it.search?.asIterable() ?: emptyList())
-                    Log.d(TAG, "there are ${aggregatedItems.size}")
                     liveData.value = SearchResult.success(aggregatedItems, it.totalResults)
                     if (page == 1) {
                         totalMovies.value = it.totalResults

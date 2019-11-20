@@ -75,8 +75,11 @@ class MovieListActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putBoolean(IS_SEARCH_VIEW_ICONIFIED, searchView!!.isIconified)
-        outState.putString(SEARCH_VIEW_VALUE, searchView!!.query.toString())
+        searchView?.let {
+            outState.putBoolean(IS_SEARCH_VIEW_ICONIFIED, it.isIconified)
+            outState.putString(SEARCH_VIEW_VALUE, it.query.toString())
+        }
+
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment>? {
