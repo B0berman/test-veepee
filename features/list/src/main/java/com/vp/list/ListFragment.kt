@@ -169,6 +169,7 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
 
     override fun loadMoreItems(page: Int) {
         gridPagingScrollListener?.markLoading(true)
+        showProgressBar(true)
         listViewModel.searchMoviesByTitle(currentQuery, page)
     }
 
