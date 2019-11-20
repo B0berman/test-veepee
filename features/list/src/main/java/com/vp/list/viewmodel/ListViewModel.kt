@@ -35,7 +35,7 @@ class ListViewModel @Inject constructor(private val searchService: SearchService
 
     fun searchMoviesByTitle(title: String, page: Int, isRefreshing: Boolean = false) {
         liveData.value = SearchResult.inProgress()
-        if ((page == 1 && title != currentTitle) && isRefreshing) {
+        if ((page == 1 && title != currentTitle) || isRefreshing) {
             aggregatedItems.clear()
             currentTitle = title
             totalMovies.value = 0

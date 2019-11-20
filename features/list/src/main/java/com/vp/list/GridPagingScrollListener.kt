@@ -33,10 +33,10 @@ class GridPagingScrollListener(private val layoutManager: GridLayoutManager) : R
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
-        lastVisibleItemListener?.onLastItemVisible(layoutManager.childCount + layoutManager.findFirstVisibleItemPosition())
         if (shouldLoadNextPage()) {
             loadMoreItemsListener?.loadMoreItems(nextPageNumber)
         }
+        lastVisibleItemListener?.onLastItemVisible(layoutManager.childCount + layoutManager.findFirstVisibleItemPosition())
     }
 
     private fun shouldLoadNextPage(): Boolean {
