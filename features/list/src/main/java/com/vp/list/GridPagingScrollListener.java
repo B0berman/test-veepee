@@ -8,10 +8,8 @@ import androidx.recyclerview.widget.RecyclerView;
 public class GridPagingScrollListener extends RecyclerView.OnScrollListener {
     private static final int PAGE_SIZE = 10;
     private final GridLayoutManager layoutManager;
-    private static final LoadMoreItemsListener EMPTY_LISTENER = (int page) -> {
-        //empty listener
-    };
-    private LoadMoreItemsListener loadMoreItemsListener = EMPTY_LISTENER;
+    /* Should not be static as it's will keep a strong reference to the object(listener), and it's better like this(following The Android Profiler) - CE */
+    private LoadMoreItemsListener loadMoreItemsListener;
     private boolean isLastPage = false;
     private boolean isLoading = false;
 
@@ -20,11 +18,15 @@ public class GridPagingScrollListener extends RecyclerView.OnScrollListener {
     }
 
     @Override
-    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+    public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
-
         if (shouldLoadNextPage()) {
-            loadMoreItemsListener.loadMoreItems(getNextPageNumber());
+            if(null != loadMoreItemsListener) {
+                loadMoreItemsListener.loadMoreItems(getNextPageNumber());
+            }
+            else {
+                // Empty listener
+            }
         }
     }
 
@@ -53,11 +55,7 @@ public class GridPagingScrollListener extends RecyclerView.OnScrollListener {
     }
 
     public void setLoadMoreItemsListener(@Nullable final LoadMoreItemsListener loadMoreItemsListener) {
-        if (loadMoreItemsListener != null) {
             this.loadMoreItemsListener = loadMoreItemsListener;
-        } else {
-            this.loadMoreItemsListener = EMPTY_LISTENER;
-        }
     }
 
     public void markLoading(boolean isLoading) {

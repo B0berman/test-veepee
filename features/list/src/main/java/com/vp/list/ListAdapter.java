@@ -3,6 +3,8 @@ package com.vp.list;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +18,8 @@ import java.util.List;
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder> {
     private static final String NO_IMAGE = "N/A";
     private List<ListItem> listItems = Collections.emptyList();
-    private OnItemClickListener EMPTY_ON_ITEM_CLICK_LISTENER = imdbID -> {
-        //empty listener
-    };
-    private OnItemClickListener onItemClickListener = EMPTY_ON_ITEM_CLICK_LISTENER;
+    /* it's better like this(following The Android Profiler) - CE */
+    private OnItemClickListener onItemClickListener;
 
     @NonNull
     @Override
@@ -29,7 +29,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ListViewHolder holder, int position) {
-        ListItem listItem = listItems.get(position);
+
+        ListItem listItem = listItems.get(holder.getAdapterPosition());
 
         if (listItem.getPoster() != null && !NO_IMAGE.equals(listItem.getPoster())) {
             final float density = holder.image.getResources().getDisplayMetrics().density;
@@ -58,11 +59,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
     }
 
     public void setOnItemClickListener(@Nullable OnItemClickListener onItemClickListener) {
-        if (onItemClickListener != null) {
-            this.onItemClickListener = onItemClickListener;
-        } else {
-            this.onItemClickListener = EMPTY_ON_ITEM_CLICK_LISTENER;
-        }
+        this.onItemClickListener = onItemClickListener;
     }
 
     class ListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -76,7 +73,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
 
         @Override
         public void onClick(View v) {
-            onItemClickListener.onItemClick(listItems.get(getAdapterPosition()).getImdbID());
+            if(null != onItemClickListener) {
+                onItemClickListener.onItemClick(listItems.get(getAdapterPosition()).getImdbID());
+            }
+            else {
+                // Empty listener
+            }
         }
     }
 

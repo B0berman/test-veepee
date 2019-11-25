@@ -20,6 +20,14 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+-ignorewarnings
+
+# Add *one* of the following rules to your Proguard configuration file.
+# Alternatively, you can annotate classes and class members with @android.support.annotation.Keep
+
+-keep class com.vp.detail.model.** { <fields>; }
+-keep class com.vp.list.model.** { <fields>; }
+
 # Retrofit does reflection on generic parameters and InnerClass is required to use Signature.
 -keepattributes Signature, InnerClasses
 

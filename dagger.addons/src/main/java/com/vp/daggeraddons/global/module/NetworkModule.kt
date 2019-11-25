@@ -1,6 +1,8 @@
-package com.vp.movies.di
+package com.vp.daggeraddons.global.module
 
-import com.vp.movies.BuildConfig
+/* Put it here so it's available to all others module if they want to build their own dagger component for Testing,
+also, all module have dependencies on it so maybe better to make it global - CE */
+
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -12,7 +14,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
-class NetworkModule {
+class NetworkModule(private val apiKey : String) {
 
     @Singleton
     @Provides
@@ -38,7 +40,7 @@ class NetworkModule {
         val originalHttpUrl = original.url()
 
         val url = originalHttpUrl.newBuilder()
-                .addQueryParameter("apiKey", BuildConfig.API_KEY)
+                .addQueryParameter("apiKey", apiKey)
                 .build()
         val requestBuilder = original.newBuilder()
                 .url(url)

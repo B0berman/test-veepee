@@ -3,6 +3,9 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
 android {
     compileSdkVersion rootProject.compileSdkVersion
 
@@ -10,7 +13,7 @@ android {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         testInstrumentationRunner "com.android.support.test.runner.AndroidJUnitRunner"
-
+        buildConfigField "String", "API_KEY", localProperties['apiKey']
     }
 
     buildTypes {
@@ -23,6 +26,12 @@ android {
         }
     }
 
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -31,7 +40,7 @@ android {
 
 dependencies {
     implementation project(':dagger.addons')
-    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.2.60'
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$rootProject.kotlin"
     //glide
     implementation "com.github.bumptech.glide:glide:$rootProject.glide"
     kapt "com.github.bumptech.glide:compiler:$rootProject.glide"
@@ -53,15 +62,20 @@ dependencies {
     implementation "com.google.android.material:material:$rootProject.supportLibraryVersion"
 
     //api
-    api "com.squareup.retrofit2:retrofit:$rootProject.retrofit"
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit"
     implementation "com.google.code.gson:gson:$rootProject.gson"
 
     //test
     testImplementation "org.assertj:assertj-core:3.11.1"
     testImplementation 'junit:junit:4.12'
     testImplementation "org.mockito:mockito-core:2.21.0"
+    kaptTest "com.google.dagger:dagger-compiler:$rootProject.dagger"
+    kaptTest "com.google.dagger:dagger-android-processor:$rootProject.dagger"
     testImplementation "com.squareup.retrofit2:retrofit-mock:$rootProject.retrofit"
     testImplementation 'androidx.arch.core:core-testing:2.0.0'
+    testImplementation 'androidx.test:core:1.2.1-alpha02'
+    testImplementation 'org.robolectric:robolectric:4.3'
+    testImplementation 'com.google.truth:truth:1.0'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 }

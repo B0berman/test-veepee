@@ -12,6 +12,11 @@
         <variable
             name="viewModel"
             type="com.vp.detail.viewmodel.DetailsViewModel" />
+
+        <variable
+            name="movieDetail"
+            type="com.vp.detail.model.MovieDetail" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

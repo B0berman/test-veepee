@@ -12,6 +12,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ViewAnimator;
 
+import com.vp.list.viewmodel.ListState;
 import com.vp.list.viewmodel.SearchResult;
 import com.vp.list.viewmodel.ListViewModel;
 
@@ -41,6 +44,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     private ProgressBar progressBar;
     private TextView errorTextView;
     private String currentQuery = "Interview";
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +63,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.recyclerView);
+        /* You could also use TransitionManager - CE */
         viewAnimator = view.findViewById(R.id.viewAnimator);
         progressBar = view.findViewById(R.id.progressBar);
         errorTextView = view.findViewById(R.id.errorText);
@@ -74,15 +79,25 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
                 handleResult(listAdapter, searchResult);
             }
         });
-        listViewModel.searchMoviesByTitle(currentQuery, 1);
+
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+
+        swipeRefreshLayout.setOnRefreshListener(this::showMovieList);
+
         showProgressBar();
+
+        showMovieList();
+    }
+
+    private void showMovieList() {
+        listViewModel.searchMoviesByTitle(currentQuery, 1);
     }
 
     private void initBottomNavigation(@NonNull View view) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("app://movies/favorites"));
         BottomNavigationView bottomNavigationView = view.findViewById(R.id.bottomNavigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.favorites) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("app://movies/favorites"));
                 intent.setPackage(requireContext().getPackageName());
                 startActivity(intent);
             }
@@ -118,6 +133,9 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     }
 
     private void handleResult(@NonNull ListAdapter listAdapter, @NonNull SearchResult searchResult) {
+
+        swipeRefreshLayout.setRefreshing(searchResult.getListState() == ListState.IN_PROGRESS);
+
         switch (searchResult.getListState()) {
             case LOADED: {
                 setItemsData(listAdapter, searchResult);
@@ -164,6 +182,8 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
 
     @Override
     public void onItemClick(String imdbID) {
-        //TODO handle click events
+        Intent detailsIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("app://movies/detail/?" + "imdbID" + "=" + imdbID));
+        detailsIntent.setPackage(requireContext().getPackageName());
+        startActivity(detailsIntent);
     }
 }

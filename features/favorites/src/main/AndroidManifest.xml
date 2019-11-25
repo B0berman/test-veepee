@@ -3,18 +3,19 @@
     package="com.vp.favorites">
 
     <application>
-        <activity android:name=".FavoriteActivity"
-            android:label="@string/activity_label">
+
+        <activity android:name=".FavoritesActivity"
+                  android:label="@string/activity_label">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="movies"
+                    android:scheme="app"
                     android:pathPrefix="/favorites"
-                    android:scheme="app" />
+                    android:host="movies"/>
             </intent-filter>
         </activity>
     </application>

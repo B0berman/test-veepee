@@ -36,9 +36,10 @@ android {
 
 dependencies {
     implementation project(':dagger.addons')
+    implementation project(':features:favorites')
     implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayout"
-    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.2.60'
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$rootProject.kotlin"
 
     //glide
     implementation "com.github.bumptech.glide:glide:$rootProject.glide"
@@ -50,6 +51,7 @@ dependencies {
 
     //architecture components
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-reactivestreams:$rootProject.lifecycle"
 
     //dagger
     implementation "com.google.dagger:dagger:$rootProject.dagger"
@@ -58,7 +60,14 @@ dependencies {
     implementation("com.google.dagger:dagger-android-support:$rootProject.dagger")
     kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
 
+    implementation "io.reactivex.rxjava2:rxjava:2.2.14"
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+
     testImplementation 'junit:junit:4.12'
+    testImplementation "org.mockito:mockito-core:2.21.0"
+    testImplementation "com.squareup.retrofit2:retrofit-mock:$rootProject.retrofit"
+    testImplementation 'androidx.arch.core:core-testing:2.0.0'
+    testImplementation 'com.google.truth:truth:1.0'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 }
