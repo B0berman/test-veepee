@@ -64,10 +64,6 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         progressBar = view.findViewById(R.id.progressBar);
         errorTextView = view.findViewById(R.id.errorText);
 
-        if (savedInstanceState != null) {
-            currentQuery = savedInstanceState.getString(CURRENT_QUERY);
-        }
-
         initBottomNavigation(view);
         initList();
         listViewModel.observeMovies().observe(this, searchResult -> {
@@ -75,8 +71,13 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
                 handleResult(listAdapter, searchResult);
             }
         });
-        listViewModel.searchMoviesByTitle(currentQuery, 1);
-        showProgressBar();
+
+        if (savedInstanceState != null) {
+            currentQuery = savedInstanceState.getString(CURRENT_QUERY);
+        } else {
+            listViewModel.searchMoviesByTitle(currentQuery, 1);
+            showProgressBar();
+        }
     }
 
     private void initBottomNavigation(@NonNull View view) {

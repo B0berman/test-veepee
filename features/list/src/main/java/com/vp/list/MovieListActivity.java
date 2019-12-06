@@ -18,11 +18,13 @@ import dagger.android.support.HasSupportFragmentInjector;
 
 public class MovieListActivity extends AppCompatActivity implements HasSupportFragmentInjector {
     private static final String IS_SEARCH_VIEW_ICONIFIED = "is_search_view_iconified";
+    private static final String SEARCH_VIEW_TEXT = "search_view_text";
 
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingActivityInjector;
     private SearchView searchView;
     private boolean searchViewExpanded = true;
+    private String searchViewText = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,7 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
                     .commit();
         } else {
             searchViewExpanded = savedInstanceState.getBoolean(IS_SEARCH_VIEW_ICONIFIED);
+            searchViewText = savedInstanceState.getString(SEARCH_VIEW_TEXT);
         }
     }
 
@@ -47,6 +50,7 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
         MenuItem menuItem = menu.findItem(R.id.search);
 
         searchView = (SearchView) menuItem.getActionView();
+        searchView.setQuery(searchViewText, false);
         searchView.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         searchView.setIconified(searchViewExpanded);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -54,6 +58,7 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
             public boolean onQueryTextSubmit(String query) {
                 ListFragment listFragment = (ListFragment) getSupportFragmentManager().findFragmentByTag(ListFragment.TAG);
                 listFragment.submitSearchQuery(query);
+                searchView.clearFocus();
                 return true;
             }
 
@@ -62,7 +67,7 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
                 return false;
             }
         });
-
+        searchView.clearFocus();
         return true;
     }
 
@@ -70,6 +75,7 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(IS_SEARCH_VIEW_ICONIFIED, searchView.isIconified());
+        outState.putString(SEARCH_VIEW_TEXT, searchView.getQuery().toString());
     }
 
     @Override
