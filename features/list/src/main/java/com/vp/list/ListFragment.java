@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.vp.list.viewmodel.ListViewModel;
@@ -37,6 +38,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     private ListViewModel listViewModel;
     private GridPagingScrollListener gridPagingScrollListener;
     private ListAdapter listAdapter;
+    private SwipeRefreshLayout refreshLayout;
     private ViewAnimator viewAnimator;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
@@ -60,12 +62,17 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.recyclerView);
+        refreshLayout = view.findViewById(R.id.refreshLayout);
         viewAnimator = view.findViewById(R.id.viewAnimator);
         progressBar = view.findViewById(R.id.progressBar);
         errorTextView = view.findViewById(R.id.errorText);
 
         initBottomNavigation(view);
         initList();
+        refreshLayout.setOnRefreshListener(() -> {
+            refreshLayout.setRefreshing(false);
+            submitSearch();
+        });
         listViewModel.observeMovies().observe(this, searchResult -> {
             if (searchResult != null) {
                 handleResult(listAdapter, searchResult);
@@ -75,9 +82,13 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         if (savedInstanceState != null) {
             currentQuery = savedInstanceState.getString(CURRENT_QUERY);
         } else {
-            listViewModel.searchMoviesByTitle(currentQuery, 1);
-            showProgressBar();
+            submitSearch();
         }
+    }
+
+    private void submitSearch() {
+        listViewModel.searchMoviesByTitle(currentQuery, 1);
+        showProgressBar();
     }
 
     private void initBottomNavigation(@NonNull View view) {
