@@ -13,7 +13,7 @@ buildscript {
         supportLibraryVersion = '1.0.0'
         constraintLayout = '1.1.2'
         retrofit = '2.4.0'
-        lifecycle = '2.0.0'
+        lifecycle = '2.2.0-rc02'
         gson = '2.8.2'
         dagger = '2.16'
         glide = '4.8.0'

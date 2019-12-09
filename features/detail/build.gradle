@@ -36,6 +36,7 @@ android {
 
 dependencies {
     implementation project(':dagger.addons')
+    implementation project(':roomdatabase')
     implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayout"
     implementation 'org.jetbrains.kotlin:kotlin-reflect:1.2.60'
@@ -50,6 +51,7 @@ dependencies {
 
     //architecture components
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.lifecycle"
 
     //dagger
     implementation "com.google.dagger:dagger:$rootProject.dagger"
