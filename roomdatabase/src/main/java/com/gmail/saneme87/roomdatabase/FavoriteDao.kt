@@ -1,23 +1,23 @@
 package com.gmail.saneme87.roomdatabase
 
 import androidx.room.*
-import com.gmail.saneme87.roomdatabase.model.Favorite
+import com.gmail.saneme87.roomdatabase.model.FavoriteMovie
 
 @Dao
 interface FavoriteDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(favorite: Favorite)
+    suspend fun insert(favoriteMovie: FavoriteMovie)
 
     @Update
-    suspend fun update(vararg favorite: Favorite)
+    suspend fun update(vararg favoriteMovie: FavoriteMovie)
 
     @Delete
-    suspend fun delete(vararg favorite: Favorite)
+    suspend fun delete(vararg favoriteMovie: FavoriteMovie)
 
     @Query("SELECT * FROM favorite")
-    suspend fun getAllFavorites(): List<Favorite>
+    suspend fun getAllFavorites(): List<FavoriteMovie>
 
     @Query("SELECT * FROM favorite WHERE id = :id")
-    suspend fun getFavorite(id: String): Favorite?
+    suspend fun getFavorite(id: String): FavoriteMovie?
 }

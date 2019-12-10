@@ -1,4 +1,4 @@
-package com.vp.list;
+package com.gmail.saneme87.glidemodule;
 
 import com.bumptech.glide.annotation.GlideModule;
 

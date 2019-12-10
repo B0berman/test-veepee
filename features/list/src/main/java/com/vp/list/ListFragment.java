@@ -73,7 +73,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
             refreshLayout.setRefreshing(false);
             submitSearch();
         });
-        listViewModel.observeMovies().observe(this, searchResult -> {
+        listViewModel.observeMovies().observe(getViewLifecycleOwner(), searchResult -> {
             if (searchResult != null) {
                 handleResult(listAdapter, searchResult);
             }

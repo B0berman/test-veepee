@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.saneme87.roomdatabase.FavoriteDao
-import com.gmail.saneme87.roomdatabase.model.Favorite
+import com.gmail.saneme87.roomdatabase.model.FavoriteMovie
 import com.vp.detail.DetailActivity
 import com.vp.detail.model.MovieDetail
 import com.vp.detail.service.DetailService
@@ -59,7 +59,7 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
 
     fun updateFavState(newState: Boolean) {
         viewModelScope.launch {
-            val favorite = Favorite(DetailActivity.queryProvider.getMovieId(), details().value?.poster
+            val favorite = FavoriteMovie(DetailActivity.queryProvider.getMovieId(), details().value?.poster
                     ?: "")
             if (newState) {
                 favoriteDao.insert(favorite)
