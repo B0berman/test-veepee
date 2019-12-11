@@ -20,6 +20,7 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_list.*
 import javax.inject.Inject
 
+
 class ListFragment : Fragment(), LoadMoreItemsListener, ListAdapter.OnItemClickListener {
 
     companion object {
@@ -47,12 +48,18 @@ class ListFragment : Fragment(), LoadMoreItemsListener, ListAdapter.OnItemClickL
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initBottomNavigation(view)
         initList()
+
+        fab.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("app://movies/favorites"))
+            intent.setPackage(requireContext().packageName)
+            startActivity(intent)
+        }
 
         refreshLayout.setOnRefreshListener {
             refreshLayout.isRefreshing = false
             listAdapter.clearItems()
+            gridPagingScrollListener.markLastPage(false)
             submitSearch()
         }
 
@@ -72,29 +79,32 @@ class ListFragment : Fragment(), LoadMoreItemsListener, ListAdapter.OnItemClickL
         showProgressBar()
     }
 
-    private fun initBottomNavigation(view: View) {
-        bottomNavigation.setOnNavigationItemSelectedListener {
-            if (it.itemId == R.id.favorites) {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("app://movies/favorites"))
-                intent.setPackage(requireContext().packageName)
-                startActivity(intent)
-            }
-            true
-        }
-    }
-
     private fun initList() {
         listAdapter = ListAdapter()
         listAdapter.setOnItemClickListener(this)
         recyclerView.adapter = listAdapter
         recyclerView.setHasFixedSize(true)
-        val layoutManager = GridLayoutManager(context,
-                if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 3)
+
+        val layoutManager = GridLayoutManager(context, getGridSpanCount())
+        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return when (listAdapter.getItemViewType(position)) {
+                    ListAdapter.VIEW_TYPE_LOADING -> getGridSpanCount()
+                    ListAdapter.VIEW_TYPE_ITEM -> 1
+                    else -> -1
+                }
+            }
+        }
         recyclerView.layoutManager = layoutManager
+
         // Pagination
         gridPagingScrollListener = GridPagingScrollListener(layoutManager)
         gridPagingScrollListener.setLoadMoreItemsListener(this)
         recyclerView.addOnScrollListener(gridPagingScrollListener)
+    }
+
+    private fun getGridSpanCount(): Int {
+        return if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 3
     }
 
     private fun showProgressBar() {
@@ -127,6 +137,7 @@ class ListFragment : Fragment(), LoadMoreItemsListener, ListAdapter.OnItemClickL
 
     private fun setItemsData(listAdapter: ListAdapter, searchResult: SearchResult) {
         listAdapter.setItems(searchResult.items)
+        listAdapter.setTotalResult(searchResult.totalResult)
         if (searchResult.totalResult <= listAdapter.itemCount) {
             gridPagingScrollListener.markLastPage(true)
         }
