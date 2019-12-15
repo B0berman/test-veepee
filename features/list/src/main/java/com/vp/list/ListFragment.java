@@ -2,6 +2,8 @@ package com.vp.list;
 
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+
+import android.app.AppComponentFactory;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -12,6 +14,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,14 +23,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ViewAnimator;
 
+import com.vp.detail.DetailActivity;
 import com.vp.list.viewmodel.SearchResult;
 import com.vp.list.viewmodel.ListViewModel;
 
 import javax.inject.Inject;
 
+import dagger.android.DaggerApplication;
 import dagger.android.support.AndroidSupportInjection;
+import dagger.android.support.DaggerAppCompatActivity;
 
-public class ListFragment extends Fragment implements GridPagingScrollListener.LoadMoreItemsListener, ListAdapter.OnItemClickListener {
+public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, GridPagingScrollListener.LoadMoreItemsListener, ListAdapter.OnItemClickListener {
     public static final String TAG = "ListFragment";
     private static final String CURRENT_QUERY = "current_query";
 
@@ -37,6 +44,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     private GridPagingScrollListener gridPagingScrollListener;
     private ListAdapter listAdapter;
     private ViewAnimator viewAnimator;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private TextView errorTextView;
@@ -58,6 +66,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         recyclerView = view.findViewById(R.id.recyclerView);
         viewAnimator = view.findViewById(R.id.viewAnimator);
         progressBar = view.findViewById(R.id.progressBar);
@@ -74,6 +83,11 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
                 handleResult(listAdapter, searchResult);
             }
         });
+
+        loadList();
+    }
+
+    private void loadList() {
         listViewModel.searchMoviesByTitle(currentQuery, 1);
         showProgressBar();
     }
@@ -93,6 +107,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     private void initList() {
         listAdapter = new ListAdapter();
         listAdapter.setOnItemClickListener(this);
+        swipeRefreshLayout.setOnRefreshListener(this);
         recyclerView.setAdapter(listAdapter);
         recyclerView.setHasFixedSize(true);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(),
@@ -110,7 +125,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     }
 
     private void showList() {
-        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(recyclerView));
+        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(swipeRefreshLayout));
     }
 
     private void showError() {
@@ -164,6 +179,14 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
 
     @Override
     public void onItemClick(String imdbID) {
-        //TODO handle click events
+        Intent intent = new Intent(getContext(), DetailActivity.class);
+        intent.putExtra("imdbID", imdbID);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onRefresh() {
+        swipeRefreshLayout.setRefreshing(false);
+        loadList();
     }
 }
