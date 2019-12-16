@@ -49,6 +49,7 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
         if (details.value != null) {
             val movieDetail: MovieDetail = details.value!!
             val movie = Movie(
+                    DetailActivity.queryProvider.getMovieId(),
                     movieDetail.title,
                     movieDetail.year,
                     movieDetail.runtime,

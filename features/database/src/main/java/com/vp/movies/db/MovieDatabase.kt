@@ -12,6 +12,7 @@ class MovieDatabase @Inject constructor(val db: MovieDB) {
         favoriteMovieTableQueries.executeAsList().forEach { favoriteMovieQuery ->
 
             val movie = Movie(
+                    favoriteMovieQuery.id,
                     favoriteMovieQuery.title,
                     favoriteMovieQuery.year,
                     favoriteMovieQuery.runtime,
@@ -26,11 +27,11 @@ class MovieDatabase @Inject constructor(val db: MovieDB) {
     }
 
     fun addFavoriteMovie(movie: Movie) {
-        db.favoriteMovieTableQueries.insert(movie.title, movie.year, movie.runtime, movie.director, movie.plot, movie.poster)
+        db.favoriteMovieTableQueries.insert(movie.id, movie.title, movie.year, movie.runtime, movie.director, movie.plot, movie.poster)
     }
 
-    fun removeFavoriteMovie(movie: Movie) {
-        db.favoriteMovieTableQueries.deleteByTitle(movie.title)
+    fun removeFavoriteMovie(id: String) {
+        db.favoriteMovieTableQueries.deleteById(id)
     }
 
     fun cleanFavoriteMovies() {

@@ -1,7 +1,8 @@
 package com.vp.movies.db
 
 data class Movie(
-        val title: String,
+        val id: String,
+        val title: String?,
         val year: String?,
         val runtime: String?,
         val director: String?,

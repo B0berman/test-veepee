@@ -14,7 +14,7 @@ import javax.inject.Singleton
 
 
 @Module
-class DatabaseModule {
+class MovieDatabaseModule {
 
     @Singleton
     @Provides

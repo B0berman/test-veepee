@@ -3,25 +3,26 @@ import java.lang.Float;
 import java.lang.Integer;
 
 CREATE TABLE FavoriteMovieTable (
-    title TEXT PRIMARY KEY NOT NULL,
+    id TEXT PRIMARY KEY NOT NULL,
+    title TEXT,
     year TEXT,
     runtime TEXT,
     director TEXT,
     plot TEXT,
     poster TEXT);
 
-selectByTitle:
-SELECT * FROM FavoriteMovieTable WHERE title = ?;
+selectById:
+SELECT * FROM FavoriteMovieTable WHERE id = ?;
 
 selectAll:
 SELECT * FROM FavoriteMovieTable;
 
 insert:
-INSERT OR REPLACE INTO FavoriteMovieTable (title, year, runtime, director, plot, poster)
-VALUES (?, ?, ?, ?, ?, ?);
+INSERT OR REPLACE INTO FavoriteMovieTable (id, title, year, runtime, director, plot, poster)
+VALUES (?, ?, ?, ?, ?, ?, ?);
 
-deleteByTitle:
-DELETE FROM FavoriteMovieTable WHERE title = ?;
+deleteById:
+DELETE FROM FavoriteMovieTable WHERE id = ?;
 
 deleteAll:
 DELETE FROM FavoriteMovieTable;

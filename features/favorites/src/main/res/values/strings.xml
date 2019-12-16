@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">favorites</string>
-    <string name="activity_label">Favorites</string>
+    <string name="favorites_name">Favorites</string>
+    <string name="favorites_error_data">No favorites.</string>
 </resources>
