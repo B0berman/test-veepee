@@ -3,6 +3,8 @@ package com.vp.list;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,6 +74,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
             super(itemView);
             itemView.setOnClickListener(this);
             image = itemView.findViewById(R.id.poster);
+            image.setClickable(false);
         }
 
         @Override

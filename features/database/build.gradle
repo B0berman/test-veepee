@@ -1,7 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.squareup.sqldelight'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -10,7 +11,7 @@ android {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
-        testInstrumentationRunner "com.android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     }
 
@@ -28,14 +29,28 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
     implementation project(':dagger.addons')
+    implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayout"
     implementation 'org.jetbrains.kotlin:kotlin-reflect:1.2.60'
+
     //glide
     implementation "com.github.bumptech.glide:glide:$rootProject.glide"
     kapt "com.github.bumptech.glide:compiler:$rootProject.glide"
+
+    //api
+    implementation "com.google.code.gson:gson:$rootProject.gson"
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit"
+
+    //architecture components
+    implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle"
 
     //dagger
     implementation "com.google.dagger:dagger:$rootProject.dagger"
@@ -44,32 +59,16 @@ dependencies {
     implementation("com.google.dagger:dagger-android-support:$rootProject.dagger")
     kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
 
-    //architecture components
-    implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle"
-
-    //support library
-    implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
-    implementation "androidx.recyclerview:recyclerview:$rootProject.supportLibraryVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayout"
-    implementation "com.google.android.material:material:$rootProject.supportLibraryVersion"
-
-    //api
-    api "com.squareup.retrofit2:retrofit:$rootProject.retrofit"
-    implementation "com.google.code.gson:gson:$rootProject.gson"
-
-    //test
-    testImplementation "org.assertj:assertj-core:3.11.1"
     testImplementation 'junit:junit:4.12'
-    testImplementation "org.mockito:mockito-core:2.21.0"
-    testImplementation "com.squareup.retrofit2:retrofit-mock:$rootProject.retrofit"
-    testImplementation 'androidx.arch.core:core-testing:2.0.0'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 
-    // coroutines.
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.1"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.1"
+    //database
+    implementation "com.squareup.sqldelight:android-driver:$rootProject.sqldelight"
+}
 
-    implementation project(':features:database')
-    implementation project(':features:detail')
+sqldelight {
+    MovieDB {
+        packageName = "com.vp.movies.db"
+    }
 }
