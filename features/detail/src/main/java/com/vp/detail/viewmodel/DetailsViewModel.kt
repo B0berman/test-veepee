@@ -6,12 +6,14 @@ import androidx.lifecycle.ViewModel
 import com.vp.detail.DetailActivity
 import com.vp.detail.model.MovieDetail
 import com.vp.detail.service.DetailService
+import com.vp.movies.db.Movie
+import com.vp.movies.db.MovieDatabase
 import retrofit2.Call
 import retrofit2.Response
 import javax.inject.Inject
 import javax.security.auth.callback.Callback
 
-class DetailsViewModel @Inject constructor(private val detailService: DetailService) : ViewModel() {
+class DetailsViewModel @Inject constructor(private val detailService: DetailService, private val movieDatabase: MovieDatabase) : ViewModel() {
 
     private val details: MutableLiveData<MovieDetail> = MutableLiveData()
     private val title: MutableLiveData<String> = MutableLiveData()
@@ -41,6 +43,21 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
                 loadingState.value = LoadingState.ERROR
             }
         })
+    }
+
+    fun addToFavorite() {
+        if (details.value != null) {
+            val movieDetail: MovieDetail = details.value!!
+            val movie = Movie(
+                    movieDetail.title,
+                    movieDetail.year,
+                    movieDetail.runtime,
+                    movieDetail.director,
+                    movieDetail.plot,
+                    movieDetail.poster
+            )
+            movieDatabase.addFavoriteMovie(movie)
+        }
     }
 
     enum class LoadingState {
