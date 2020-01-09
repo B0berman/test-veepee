@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="star_off">#aaaaaa</color>
+    <color name="star_on">#fdd835</color>
+</resources>

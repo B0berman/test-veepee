@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="favorite_preference_file_key">FAVORITE</string>
+    <string name="favorite_entry_key">MOVIE_LIST</string>
+</resources>

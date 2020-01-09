@@ -18,11 +18,13 @@ import dagger.android.support.HasSupportFragmentInjector;
 
 public class MovieListActivity extends AppCompatActivity implements HasSupportFragmentInjector {
     private static final String IS_SEARCH_VIEW_ICONIFIED = "is_search_view_iconified";
+    private static final String IS_SEARCH_QUERY = "is_search_query";
 
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingActivityInjector;
     private SearchView searchView;
     private boolean searchViewExpanded = true;
+    private String savedSearchQuery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,9 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
         } else {
             searchViewExpanded = savedInstanceState.getBoolean(IS_SEARCH_VIEW_ICONIFIED);
         }
+
+        // Restore the prospective query
+        savedSearchQuery = (savedInstanceState != null && savedInstanceState.getString(IS_SEARCH_QUERY) != null)?savedInstanceState.getString(IS_SEARCH_QUERY):"";
     }
 
     @Override
@@ -62,6 +67,7 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
                 return false;
             }
         });
+        searchView.setQuery(savedSearchQuery, false);
 
         return true;
     }
@@ -70,6 +76,9 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(IS_SEARCH_VIEW_ICONIFIED, searchView.isIconified());
+
+        // Do not loose the current user query
+        outState.putString(IS_SEARCH_QUERY, searchView.getQuery().toString());
     }
 
     @Override

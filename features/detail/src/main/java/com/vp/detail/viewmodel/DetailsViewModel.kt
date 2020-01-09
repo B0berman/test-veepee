@@ -1,8 +1,10 @@
 package com.vp.detail.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.vp.common.utils.StorageUtil
 import com.vp.detail.DetailActivity
 import com.vp.detail.model.MovieDetail
 import com.vp.detail.service.DetailService
@@ -16,12 +18,15 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
     private val details: MutableLiveData<MovieDetail> = MutableLiveData()
     private val title: MutableLiveData<String> = MutableLiveData()
     private val loadingState: MutableLiveData<LoadingState> = MutableLiveData()
+    private val favorite: MutableLiveData<Boolean> = MutableLiveData()
 
     fun title(): LiveData<String> = title
 
     fun details(): LiveData<MovieDetail> = details
 
     fun state(): LiveData<LoadingState> = loadingState
+
+    fun favorite(): LiveData<Boolean> = favorite
 
     fun fetchDetails() {
         loadingState.value = LoadingState.IN_PROGRESS
@@ -41,6 +46,24 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
                 loadingState.value = LoadingState.ERROR
             }
         })
+    }
+
+    fun isFavorite(context: Context){
+        val set = StorageUtil.getFavoriteMoviesList(context)
+        favorite.postValue(set?.contains(DetailActivity.queryProvider.getMovieId()))
+    }
+
+    fun toggleFavorite(context: Context) {
+        val set = StorageUtil.getFavoriteMoviesList(context)
+        favorite.value?.let {
+            if (it) {
+                set?.remove(DetailActivity.queryProvider.getMovieId())
+            } else {
+                set?.add(DetailActivity.queryProvider.getMovieId())
+            }
+            favorite.postValue(!it)
+        }
+        set?.let { StorageUtil.saveFaroritesMovieList(context, it) }
     }
 
     enum class LoadingState {

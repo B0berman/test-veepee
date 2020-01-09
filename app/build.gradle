@@ -14,12 +14,15 @@ android {
         applicationId "com.vp.movies"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        buildConfigField "String", "API_KEY", localProperties['apiKey']
+        //buildConfigField "String", "API_KEY", localProperties['apiKey']
+        buildConfigField "String", "API_KEY", "\"1ba07f8a\""
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         debug {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debugProguard {
             initWith buildTypes.debug

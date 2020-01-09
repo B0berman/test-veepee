@@ -49,6 +49,13 @@ public class ListViewModel extends ViewModel {
 
                 if (result != null) {
                     aggregatedItems.addAll(result.getSearch());
+
+                    //TODO: Question1
+                    // Must inform View of data update
+                    liveData.postValue(SearchResult.success(aggregatedItems, result.getTotalResults()));
+                } else {
+                    // Do not forget this case
+                    liveData.setValue(SearchResult.error());
                 }
             }
 
