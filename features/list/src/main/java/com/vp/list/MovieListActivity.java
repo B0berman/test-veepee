@@ -18,11 +18,13 @@ import dagger.android.support.HasSupportFragmentInjector;
 
 public class MovieListActivity extends AppCompatActivity implements HasSupportFragmentInjector {
     private static final String IS_SEARCH_VIEW_ICONIFIED = "is_search_view_iconified";
+    private static final String SEARCH_QUERY = "search_query";
 
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingActivityInjector;
     private SearchView searchView;
     private boolean searchViewExpanded = true;
+    private String searchQuery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,7 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
                     .commit();
         } else {
             searchViewExpanded = savedInstanceState.getBoolean(IS_SEARCH_VIEW_ICONIFIED);
+            searchQuery = savedInstanceState.getString(SEARCH_QUERY);
         }
     }
 
@@ -49,6 +52,12 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
         searchView = (SearchView) menuItem.getActionView();
         searchView.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         searchView.setIconified(searchViewExpanded);
+
+        if(searchQuery != null){
+            searchView.setQuery(searchQuery, false);
+            searchView.setFocusable(true);
+        }
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -59,6 +68,7 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                searchQuery = newText;
                 return false;
             }
         });
@@ -70,6 +80,7 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(IS_SEARCH_VIEW_ICONIFIED, searchView.isIconified());
+        outState.putString(SEARCH_QUERY, searchQuery);
     }
 
     @Override
