@@ -12,6 +12,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     private ListAdapter listAdapter;
     private ViewAnimator viewAnimator;
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefresh;
     private ProgressBar progressBar;
     private TextView errorTextView;
     private String currentQuery = "Interview";
@@ -59,6 +61,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.recyclerView);
+        swipeRefresh = view.findViewById(R.id.swipeRefresh);
         viewAnimator = view.findViewById(R.id.viewAnimator);
         progressBar = view.findViewById(R.id.progressBar);
         errorTextView = view.findViewById(R.id.errorText);
@@ -76,6 +79,11 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         });
         listViewModel.searchMoviesByTitle(currentQuery, 1);
         showProgressBar();
+        initListeners();
+    }
+
+    private void initListeners() {
+        swipeRefresh.setOnRefreshListener(() -> submitSearchQuery(currentQuery));
     }
 
     private void initBottomNavigation(@NonNull View view) {
@@ -110,7 +118,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     }
 
     private void showList() {
-        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(recyclerView));
+        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(swipeRefresh));
     }
 
     private void showError() {
@@ -133,6 +141,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
             }
         }
         gridPagingScrollListener.markLoading(false);
+        swipeRefresh.setRefreshing(false);
     }
 
     private void setItemsData(@NonNull ListAdapter listAdapter, @NonNull SearchResult searchResult) {
