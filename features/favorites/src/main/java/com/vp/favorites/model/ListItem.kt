@@ -1,8 +1,8 @@
 package com.vp.favorites.model
 
-class ListItem {
-    val title: String? = null
-    val year: String? = null
-    val imdbID: String? = null
-    val poster: String? = null
-}
+class ListItem(
+    var title: String,
+    val year: String,
+    val imdbID: String,
+    val poster: String
+)

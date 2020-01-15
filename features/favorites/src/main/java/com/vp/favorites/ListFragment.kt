@@ -61,7 +61,7 @@ class ListFragment : Fragment() {
                 handleResult(listAdapter, favoriteFetchResult)
             }
         )
-        listViewModel?.searchMoviesByTitle(currentQuery, 1)
+        listViewModel?.fetchFavoriteList()
         showProgressBar()
     }
 

@@ -54,10 +54,16 @@ class DetailsViewModel @Inject constructor(
         isFavorite.postValue(bool)
     }
 
-    fun setMovieFavorite(bool: Boolean) {
+    fun setMovieFavorite() {
         val movieId = DetailActivity.queryProvider.getMovieId()
-        appPreferences.setMovieFavorite(movieId, bool)
-        isFavorite.postValue(bool)
+        appPreferences.setMovieFavorite(movieId)
+        isFavorite.postValue(true)
+    }
+
+    fun removeMovieFavorite(){
+        val movieId = DetailActivity.queryProvider.getMovieId()
+        appPreferences.removeMovieFavorite(movieId)
+        isFavorite.postValue(false)
     }
 
     enum class LoadingState {

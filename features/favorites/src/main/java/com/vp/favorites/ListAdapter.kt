@@ -38,6 +38,7 @@ class ListAdapter : RecyclerView.Adapter<ListAdapter.ListViewHolder?>() {
     inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         internal fun bind(item: ListItem) {
+            itemView.title?.text = item.title
             Glide
                 .with(itemView.poster)
                 .load(item.poster)

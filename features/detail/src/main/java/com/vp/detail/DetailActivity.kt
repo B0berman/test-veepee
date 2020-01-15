@@ -59,10 +59,10 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.star -> {
-                detailViewModel?.setMovieFavorite(true)
+                detailViewModel?.setMovieFavorite()
             }
             R.id.star_active -> {
-                detailViewModel?.setMovieFavorite(false)
+                detailViewModel?.removeMovieFavorite()
             }
         }
         return super.onOptionsItemSelected(item)
