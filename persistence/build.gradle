@@ -39,4 +39,7 @@ dependencies {
     implementation "com.google.dagger:dagger-android:$rootProject.dagger"
     implementation "com.google.dagger:dagger-android-support:$rootProject.dagger"
     kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
+
+    //gson
+    implementation "com.google.code.gson:gson:$rootProject.gson"
 }
