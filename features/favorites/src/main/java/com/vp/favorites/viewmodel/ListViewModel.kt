@@ -23,7 +23,6 @@ class ListViewModel @Inject internal constructor(
             currentTitle = title
             liveData.value = inProgress()
         }
-        appPreferences.getFCMToken()
         liveData.value = onSuccess(
             listOf()
         )
