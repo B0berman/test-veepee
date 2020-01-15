@@ -2,6 +2,7 @@ package com.vp.movies
 
 import android.app.Activity
 import android.app.Application
+import com.vp.movies.di.AppModule
 import com.vp.movies.di.DaggerAppComponent
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
@@ -14,10 +15,11 @@ class MoviesApplication : Application(), HasActivityInjector {
     override fun onCreate() {
         super.onCreate()
         DaggerAppComponent.builder()
-                .application(this)
-                .build()
-                .inject(this)
+            .application(this)
+            .build()
+            .inject(this)
     }
 
-    override fun activityInjector(): DispatchingAndroidInjector<Activity>? = dispatchingActivityInjector
+    override fun activityInjector(): DispatchingAndroidInjector<Activity> =
+        dispatchingActivityInjector
 }

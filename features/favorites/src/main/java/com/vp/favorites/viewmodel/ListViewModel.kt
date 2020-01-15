@@ -9,7 +9,7 @@ import com.vp.persistence.storage.AppPreferences
 import javax.inject.Inject
 
 class ListViewModel @Inject internal constructor(
-//    private val appPreferences: AppPreferences
+    private val appPreferences: AppPreferences
 ) : ViewModel() {
     private val liveData = MutableLiveData<FavoriteFetchResult>()
     private var currentTitle = ""
@@ -23,7 +23,7 @@ class ListViewModel @Inject internal constructor(
             currentTitle = title
             liveData.value = inProgress()
         }
-//        appPreferences.getFCMToken()
+        appPreferences.getFCMToken()
         liveData.value = onSuccess(
             listOf()
         )
