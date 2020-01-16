@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.vp.detail.DetailActivity
 import com.vp.detail.model.MovieDetail
 import com.vp.detail.service.DetailService
+import com.vp.persistence.model.FavoriteData
 import com.vp.persistence.storage.AppPreferences
 import retrofit2.Call
 import retrofit2.Response
@@ -56,7 +57,13 @@ class DetailsViewModel @Inject constructor(
 
     fun setMovieFavorite() {
         val movieId = DetailActivity.queryProvider.getMovieId()
-        appPreferences.setMovieFavorite(movieId)
+        appPreferences.setMovieFavorite(
+            FavoriteData(
+                id = movieId,
+                title = details.value?.title ?: "",
+                year =  details.value?.year ?: ""
+            )
+        )
         isFavorite.postValue(true)
     }
 

@@ -1,6 +1,6 @@
-package com.vp.favorites.model
+package com.vp.persistence.model
 
-class ListItem(
+class FavoriteData (
     val id: String,
     val title: String,
     val year: String

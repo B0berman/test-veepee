@@ -22,7 +22,11 @@ class ListViewModel @Inject internal constructor(
         liveData.value = inProgress()
 
         val list = appPreferences.getFavoriteMovieList().map {
-            ListItem(title = it, year = "", imdbID = "", poster = "")
+            ListItem(
+                id = it.id,
+                title = it.title,
+                year = it.year
+            )
         }
         liveData.postValue(onSuccess(items = list))
     }
