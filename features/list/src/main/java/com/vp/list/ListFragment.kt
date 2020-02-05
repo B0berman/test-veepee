@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -34,10 +36,12 @@ class ListFragment : Fragment(), LoadMoreItemsListener, ListAdapter.OnItemClickL
     private var gridPagingScrollListener: GridPagingScrollListener? = null
     private lateinit var listAdapter: ListAdapter
     private lateinit var viewAnimator: ViewAnimator
+    private lateinit var recyclerViewLayout: ViewGroup
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
     private lateinit var errorTextView: TextView
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var bottomProgressBar : ProgressBar
     private var currentQuery: String = "Interview"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +61,8 @@ class ListFragment : Fragment(), LoadMoreItemsListener, ListAdapter.OnItemClickL
         progressBar = view.findViewById(R.id.progressBar)
         errorTextView = view.findViewById(R.id.errorText)
         swipeRefreshLayout = view.findViewById(R.id.swipeRefresh)
+        recyclerViewLayout = view.findViewById(R.id.recyclerViewLayout)
+        bottomProgressBar = view.findViewById(R.id.bottomProgressBar)
 
         savedInstanceState?.let { currentQuery = it.getString(CURRENT_QUERY, "") }
 
@@ -64,7 +70,9 @@ class ListFragment : Fragment(), LoadMoreItemsListener, ListAdapter.OnItemClickL
         initList()
         initSwipeRefresh()
         listViewModel.observeMovies().observe(this, Observer { handleResult(listAdapter, it) })
-        listViewModel.searchMoviesByTitle(currentQuery, 1)
+        if (savedInstanceState == null) {
+            listViewModel.searchMoviesByTitle(currentQuery, 1)
+        }
         showProgressBar()
     }
 
@@ -106,11 +114,17 @@ class ListFragment : Fragment(), LoadMoreItemsListener, ListAdapter.OnItemClickL
     }
 
     private fun showList() {
-        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(recyclerView))
+        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(recyclerViewLayout))
+        bottomProgressBar.visibility = GONE
     }
 
     private fun showError() {
         viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(errorTextView))
+    }
+
+    private fun showLoadingMore() {
+        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(recyclerViewLayout))
+        bottomProgressBar.visibility = VISIBLE
     }
 
     private fun handleResult(listAdapter: ListAdapter, searchResult: SearchResult) {
@@ -119,11 +133,15 @@ class ListFragment : Fragment(), LoadMoreItemsListener, ListAdapter.OnItemClickL
             ListState.LOADED -> {
                 setItemsData(listAdapter, searchResult)
                 showList()
+                gridPagingScrollListener?.markLoading(false)
             }
             ListState.IN_PROGRESS -> showProgressBar()
-            else -> showError()
+            ListState.LOADING_MORE -> showLoadingMore()
+            else -> {
+                showError()
+                gridPagingScrollListener?.markLoading(false)
+            }
         }
-        gridPagingScrollListener?.markLoading(false)
     }
 
     private fun setItemsData(listAdapter: ListAdapter, searchResult: SearchResult) {

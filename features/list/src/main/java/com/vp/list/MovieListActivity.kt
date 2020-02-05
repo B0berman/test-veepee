@@ -44,6 +44,7 @@ class MovieListActivity : AppCompatActivity(), HasSupportFragmentInjector {
             setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI)
             setIconified(searchViewExpanded)
             setQuery(searchTypedText, false)
+            clearFocus()
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
                     val listFragment = supportFragmentManager.findFragmentByTag(ListFragment.TAG) as ListFragment

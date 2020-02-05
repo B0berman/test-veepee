@@ -29,8 +29,10 @@ class SearchResult private constructor(
     companion object {
         fun error() = SearchResult(emptyList(), 0, ListState.ERROR)
 
-        fun success(items: MutableList<ListItem>, totalResult: Int) = SearchResult(items, totalResult, ListState.LOADED)
+        fun success(items: List<ListItem>, totalResult: Int) = SearchResult(items, totalResult, ListState.LOADED)
 
         fun inProgress() = SearchResult(emptyList(), 0, ListState.IN_PROGRESS)
+
+        fun loadingMore() = SearchResult(emptyList(), 0, ListState.LOADING_MORE)
     }
 }

@@ -40,6 +40,7 @@ class ListAdapter : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
     }
 
     fun setItems(listItems: List<ListItem>) {
+        this.listItems.clear()
         this.listItems.addAll(listItems)
         notifyDataSetChanged()
     }
