@@ -17,7 +17,7 @@ data class MovieDetail(
     @SerializedName("Plot")
     val plot: String,
     @SerializedName("Poster")
-    val poster: String
+    val poster: String = ""
 )
 
 fun MovieDetail.toEntity() = MovieEntity(imdbId, title, poster)
