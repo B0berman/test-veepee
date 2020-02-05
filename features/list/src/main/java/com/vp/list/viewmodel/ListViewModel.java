@@ -34,13 +34,23 @@ public class ListViewModel extends ViewModel {
         return liveData;
     }
 
-    public void searchMoviesByTitle(@NonNull String title, int page) {
+    public void refreshMovies(@NonNull String title) {
+        searchMoviesByTitle(title, 1, true);
+    }
 
-        if (page == 1 && !title.equals(currentTitle)) {
+    public void searchMoviesByTitle(@NonNull String title, int page) {
+        searchMoviesByTitle(title, page, false);
+    }
+
+    private void searchMoviesByTitle(@NonNull String title, int page, boolean forceRefresh) {
+
+        boolean refresh = forceRefresh || (page == 1 && !title.equals(currentTitle));
+        if (refresh) {
             aggregatedItems.clear();
             currentTitle = title;
             liveData.setValue(SearchResult.inProgress());
         }
+
         searchService.search(title, page).enqueue(new Callback<SearchResponse>() {
             @Override
             public void onResponse(@NonNull Call<SearchResponse> call, @NonNull Response<SearchResponse> response) {
