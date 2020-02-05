@@ -45,3 +45,6 @@
 
 # OkHttp platform used only on JVM and when Conscrypt dependency is available.
 -dontwarn okhttp3.internal.platform.ConscryptPlatform
+
+# keep ListItem member original names for Gson parsing
+-keepclassmembernames class com.vp.list.model.ListItem { <fields>; }
