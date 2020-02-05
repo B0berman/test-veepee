@@ -2,15 +2,20 @@ package com.vp.movies.di
 
 import android.app.Application
 import com.vp.detail.di.DetailActivityModule
+import com.vp.favorites.di.FavoriteActivityModule
 import com.vp.list.di.MovieListActivityModule
 import com.vp.movies.MoviesApplication
+import com.vp.persistence.di.PersistenceModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AndroidSupportInjectionModule::class, NetworkModule::class, MovieListActivityModule::class, DetailActivityModule::class])
+@Component(
+    modules = [AndroidSupportInjectionModule::class, NetworkModule::class, MovieListActivityModule::class,
+        DetailActivityModule::class, FavoriteActivityModule::class, PersistenceModule::class]
+)
 interface AppComponent {
 
     @Component.Builder

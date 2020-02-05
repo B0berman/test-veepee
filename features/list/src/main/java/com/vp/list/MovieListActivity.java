@@ -58,6 +58,7 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
             public boolean onQueryTextSubmit(String query) {
                 ListFragment listFragment = (ListFragment) getSupportFragmentManager().findFragmentByTag(ListFragment.TAG);
                 listFragment.submitSearchQuery(query);
+                clearFocus();
                 return true;
             }
 
@@ -75,6 +76,18 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
         super.onSaveInstanceState(outState);
         outState.putBoolean(IS_SEARCH_VIEW_ICONIFIED, searchView.isIconified());
         outState.putString(SEARCH_TYPED_TEXT, searchView.getQuery().toString());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        clearFocus();
+    }
+
+    private void clearFocus() {
+        if (searchView != null) {
+            searchView.clearFocus();
+        }
     }
 
     @Override
