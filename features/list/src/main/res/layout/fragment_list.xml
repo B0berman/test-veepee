@@ -20,12 +20,32 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
 
-        <TextView
-            android:id="@+id/errorText"
+        <LinearLayout
+            android:id="@+id/errorContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/data_loading_error" />
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/data_loading_error"
+                android:padding="4dp"
+                android:textColor="#333" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/errorReload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:drawableEnd="@drawable/ic_reload"
+                android:gravity="center_vertical"
+                android:drawablePadding="4dp"
+                android:padding="4dp"
+                android:text="@string/try_to_reload"
+                android:textColor="#333" />
+        </LinearLayout>
     </ViewAnimator>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
