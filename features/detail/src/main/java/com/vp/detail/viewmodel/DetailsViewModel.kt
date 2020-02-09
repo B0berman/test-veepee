@@ -27,10 +27,10 @@ class DetailsViewModel @Inject constructor(
 
     fun favorite(): LiveData<FavoriteState> = favoriteState
 
-    fun fetchDetails() {
+    fun fetchDetails(movieId: String) {
         loadingState.value = LoadingState.IN_PROGRESS
         favoriteState.value = FavoriteState.IN_PROGRESS
-        detailService.getMovie(DetailActivity.queryProvider.getMovieId()).enqueue(object : Callback, retrofit2.Callback<MovieDetail> {
+        detailService.getMovie(movieId).enqueue(object : Callback, retrofit2.Callback<MovieDetail> {
             override fun onResponse(call: Call<MovieDetail>?, response: Response<MovieDetail>?) {
                 details.postValue(response?.body())
 
@@ -49,25 +49,25 @@ class DetailsViewModel @Inject constructor(
         })
     }
 
-    fun setLifecycleOwner(lifecycleOwner: LifecycleOwner) {
+    fun bindFavoriteObserver(lifecycleOwner: LifecycleOwner, movieId: String) {
         details.observe(lifecycleOwner, Observer {
-            val isFavorite = favoritesService.isFavorite(DetailActivity.queryProvider.getMovieId())
+            val isFavorite = favoritesService.isFavorite(movieId)
             favoriteState.value = if (isFavorite) FavoriteState.TRUE else FavoriteState.FALSE
         })
     }
 
     fun isFavorite() = favoriteState.value == FavoriteState.TRUE
 
-    fun saveToFavorites() {
+    fun saveToFavorites(movieId: String) {
         details.value?.also {
-            favoritesService.saveToFavorites(DetailActivity.queryProvider.getMovieId(), it)
+            favoritesService.saveToFavorites(movieId, it)
         }
         favoriteState.value = FavoriteState.TRUE
     }
 
-    fun removeFromFavorites() {
+    fun removeFromFavorites(movieId: String) {
         details.value?.also {
-            favoritesService.removeFromFavorites(DetailActivity.queryProvider.getMovieId())
+            favoritesService.removeFromFavorites(movieId)
         }
         favoriteState.value = FavoriteState.FALSE
     }

@@ -13,21 +13,28 @@ import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_detail.*
 import javax.inject.Inject
 
-class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
+class DetailActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var detailViewModel: DetailsViewModel
 
+    private val queryProvider = object : QueryProvider {
+        private val queryId by lazy {
+            intent?.data?.getQueryParameter("imdbID") ?: throw IllegalStateException("You must provide movie id to display details")
+        }
+
+        override fun getMovieId() = queryId
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding: ActivityDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
         detailViewModel = ViewModelProviders.of(this, factory).get(DetailsViewModel::class.java)
-        detailViewModel.setLifecycleOwner(this)
+        detailViewModel.bindFavoriteObserver(this, queryProvider.getMovieId())
         binding.viewModel = detailViewModel
-        queryProvider = this
         binding.setLifecycleOwner(this)
-        detailViewModel.fetchDetails()
+        detailViewModel.fetchDetails(queryProvider.getMovieId())
         detailViewModel.title().observe(this, Observer {
             supportActionBar?.title = it
         })
@@ -36,7 +43,7 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
         })
 
         errorReload.setOnClickListener {
-            detailViewModel.fetchDetails()
+            detailViewModel.fetchDetails(queryProvider.getMovieId())
         }
     }
 
@@ -54,20 +61,10 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            R.id.add_favorite -> detailViewModel.saveToFavorites()
-            R.id.remove_favorite -> detailViewModel.removeFromFavorites()
+            R.id.add_favorite -> detailViewModel.saveToFavorites(queryProvider.getMovieId())
+            R.id.remove_favorite -> detailViewModel.removeFromFavorites(queryProvider.getMovieId())
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun getMovieId(): String {
-        return intent?.data?.getQueryParameter("imdbID") ?: run {
-            throw IllegalStateException("You must provide movie id to display details")
-        }
-    }
-
-    companion object {
-        lateinit var queryProvider: QueryProvider
     }
 }

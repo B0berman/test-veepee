@@ -67,6 +67,9 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp"
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofit"
 
+    //for memory leaks hunt
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
+
     //test
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
