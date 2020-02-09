@@ -28,6 +28,18 @@
     @retrofit2.http.* <methods>;
 }
 
+# remove logs before publishing
+-assumenosideeffects class android.util.Log {
+    public static *** d(...);
+    public static *** e(...);
+    public static *** i(...);
+    public static *** v(...);
+    public static *** w(...);
+}
+
+#set all possible classes in default package to be more unreadable
+-repackageclasses ''
+
 # Ignore annotation used for build tooling.
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 
