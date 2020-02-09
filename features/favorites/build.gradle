@@ -1,4 +1,7 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -9,6 +12,10 @@ android {
 
         testInstrumentationRunner "com.android.support.test.runner.AndroidJUnitRunner"
 
+    }
+
+    dataBinding {
+        enabled = true
     }
 
     buildTypes {
@@ -24,14 +31,27 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    implementation('androidx.constraintlayout:constraintlayout:1.1.2')
-
-    //support
+    implementation project(':dagger.addons')
     implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
+    implementation "androidx.recyclerview:recyclerview:$rootProject.supportLibraryVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayout"
+    implementation "com.google.android.material:material:$rootProject.supportLibraryVersion"
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.2.60'
 
-    //tests
+    //glide
+    implementation "com.github.bumptech.glide:glide:$rootProject.glide"
+    kapt "com.github.bumptech.glide:compiler:$rootProject.glide"
+
+    //architecture components
+    implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle"
+
+    //dagger
+    implementation "com.google.dagger:dagger:$rootProject.dagger"
+    kapt "com.google.dagger:dagger-compiler:$rootProject.dagger"
+    implementation "com.google.dagger:dagger-android:$rootProject.dagger"
+    implementation("com.google.dagger:dagger-android-support:$rootProject.dagger")
+    kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'

@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">favorites</string>
     <string name="activity_label">Favorites</string>
+
+    <string name="no_favorites_yet">You have no favorite yet</string>
+
+    <string name="title">Title: %s</string>
+    <string name="year">Year: %s</string>
 </resources>

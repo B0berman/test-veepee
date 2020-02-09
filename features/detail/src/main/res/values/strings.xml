@@ -5,5 +5,7 @@
     <string name="director">Director: %s</string>
     <string name="runtime">Runtime: %s</string>
     <string name="loading_error">Loading error</string>
-    <string name="favorite">Favorite</string>
+    <string name="try_to_reload">Try to reload</string>
+    <string name="add_favorite">Add to Favorite</string>
+    <string name="remove_favorite">Remove from favorite</string>
 </resources>

@@ -3,8 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/star"
-        android:icon="@drawable/ic_star"
-        app:showAsAction="always"
-        android:title="@string/favorite" />
+        android:id="@+id/remove_favorite"
+        android:icon="@drawable/ic_star_selected"
+        android:title="@string/remove_favorite"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/add_favorite"
+        android:icon="@drawable/ic_star_enabled"
+        android:title="@string/add_favorite"
+        android:visible="true"
+        app:showAsAction="always" />
 </menu>
