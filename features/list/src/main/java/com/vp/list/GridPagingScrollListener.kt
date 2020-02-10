@@ -30,7 +30,7 @@ class GridPagingScrollListener internal constructor(private val layoutManager: G
         return layoutManager.childCount + layoutManager.findFirstVisibleItemPosition() >= layoutManager.itemCount
     }
 
-    private fun hasNextPage() = !isLastPage
+    fun hasNextPage() = !isLastPage
 
     fun setLoadMoreItemsListener(loadMoreItemsListener: LoadMoreItemsListener?) {
         this.loadMoreItemsListener = loadMoreItemsListener ?: EMPTY_LISTENER

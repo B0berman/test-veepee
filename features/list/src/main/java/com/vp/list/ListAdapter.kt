@@ -7,25 +7,46 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.vp.list.model.ListItem
 
-class ListAdapter : RecyclerView.Adapter<ListViewHolder>() {
-    var listItems: MutableList<ListItem> = ArrayList()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+class ListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var listItems: List<ListItem> = emptyList()
+    private var hasNextPage: Boolean = false
     private var onItemClickListener: OnItemClickListener = EMPTY_ON_ITEM_CLICK_LISTENER
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ListViewHolder(parent)
-
-    override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        val listItem = listItems[position]
-        holder.bind(listItem)
-        holder.itemView.setOnClickListener { onItemClickListener.onItemClick(listItem.imdbID) }
+    override fun getItemViewType(position: Int) = when (position) {
+        itemCount - 1 -> TYPE_LOADING
+        else -> TYPE_LIST_ITEM
     }
 
-    override fun getItemCount() = listItems.size
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = when (viewType) {
+        TYPE_LOADING -> LoaderViewHolder(parent)
+        TYPE_LIST_ITEM -> ListViewHolder(parent)
+        else -> throw IllegalArgumentException("unknown viewType : $viewType")
+    }
 
-    fun clearItems() = listItems.clear()
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is LoaderViewHolder -> {
+                // nothing to do
+            }
+            is ListViewHolder -> {
+                val listItem = listItems[position]
+                holder.bind(listItem)
+                holder.itemView.setOnClickListener { onItemClickListener.onItemClick(listItem.imdbID) }
+            }
+        }
+    }
+
+    override fun getItemCount() = listItems.size + (if (hasNextPage) 1 else 0)
+
+    fun setListItems(listItems: List<ListItem>, hasNextPage: Boolean) {
+        this.listItems = listItems
+        this.hasNextPage = hasNextPage
+        notifyDataSetChanged()
+    }
+
+    fun clearItems() {
+        listItems = emptyList()
+    }
 
     fun setOnItemClickListener(onItemClickListener: OnItemClickListener?) {
         this.onItemClickListener = onItemClickListener ?: EMPTY_ON_ITEM_CLICK_LISTENER
@@ -36,6 +57,9 @@ class ListAdapter : RecyclerView.Adapter<ListViewHolder>() {
     }
 
     companion object {
+        const val TYPE_LOADING = 1
+        const val TYPE_LIST_ITEM = 2
+
         private val EMPTY_ON_ITEM_CLICK_LISTENER = object : OnItemClickListener {
             override fun onItemClick(imdbID: String) {
                 //empty listener
@@ -43,6 +67,8 @@ class ListAdapter : RecyclerView.Adapter<ListViewHolder>() {
         }
     }
 }
+
+class LoaderViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_loader, parent, false))
 
 class ListViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_list, parent, false)) {
     private val image: ImageView = itemView.findViewById(R.id.poster)

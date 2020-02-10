@@ -97,6 +97,14 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
                 gridPagingScrollListener = GridPagingScrollListener(this).apply {
                     setLoadMoreItemsListener(this@ListFragment)
                 }
+                spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                    override fun getSpanSize(position: Int): Int {
+                        return when (listAdapter.getItemViewType(position)) {
+                            ListAdapter.TYPE_LOADING -> spanCount
+                            else -> 1
+                        }
+                    }
+                }
             }
             addOnScrollListener(gridPagingScrollListener)
         }
@@ -127,7 +135,7 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
     }
 
     private fun setItemsData(listAdapter: ListAdapter, searchResult: SearchResult) {
-        listAdapter.listItems = searchResult.items.toMutableList()
+        listAdapter.setListItems(searchResult.items.toMutableList(), gridPagingScrollListener.hasNextPage())
 
         if (searchResult.totalResult <= listAdapter.itemCount) {
             gridPagingScrollListener.markLastPage(true)
