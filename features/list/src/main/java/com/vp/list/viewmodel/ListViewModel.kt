@@ -27,8 +27,8 @@ class ListViewModel @Inject internal constructor(private val searchService: Sear
             override fun onResponse(call: Call<SearchResponse>, response: Response<SearchResponse>) {
                 response.body()?.also {
                     aggregatedItems.addAll(it.search)
+                    movies.value = SearchResult.success(aggregatedItems, it.totalResults)
                 }
-                movies.value = SearchResult.success(aggregatedItems, aggregatedItems.size)
             }
 
             override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
