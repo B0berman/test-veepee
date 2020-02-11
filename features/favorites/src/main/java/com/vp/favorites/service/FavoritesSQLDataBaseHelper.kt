@@ -6,7 +6,6 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.vp.favorites.model.FavoriteMovie
-import java.util.*
 
 class FavoritesSQLDataBaseHelper constructor(context: Context) : SQLiteOpenHelper(context.applicationContext ?: context, DATA_BASE_NAME, null, DATA_BASE_VERSION) {
 
@@ -35,7 +34,7 @@ class FavoritesSQLDataBaseHelper constructor(context: Context) : SQLiteOpenHelpe
 
     fun removeFromFavoriteMovie(id: String) {
         writableDatabase.use { dataBase ->
-            dataBase.execSQL(getRemoveInstruction(id))
+            dataBase.execSQL("DELETE FROM $TABLE_NAME WHERE $COLUMN_ID=\"$id\"")
         }
     }
 
@@ -75,10 +74,6 @@ class FavoritesSQLDataBaseHelper constructor(context: Context) : SQLiteOpenHelpe
         private const val COLUMN_POSTER_DEFINE = "$COLUMN_POSTER text"
 
         private const val CREATE_TABLE = "CREATE TABLE IF NOT EXISTS $TABLE_NAME($COLUMN_ID_DEFINE,$COLUMN_TITLE_DEFINE,$COLUMN_YEAR_DEFINE,$COLUMN_RUNTIME_DEFINE,$COLUMN_DIRECTOR_DEFINE,$COLUMN_PLOT_DEFINE,$COLUMN_POSTER_DEFINE)"
-
-        private const val REMOVE = "DELETE FROM $TABLE_NAME WHERE $COLUMN_ID=%s"
-
-        private fun getRemoveInstruction(id: String) = String.format(Locale.US, REMOVE, id)
 
         private fun FavoriteMovie.toContentValues() = ContentValues().apply {
             put(COLUMN_ID, id)
