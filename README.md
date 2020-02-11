@@ -47,3 +47,77 @@ You cracked all of those challenges, and you still can't get enough. We've got y
 2. Java to Kotlin conversion - convert `list` module from Java to Kotlin.
 3. List loading indicator - The app loads gradually the list of movies. Add a progress bar to indicate that the next page is loading.
 
+### Responses
+
+First of all, thanks for this exercise. It is kind of complete and really educative.
+
+# Challenges responses
+1. The list was not updated with the service response. You add to call `movies.value = SearchResult.success(aggregatedItems, it.totalResults)` in `ListViewModel` 
+2. To handle the poster click, I used the same kind of implemention than it was done for favorites button click in `ListFragment.initBottomNavigation` : 
+```kotlin
+    override fun onItemClick(imdbID: String) {
+        val uri = Uri.parse("app://movies/detail?imdbID=$imdbID")
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        intent.setPackage(requireContext().packageName)
+        startActivity(intent)
+    }
+```
+3. To resolve the lost state, I have used `onSavedInstanceState` and `onCreate` methods from `MovieListActivity` using the bundle.
+```kotlin
+    override fun onCreate(savedInstanceState: Bundle?) {
+        searchViewQuery = savedInstanceState.getString(SEARCH_VIEW_QUERY)
+    }
+```
+```kotlin
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString(SEARCH_VIEW_QUERY, searchView?.query?.toString())
+    }
+```
+4. To handle errors, I changed the error TextView that was included in `ListFragment` and `DetailActivity` with a refresh layout :
+```xml
+    <LinearLayout
+        android:id="@+id/errorContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/data_loading_error"
+            android:padding="4dp"
+            android:textColor="#333" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/errorReload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:drawableEnd="@drawable/ic_reload"
+            android:gravity="center_vertical"
+            android:drawablePadding="4dp"
+            android:padding="4dp"
+            android:text="@string/try_to_reload"
+            android:textColor="#333" />
+    </LinearLayout>
+```
+Then I bound this layout with `view.findViewById<View>(R.id.errorReload).setOnClickListener { listViewModel.searchMoviesByTitle(currentQuery, 1) }`
+
+5. I used a SQLDataBase to store the favorite movies : `FavoritesSQLDataBaseHelper`. It will be provided by the module `com.vp.movies.di.FavoritesStorageModule` in app gradle module.
+`providesFavoritesStorageAccessor` : provides the access to save or remove favorites from storage and know if the movie is already in the favorite database to details gradle module.
+`providesFavoritesStorageGetter` : provides all the favorites movies to feature gradle module.
+I proposed a layout for favorites movies that is voluntary different than in the list module to show you my abilities to build a layout.
+Finally a click on a favorite movie will lead to `DetailActivity`
+
+6. To fix the proguard I simply added the `@SerializedName("imdbID")` in ListItem.
+Without this annotation, le `imdbID` was not parsed with `Gson` since `Gson` try to parse it with the name of the field which was proguarded.
+
+# Bonus responses
+1. The companion object (which is a singleton) `DetailActivity` kept the instance of `QueryProvider`. This `queryProvider` was actually `DetailActivity` and so the Activity was leaked. 
+I changed the `queryProvider` to be a field of `DetailActivity`. 
+This leak was easily found by using LeakCanary.
+
+2. Nothing to tell excepting : it's done
+
+3. I added an progress bar item to the list while loaded with a span size equals to the layout manager span count. (see `ListFragment` and `ListAdapter`)
