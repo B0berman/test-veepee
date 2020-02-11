@@ -47,11 +47,11 @@ You cracked all of those challenges, and you still can't get enough. We've got y
 2. Java to Kotlin conversion - convert `list` module from Java to Kotlin.
 3. List loading indicator - The app loads gradually the list of movies. Add a progress bar to indicate that the next page is loading.
 
-### Responses
+# Responses
 
 First of all, thanks for this exercise. It is kind of complete and really educative.
 
-# Challenges responses
+### Challenges responses
 1. The list was not updated with the service response. You add to call `movies.value = SearchResult.success(aggregatedItems, it.totalResults)` in `ListViewModel` 
 2. To handle the poster click, I used the same kind of implemention than it was done for favorites button click in `ListFragment.initBottomNavigation` : 
 ```kotlin
@@ -113,7 +113,7 @@ Finally a click on a favorite movie will lead to `DetailActivity`
 6. To fix the proguard I simply added the `@SerializedName("imdbID")` in ListItem.
 Without this annotation, le `imdbID` was not parsed with `Gson` since `Gson` try to parse it with the name of the field which was proguarded.
 
-# Bonus responses
+### Bonus responses
 1. The companion object (which is a singleton) `DetailActivity` kept the instance of `QueryProvider`. This `queryProvider` was actually `DetailActivity` and so the Activity was leaked. 
 I changed the `queryProvider` to be a field of `DetailActivity`. 
 This leak was easily found by using LeakCanary.
