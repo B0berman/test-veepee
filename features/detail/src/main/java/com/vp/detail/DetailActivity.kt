@@ -1,5 +1,7 @@
 package com.vp.detail
 
+import android.content.Context
+import android.content.Intent
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -36,12 +38,17 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
     }
 
     override fun getMovieId(): String {
-        return intent?.data?.getQueryParameter("imdbID") ?: run {
+        return intent?.extras?.getString("imdbID") ?: run {
             throw IllegalStateException("You must provide movie id to display details")
         }
     }
 
     companion object {
         lateinit var queryProvider: QueryProvider
+        @JvmStatic
+        fun getDetailIntent(context: Context, imdbId: String): Intent =
+                Intent(context, DetailActivity::class.java).apply {
+                    putExtra("imdbID", imdbId)
+                }
     }
 }

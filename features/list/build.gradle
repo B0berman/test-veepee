@@ -30,6 +30,7 @@ android {
 }
 
 dependencies {
+    implementation project(':features:detail')
     implementation project(':dagger.addons')
     implementation 'org.jetbrains.kotlin:kotlin-reflect:1.2.60'
     //glide
