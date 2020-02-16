@@ -8,6 +8,9 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.vp.detail.databinding.ActivityDetailBinding
 import com.vp.detail.viewmodel.DetailsViewModel
 import dagger.android.support.DaggerAppCompatActivity
@@ -19,10 +22,12 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
 
+    lateinit var detailViewModel: DetailsViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding: ActivityDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
-        val detailViewModel = ViewModelProviders.of(this, factory).get(DetailsViewModel::class.java)
+        detailViewModel = ViewModelProviders.of(this, factory).get(DetailsViewModel::class.java)
         binding.viewModel = detailViewModel
         queryProvider = this
         binding.setLifecycleOwner(this)
@@ -30,25 +35,41 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
         detailViewModel.title().observe(this, Observer {
             supportActionBar?.title = it
         })
+        detailViewModel.isFavourite.observe(this, Observer {
+            if (it) invalidateOptionsMenu()
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.detail_menu, menu)
+        if (detailViewModel.isFavourite()) {
+            menu?.findItem(R.id.star)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_star_fill)
+        }
         return true
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.star && !detailViewModel.isFavourite()) {
+            detailViewModel.addFavourite()
+        } else {
+            Toast.makeText(this, "Already favourite", Toast.LENGTH_SHORT).show()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun getMovieId(): String {
-        return intent?.extras?.getString("imdbID") ?: run {
+        return intent?.extras?.getString(IMDBID_KEY) ?: run {
             throw IllegalStateException("You must provide movie id to display details")
         }
     }
 
     companion object {
         lateinit var queryProvider: QueryProvider
+        private const val IMDBID_KEY = "imdbID"
         @JvmStatic
         fun getDetailIntent(context: Context, imdbId: String): Intent =
                 Intent(context, DetailActivity::class.java).apply {
-                    putExtra("imdbID", imdbId)
+                    putExtra(IMDBID_KEY, imdbId)
                 }
     }
 }
