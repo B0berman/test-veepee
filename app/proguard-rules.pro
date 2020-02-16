@@ -45,3 +45,6 @@
 
 # OkHttp platform used only on JVM and when Conscrypt dependency is available.
 -dontwarn okhttp3.internal.platform.ConscryptPlatform
+
+-dontwarn com.google.android.material.snackbar.*
+-dontwarn kotlinx.coroutines.flow.**inlined**
