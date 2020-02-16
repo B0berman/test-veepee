@@ -20,6 +20,7 @@ class DetailsViewModel @Inject constructor(
         private val dbFavMovieRepository: FavMovieRepository
 ) : ViewModel() {
 
+    private lateinit var movieId: String
     private val details: MutableLiveData<MovieDetail> = MutableLiveData()
     private val title: MutableLiveData<String> = MutableLiveData()
     private val loadingState: MutableLiveData<LoadingState> = MutableLiveData()
@@ -35,7 +36,7 @@ class DetailsViewModel @Inject constructor(
     init {
         favList.observeOnce {
             it.forEach { favMovie ->
-                if (favMovie.imdbId == DetailActivity.queryProvider.getMovieId()) {
+                if (favMovie.imdbId == movieId) {
                     isFavourite.postValue(true)
                     return@observeOnce
                 }
@@ -44,9 +45,10 @@ class DetailsViewModel @Inject constructor(
         }
     }
 
-    fun fetchDetails() {
+    fun fetchDetails(movieId: String) {
+        this.movieId = movieId
         loadingState.value = LoadingState.IN_PROGRESS
-        detailService.getMovie(DetailActivity.queryProvider.getMovieId()).enqueue(object : Callback, retrofit2.Callback<MovieDetail> {
+        detailService.getMovie(movieId).enqueue(object : Callback, retrofit2.Callback<MovieDetail> {
             override fun onResponse(call: Call<MovieDetail>?, response: Response<MovieDetail>?) {
                 details.postValue(response?.body())
 
@@ -69,7 +71,7 @@ class DetailsViewModel @Inject constructor(
     fun addFavourite() {
         details.value?.let {
             dbFavMovieRepository
-                    .addFavourite(it.toFavMovie(DetailActivity.queryProvider.getMovieId())) { movieRoomDbId ->
+                    .addFavourite(it.toFavMovie(movieId)) { movieRoomDbId ->
                         if (movieRoomDbId > -1) {
                             isFavourite.postValue(true)
                         }

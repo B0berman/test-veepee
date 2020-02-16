@@ -35,9 +35,7 @@ class FavoriteActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerview() {
-        favMovieAdapter = FavMovieAdapter(onClick = { onClickId ->
-            Toast.makeText(this@FavoriteActivity, onClickId, Toast.LENGTH_SHORT).show()
-        })
+        favMovieAdapter = FavMovieAdapter()
         recyclerView.adapter = favMovieAdapter
         recyclerView.setHasFixedSize(true)
         val layoutManager = GridLayoutManager(this,
