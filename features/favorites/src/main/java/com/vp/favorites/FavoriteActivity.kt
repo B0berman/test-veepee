@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import com.tushar.todosample.db.FavMovieDb
 import com.vp.favorites.viewmodel.FavouriteViewModel
 import kotlinx.android.synthetic.main.activity_favorite.*
 
@@ -19,7 +20,7 @@ class FavoriteActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_favorite)
         favouriteViewModel = ViewModelProviders.of(this).get(FavouriteViewModel::class.java)
-        favouriteViewModel.init(this)
+        favouriteViewModel.init(FavMovieDb.getDatabase(this))
         favouriteViewModel.getFavList().observe(this, Observer {
             it?.let {
                 if (it.isEmpty()) {

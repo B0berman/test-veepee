@@ -26,14 +26,14 @@ class DetailActivity : DaggerAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        intent?.extras?.getString(IMDBID_KEY) ?: run {
+        intent?.data?.getQueryParameter("id") ?: run {
             throw IllegalStateException("You must provide movie id to display details")
         }
         val binding: ActivityDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
         detailViewModel = ViewModelProviders.of(this, factory).get(DetailsViewModel::class.java)
         binding.viewModel = detailViewModel
         binding.setLifecycleOwner(this)
-        detailViewModel.fetchDetails(intent?.extras?.getString(IMDBID_KEY) ?: "")
+        detailViewModel.fetchDetails(intent?.data?.getQueryParameter("id") ?: "")
         detailViewModel.title().observe(this, Observer {
             supportActionBar?.title = it
         })
@@ -57,14 +57,5 @@ class DetailActivity : DaggerAppCompatActivity() {
             Toast.makeText(this, "Already favourite", Toast.LENGTH_SHORT).show()
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    companion object {
-        private const val IMDBID_KEY = "imdbID"
-        @JvmStatic
-        fun getDetailIntent(context: Context, imdbId: String): Intent =
-                Intent(context, DetailActivity::class.java).apply {
-                    putExtra(IMDBID_KEY, imdbId)
-                }
     }
 }

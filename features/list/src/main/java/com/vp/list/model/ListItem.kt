@@ -8,7 +8,7 @@ class ListItem {
     @SerializedName("Year")
     val year: String? = null
     @SerializedName("imdbID")
-    val imdbID: String? = null
+    val imdbID: String = ""
     @SerializedName("Poster")
     val poster: String? = null
 }

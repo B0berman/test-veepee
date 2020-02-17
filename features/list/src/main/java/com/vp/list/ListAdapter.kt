@@ -11,7 +11,7 @@ class ListAdapter : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
     private var listItems: MutableList<ListItem> = mutableListOf()
 
     private val EMPTY_ON_ITEM_CLICK_LISTENER: OnItemClickListener = object : OnItemClickListener {
-        override fun onItemClick(imdbID: String?) {
+        override fun onItemClick(imdbID: String) {
             // empty listener
         }
     }
@@ -70,7 +70,7 @@ class ListAdapter : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
     }
 
     interface OnItemClickListener {
-        fun onItemClick(imdbID: String?)
+        fun onItemClick(imdbID: String)
     }
 
     companion object {

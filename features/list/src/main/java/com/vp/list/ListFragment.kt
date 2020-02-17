@@ -19,7 +19,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.vp.detail.DetailActivity.Companion.getDetailIntent
 import com.vp.list.GridPagingScrollListener.LoadMoreItemsListener
 import com.vp.list.viewmodel.ListState
 import com.vp.list.viewmodel.ListViewModel
@@ -159,8 +158,11 @@ class ListFragment : Fragment(), LoadMoreItemsListener, ListAdapter.OnItemClickL
         showProgressBar()
     }
 
-    override fun onItemClick(imdbID: String?) {
-        startActivity(getDetailIntent(requireContext(), imdbID!!))
+    override fun onItemClick(imdbID: String) {
+        startActivity(
+                Intent(Intent.ACTION_VIEW, Uri.parse("app://movies/detail?id=${imdbID}")).apply {
+                    setPackage(requireContext().packageName)
+                })
     }
 
     companion object {
