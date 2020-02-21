@@ -2,22 +2,22 @@
 
 buildscript {
     ext {
-        androidPluginVersion = '3.2.1'
+        androidPluginVersion = '3.5.3'
         //sdk and tools
         compileSdkVersion = 28
         minSdkVersion = 21
         targetSdkVersion = 28
 
         //dependencies
-        kotlin = '1.2.60'
-        supportLibraryVersion = '1.0.0'
-        constraintLayout = '1.1.2'
-        retrofit = '2.4.0'
-        lifecycle = '2.0.0'
-        gson = '2.8.2'
-        dagger = '2.16'
-        glide = '4.8.0'
-        okhttp = '3.10.0'
+        kotlin = '1.3.61'
+        supportLibraryVersion = '1.1.0'
+        constraintLayout = '1.1.3'
+        retrofit = '2.7.1'
+        lifecycle = '2.2.0'
+        gson = '2.8.6'
+        dagger = '2.23.2'
+        glide = '4.11.0'
+        okhttp = '4.4.0'
     }
 
     repositories {
@@ -25,7 +25,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:$androidPluginVersion"
+        classpath "com.android.tools.build:gradle:${androidPluginVersion}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin"
 
         // NOTE: Do not place your application dependencies here; they belong

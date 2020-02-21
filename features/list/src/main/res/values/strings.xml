@@ -3,5 +3,7 @@
     <string name="search">Search</string>
     <string name="data_loading_error">Data loading error</string>
     <string name="favorites">Favorites</string>
+    <string name="refresh">Refresh</string>
     <string name="movies">Movies</string>
+    <string name="movies_loaded">Movies loaded</string>
 </resources>

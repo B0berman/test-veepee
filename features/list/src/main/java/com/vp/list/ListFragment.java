@@ -1,29 +1,31 @@
 package com.vp.list;
 
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewAnimator;
 
-import com.vp.list.viewmodel.SearchResult;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.vp.detail.DetailActivity;
 import com.vp.list.viewmodel.ListViewModel;
+import com.vp.list.viewmodel.SearchResult;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import dagger.android.support.AndroidSupportInjection;
 
 public class ListFragment extends Fragment implements GridPagingScrollListener.LoadMoreItemsListener, ListAdapter.OnItemClickListener {
@@ -85,6 +87,9 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("app://movies/favorites"));
                 intent.setPackage(requireContext().getPackageName());
                 startActivity(intent);
+            } else if (item.getItemId() == R.id.refresh) {
+                showProgressBar();
+                listViewModel.searchMoviesByTitle(currentQuery, 1);
             }
             return true;
         });
@@ -120,6 +125,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     private void handleResult(@NonNull ListAdapter listAdapter, @NonNull SearchResult searchResult) {
         switch (searchResult.getListState()) {
             case LOADED: {
+                Toast.makeText(getActivity(), R.string.movies_loaded, Toast.LENGTH_SHORT).show();
                 setItemsData(listAdapter, searchResult);
                 showList();
                 break;
@@ -164,6 +170,6 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
 
     @Override
     public void onItemClick(String imdbID) {
-        //TODO handle click events
+        startActivity(DetailActivity.newIntent(getActivity(), imdbID));
     }
 }
