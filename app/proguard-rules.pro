@@ -45,3 +45,14 @@
 
 # OkHttp platform used only on JVM and when Conscrypt dependency is available.
 -dontwarn okhttp3.internal.platform.ConscryptPlatform
+
+-keep public class  com.vp.detail.model.MovieDetail
+
+-keep public class  com.vp.favorites.model.ListItem{
+    public String getImdbID();
+    private *;
+}
+-keep public class  com.vp.favorites.model.MovieItem{
+    public String getImdbID();
+    private *;
+}

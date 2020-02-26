@@ -5,12 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.annotation.NonNull;
 
-import com.vp.list.model.ListItem;
 import com.vp.list.model.SearchResponse;
 import com.vp.list.service.SearchService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -23,7 +19,6 @@ public class ListViewModel extends ViewModel {
     private SearchService searchService;
 
     private String currentTitle = "";
-    private List<ListItem> aggregatedItems = new ArrayList<>();
 
     @Inject
     ListViewModel(@NonNull SearchService searchService) {
@@ -37,7 +32,6 @@ public class ListViewModel extends ViewModel {
     public void searchMoviesByTitle(@NonNull String title, int page) {
 
         if (page == 1 && !title.equals(currentTitle)) {
-            aggregatedItems.clear();
             currentTitle = title;
             liveData.setValue(SearchResult.inProgress());
         }
@@ -48,7 +42,7 @@ public class ListViewModel extends ViewModel {
                 SearchResponse result = response.body();
 
                 if (result != null) {
-                    aggregatedItems.addAll(result.getSearch());
+                    liveData.setValue(SearchResult.success(response.body().getSearch(), result.getTotalResults()));
                 }
             }
 

@@ -6,11 +6,11 @@ import androidx.lifecycle.Observer;
 import com.vp.list.model.SearchResponse;
 import com.vp.list.service.SearchService;
 
+
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
-
 import retrofit2.mock.Calls;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,6 +21,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class ListViewModelTest {
+
+
     @Rule
     public InstantTaskExecutorRule instantTaskRule = new InstantTaskExecutorRule();
 
@@ -53,5 +55,4 @@ public class ListViewModelTest {
         //then
         verify(mockObserver).onChanged(SearchResult.inProgress());
     }
-
 }

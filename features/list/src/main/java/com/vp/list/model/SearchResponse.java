@@ -3,6 +3,7 @@ package com.vp.list.model;
 import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
+import com.vp.favorites.model.ListItem;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class SearchResponse {
     @SerializedName("Response")
     private String response;
 
-    private SearchResponse(String response) {
+    public SearchResponse(String response) {
         this.response = response;
     }
 

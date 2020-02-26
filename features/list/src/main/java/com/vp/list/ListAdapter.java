@@ -3,18 +3,21 @@ package com.vp.list;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.vp.list.model.ListItem;
+import com.vp.favorites.GlideApp;
+import com.vp.favorites.model.ListItem;
 
 import java.util.Collections;
 import java.util.List;
 
+import static com.vp.list.Constants.NO_IMAGE;
+
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder> {
-    private static final String NO_IMAGE = "N/A";
     private List<ListItem> listItems = Collections.emptyList();
     private OnItemClickListener EMPTY_ON_ITEM_CLICK_LISTENER = imdbID -> {
         //empty listener

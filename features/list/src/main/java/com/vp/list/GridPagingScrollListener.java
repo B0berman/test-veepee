@@ -6,9 +6,11 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class GridPagingScrollListener extends RecyclerView.OnScrollListener {
-    private static final int PAGE_SIZE = 10;
+    private static final int PAGE_SIZE = BuildConfig.PAGE_SIZE;
     private final GridLayoutManager layoutManager;
-    private static final LoadMoreItemsListener EMPTY_LISTENER = (int page) -> {
+
+    // fixing the memory lick. Removed static so that the class is not being hold at rotation or recreation
+    private final LoadMoreItemsListener EMPTY_LISTENER = (int page) -> {
         //empty listener
     };
     private LoadMoreItemsListener loadMoreItemsListener = EMPTY_LISTENER;

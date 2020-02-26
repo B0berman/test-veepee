@@ -16,8 +16,9 @@ import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 
+import static com.vp.list.Constants.IS_SEARCH_VIEW_ICONIFIED;
+
 public class MovieListActivity extends AppCompatActivity implements HasSupportFragmentInjector {
-    private static final String IS_SEARCH_VIEW_ICONIFIED = "is_search_view_iconified";
 
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingActivityInjector;
@@ -46,6 +47,7 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
         inflater.inflate(R.menu.options_menu, menu);
         MenuItem menuItem = menu.findItem(R.id.search);
 
+        menuItem.expandActionView();
         searchView = (SearchView) menuItem.getActionView();
         searchView.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         searchView.setIconified(searchViewExpanded);
@@ -59,10 +61,21 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                ListFragment listFragment = (ListFragment) getSupportFragmentManager().findFragmentByTag(ListFragment.TAG);
+                if( listFragment != null ){
+                    listFragment.updateCurrentQuery(newText);
+                }
                 return false;
             }
         });
-
+        ListFragment listFragment = (ListFragment) getSupportFragmentManager().findFragmentByTag(ListFragment.TAG);
+        if( listFragment != null ){
+            searchView.post(() -> {
+                menuItem.expandActionView();
+                searchView.setQuery(listFragment.getCurrentQuery(), false);
+                searchView.clearFocus();
+            });
+        }
         return true;
     }
 
