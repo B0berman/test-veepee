@@ -7,6 +7,6 @@ import dagger.android.ContributesAndroidInjector
 @Module
 abstract class ListFragmentModule {
 
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(modules = [ListNetworkModule::class, ListViewModelsModule::class])
     abstract fun bindListFragment(): ListFragment
 }

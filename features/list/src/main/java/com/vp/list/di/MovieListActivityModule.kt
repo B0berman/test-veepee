@@ -4,9 +4,11 @@ import com.vp.list.MovieListActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
-@Module
+@Module(includes = [
+    ListFragmentModule::class
+])
 abstract class MovieListActivityModule {
 
-    @ContributesAndroidInjector(modules = [ListFragmentModule::class, ListNetworkModule::class, ListViewModelsModule::class])
+    @ContributesAndroidInjector
     abstract fun bindMovieListActivity(): MovieListActivity
 }

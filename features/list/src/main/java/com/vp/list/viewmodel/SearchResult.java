@@ -1,6 +1,6 @@
 package com.vp.list.viewmodel;
 
-import com.vp.list.model.ListItem;
+import com.vp.api.model.ListItem;
 
 import java.util.Collections;
 import java.util.List;

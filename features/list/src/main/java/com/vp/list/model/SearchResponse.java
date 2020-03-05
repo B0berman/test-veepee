@@ -1,8 +1,10 @@
 package com.vp.list.model;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
+import com.vp.api.model.ListItem;
 
 import java.util.List;
 
@@ -13,6 +15,7 @@ public class SearchResponse {
     @SerializedName("Search")
     private List<ListItem> search;
 
+    @Keep
     private int totalResults;
     @SerializedName("Response")
     private String response;

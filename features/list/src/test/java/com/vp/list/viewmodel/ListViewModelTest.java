@@ -3,6 +3,7 @@ package com.vp.list.viewmodel;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.Observer;
 
+import com.vp.list.model.ListItem;
 import com.vp.list.model.SearchResponse;
 import com.vp.list.service.SearchService;
 
@@ -10,6 +11,8 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 import retrofit2.mock.Calls;
 
@@ -24,12 +27,13 @@ public class ListViewModelTest {
     @Rule
     public InstantTaskExecutorRule instantTaskRule = new InstantTaskExecutorRule();
 
+    private SearchService searchService = mock(SearchService.class);
+    private ListViewModel listViewModel = new ListViewModel(searchService);
+
     @Test
     public void shouldReturnErrorState() {
         //given
-        SearchService searchService = mock(SearchService.class);
         when(searchService.search(anyString(), anyInt())).thenReturn(Calls.failure(new IOException()));
-        ListViewModel listViewModel = new ListViewModel(searchService);
 
         //when
         listViewModel.searchMoviesByTitle("title", 1);
@@ -41,9 +45,7 @@ public class ListViewModelTest {
     @Test
     public void shouldReturnInProgressState() {
         //given
-        SearchService searchService = mock(SearchService.class);
         when(searchService.search(anyString(), anyInt())).thenReturn(Calls.response(mock(SearchResponse.class)));
-        ListViewModel listViewModel = new ListViewModel(searchService);
         Observer<SearchResult> mockObserver = (Observer<SearchResult>) mock(Observer.class);
         listViewModel.observeMovies().observeForever(mockObserver);
 
@@ -52,6 +54,24 @@ public class ListViewModelTest {
 
         //then
         verify(mockObserver).onChanged(SearchResult.inProgress());
+    }
+
+    @Test
+    public void shouldReturnSuccessState() {
+        //given
+        List<ListItem> listItems = Collections.singletonList(new ListItem());
+        SearchResponse searchResponse = mock(SearchResponse.class);
+        when(searchResponse.getSearch()).thenReturn(listItems);
+        when(searchResponse.getTotalResults()).thenReturn(100);
+        when(searchService.search(anyString(), anyInt())).thenReturn(Calls.response(searchResponse));
+        Observer<SearchResult> mockObserver = (Observer<SearchResult>) mock(Observer.class);
+        listViewModel.observeMovies().observeForever(mockObserver);
+
+        //when
+        listViewModel.searchMoviesByTitle("title", 1);
+
+        //then
+        verify(mockObserver).onChanged(SearchResult.success(listItems, 100));
     }
 
 }

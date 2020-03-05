@@ -2,6 +2,8 @@ package com.vp.list.model;
 
 import androidx.annotation.NonNull;
 
+import com.vp.api.model.ListItem;
+
 import java.util.Collections;
 import java.util.List;
 

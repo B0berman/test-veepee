@@ -1,11 +1,12 @@
 package com.vp.list.viewmodel;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.annotation.NonNull;
 
-import com.vp.list.model.ListItem;
+import com.vp.api.model.FavoritesRepository;
+import com.vp.api.model.ListItem;
 import com.vp.list.model.SearchResponse;
 import com.vp.list.service.SearchService;
 
@@ -21,17 +22,28 @@ import retrofit2.Response;
 public class ListViewModel extends ViewModel {
     private MutableLiveData<SearchResult> liveData = new MutableLiveData<>();
     private SearchService searchService;
+    private FavoritesRepository favoritesRepository;
 
     private String currentTitle = "";
     private List<ListItem> aggregatedItems = new ArrayList<>();
 
     @Inject
-    ListViewModel(@NonNull SearchService searchService) {
+    ListViewModel(
+            @NonNull SearchService searchService,
+            @NonNull FavoritesRepository favoritesRepository
+    ) {
         this.searchService = searchService;
+        this.favoritesRepository = favoritesRepository;
     }
 
     public LiveData<SearchResult> observeMovies() {
         return liveData;
+    }
+
+    public void fetchFavoritesMovies() {
+        favoritesRepository.getFavorites().observeForever(favorites ->
+                liveData.setValue(SearchResult.success(favorites, favorites.size()))
+        );
     }
 
     public void searchMoviesByTitle(@NonNull String title, int page) {
@@ -49,6 +61,7 @@ public class ListViewModel extends ViewModel {
 
                 if (result != null) {
                     aggregatedItems.addAll(result.getSearch());
+                    liveData.setValue(SearchResult.success(aggregatedItems, result.getTotalResults()));
                 }
             }
 

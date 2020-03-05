@@ -1,26 +1,27 @@
 package com.vp.list;
 
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ViewAnimator;
 
-import com.vp.list.viewmodel.SearchResult;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.vp.list.viewmodel.ListViewModel;
+import com.vp.list.viewmodel.SearchResult;
 
 import javax.inject.Inject;
 
@@ -38,7 +39,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     private ListAdapter listAdapter;
     private ViewAnimator viewAnimator;
     private RecyclerView recyclerView;
-    private ProgressBar progressBar;
+    private SwipeRefreshLayout refreshLayout;
     private TextView errorTextView;
     private String currentQuery = "Interview";
 
@@ -60,11 +61,14 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.recyclerView);
         viewAnimator = view.findViewById(R.id.viewAnimator);
-        progressBar = view.findViewById(R.id.progressBar);
+        refreshLayout = view.findViewById(R.id.refresh_layout);
         errorTextView = view.findViewById(R.id.errorText);
 
         if (savedInstanceState != null) {
             currentQuery = savedInstanceState.getString(CURRENT_QUERY);
+        } else {
+            triggerFetch();
+            showProgressBar();
         }
 
         initBottomNavigation(view);
@@ -74,20 +78,34 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
                 handleResult(listAdapter, searchResult);
             }
         });
-        listViewModel.searchMoviesByTitle(currentQuery, 1);
-        showProgressBar();
+    }
+
+    private void triggerFetch() {
+        if (shouldShowFavorites()) {
+            listViewModel.fetchFavoritesMovies();
+        } else {
+            listViewModel.searchMoviesByTitle(currentQuery, 1);
+        }
+    }
+
+    private boolean shouldShowFavorites() {
+        return !(getActivity() instanceof MovieListActivity);
     }
 
     private void initBottomNavigation(@NonNull View view) {
         BottomNavigationView bottomNavigationView = view.findViewById(R.id.bottomNavigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.favorites) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("app://movies/favorites"));
-                intent.setPackage(requireContext().getPackageName());
-                startActivity(intent);
+                navigateToFavorites();
             }
             return true;
         });
+    }
+
+    private void navigateToFavorites() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("app://movies/favorites"));
+        intent.setPackage(requireContext().getPackageName());
+        startActivity(intent);
     }
 
     private void initList() {
@@ -103,14 +121,17 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         gridPagingScrollListener = new GridPagingScrollListener(layoutManager);
         gridPagingScrollListener.setLoadMoreItemsListener(this);
         recyclerView.addOnScrollListener(gridPagingScrollListener);
+        refreshLayout.setOnRefreshListener(this::triggerFetch);
     }
 
     private void showProgressBar() {
-        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(progressBar));
+        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(refreshLayout));
+        refreshLayout.setRefreshing(true);
     }
 
     private void showList() {
-        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(recyclerView));
+        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(refreshLayout));
+        refreshLayout.setRefreshing(false);
     }
 
     private void showError() {
@@ -153,6 +174,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     public void loadMoreItems(int page) {
         gridPagingScrollListener.markLoading(true);
         listViewModel.searchMoviesByTitle(currentQuery, page);
+        refreshLayout.setRefreshing(true);
     }
 
     public void submitSearchQuery(@NonNull final String query) {
@@ -164,6 +186,12 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
 
     @Override
     public void onItemClick(String imdbID) {
-        //TODO handle click events
+        navigateToDetails(imdbID);
+    }
+
+    private void navigateToDetails(String imdbID) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("app://movies/detail?imdbID=" + imdbID));
+        intent.setPackage(requireContext().getPackageName());
+        startActivity(intent);
     }
 }

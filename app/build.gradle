@@ -24,8 +24,13 @@ android {
         debugProguard {
             initWith buildTypes.debug
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            shrinkResources true
             minifyEnabled true
         }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/proguard/coroutines.pro'
     }
 
     compileOptions {
@@ -49,6 +54,8 @@ dependencies {
     //support
     implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayout"
+    implementation("androidx.fragment:fragment:$rootProject.fragment")
+    implementation("androidx.lifecycle:lifecycle-livedata:$rootProject.lifecycle")
 
     //dagger
     implementation "com.google.dagger:dagger:$rootProject.dagger"

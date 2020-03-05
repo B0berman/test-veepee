@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -24,12 +26,20 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    implementation('androidx.constraintlayout:constraintlayout:1.1.2')
+    api project(':features:api')
+    implementation project(':features:list') // TODO: this is shortcut to show list of favorites, could be refactored
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin"
 
     //support
     implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
+
+    //room
+    kapt "androidx.room:room-compiler:$rootProject.room"
+    implementation "androidx.room:room-ktx:$rootProject.room"
+
+    //dagger
+    kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
+    implementation("com.google.dagger:dagger-android-support:$rootProject.dagger")
 
     //tests
     testImplementation 'junit:junit:4.12'

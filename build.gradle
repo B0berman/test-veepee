@@ -2,22 +2,24 @@
 
 buildscript {
     ext {
-        androidPluginVersion = '3.2.1'
+        androidPluginVersion = '3.6.1'
         //sdk and tools
-        compileSdkVersion = 28
+        compileSdkVersion = 29
         minSdkVersion = 21
-        targetSdkVersion = 28
+        targetSdkVersion = 29
 
         //dependencies
-        kotlin = '1.2.60'
-        supportLibraryVersion = '1.0.0'
-        constraintLayout = '1.1.2'
+        kotlin = '1.3.61'
+        supportLibraryVersion = '1.1.0'
+        fragment = '1.2.0'
+        constraintLayout = '1.1.3'
         retrofit = '2.4.0'
-        lifecycle = '2.0.0'
+        lifecycle = '2.2.0'
         gson = '2.8.2'
         dagger = '2.16'
-        glide = '4.8.0'
+        glide = '4.10.0'
         okhttp = '3.10.0'
+        room = '2.2.4'
     }
 
     repositories {
