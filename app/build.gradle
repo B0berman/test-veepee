@@ -9,13 +9,24 @@ def localProperties = new Properties()
 localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
 android {
+    signingConfigs {
+        release {
+            storePassword 'alexis'
+            keyAlias = 'key0'
+            keyPassword 'alexis'
+            storeFile file('/Users/alexisrodriguezparet/Desktop/key/Untitled')
+        }
+    }
     compileSdkVersion rootProject.compileSdkVersion
     defaultConfig {
         applicationId "com.vp.movies"
+        versionCode 1
+        versionName "1.0"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         buildConfigField "String", "API_KEY", localProperties['apiKey']
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.release
     }
     buildTypes {
         debug {
@@ -25,6 +36,24 @@ android {
             initWith buildTypes.debug
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             minifyEnabled true
+        }
+        release {
+            debuggable false
+            // Enables code shrinking, obfuscation, and optimization for only
+            // your project's release build type.
+            minifyEnabled true
+
+            // Enables resource shrinking, which is performed by the
+            // Android Gradle plugin.
+            shrinkResources true
+
+            // Includes the default ProGuard rules files that are packaged with
+            // the Android Gradle plugin. To learn more, go to the section about
+            // R8 configuration files.
+            proguardFiles getDefaultProguardFile(
+                    'proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 
@@ -63,6 +92,11 @@ dependencies {
 
     //test
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation project(path: ':persistance')
+
+    implementation "androidx.recyclerview:recyclerview:$rootProject.supportLibraryVersion"
+
+    implementation 'androidx.annotation:annotation:1.1.0'
 }

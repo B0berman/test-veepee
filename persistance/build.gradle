@@ -1,0 +1,73 @@
+/*
+ * Created by Alexis Rodriguez Paret on 3/13/20 8:52 PM
+ * Copyright (c) 2020. All rights reserved. Heliocor (alexis.rodriquez@heliocor.com)
+ * Last modified 3/13/20 8:52 PM
+ *
+ */
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+        }
+        debugProguard {
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+}
+
+dependencies {
+    implementation project(':dagger.addons')
+    implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayout"
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.2.60'
+
+    //glide
+    implementation "com.github.bumptech.glide:glide:$rootProject.glide"
+    kapt "com.github.bumptech.glide:compiler:$rootProject.glide"
+
+    //api
+    implementation "com.google.code.gson:gson:$rootProject.gson"
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit"
+
+    //architecture components
+    implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle"
+
+    //dagger
+    implementation "com.google.dagger:dagger:$rootProject.dagger"
+    kapt "com.google.dagger:dagger-compiler:$rootProject.dagger"
+    implementation "com.google.dagger:dagger-android:$rootProject.dagger"
+    implementation("com.google.dagger:dagger-android-support:$rootProject.dagger")
+    kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+
+    // Room components
+    implementation ("androidx.room:room-runtime:$rootProject.roomVersion")
+    implementation ("androidx.room:room-ktx:$rootProject.roomVersion")
+    kapt "androidx.room:room-compiler:$rootProject.roomVersion"
+
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
+}

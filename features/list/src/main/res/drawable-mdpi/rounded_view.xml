@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Alexis Rodriguez Paret on 3/15/20 2:47 PM
+  ~ Copyright (c) 2020. All rights reserved. Heliocor (alexis.rodriquez@heliocor.com)
+  ~ Last modified 4/30/19 4:25 PM
+  ~
+  -->
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle" android:padding="2dp">
+    <solid android:color="@color/colorAccent" />
+
+    <corners
+        android:topLeftRadius="10dp"
+        android:topRightRadius="10dp"/>
+
+</shape>
