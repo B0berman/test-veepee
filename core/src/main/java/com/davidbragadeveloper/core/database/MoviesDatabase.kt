@@ -1,10 +1,10 @@
-package com.davidbragadeveloper.core
+package com.davidbragadeveloper.core.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.davidbragadeveloper.core.dao.MovieDao
+import com.davidbragadeveloper.core.database.dao.MovieDao
 import com.davidbragadeveloper.core.entity.MovieRoomEntity
 
 @Database(entities = [MovieRoomEntity::class], version = 1)
