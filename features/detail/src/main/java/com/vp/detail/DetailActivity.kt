@@ -9,6 +9,7 @@ import android.view.Menu
 import com.vp.detail.databinding.ActivityDetailBinding
 import com.vp.detail.viewmodel.DetailsViewModel
 import dagger.android.support.DaggerAppCompatActivity
+import kotlinx.android.synthetic.main.activity_detail.*
 import javax.inject.Inject
 import kotlin.run
 

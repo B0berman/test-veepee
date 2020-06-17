@@ -43,6 +43,7 @@ dependencies {
     implementation project(':features:detail')
     implementation project(':features:favorites')
     implementation project(':dagger.addons')
+    implementation project(':core')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin"
 
@@ -60,6 +61,10 @@ dependencies {
     //api
     implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp"
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofit"
+
+    //room
+    implementation 'androidx.room:room-runtime:2.2.5'
+    kapt 'androidx.room:room-compiler:2.2.5'
 
     //test
     testImplementation 'junit:junit:4.12'

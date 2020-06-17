@@ -30,6 +30,20 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@tools:sample/avatars" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/toggleFavoriteFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/poster"
+            app:layout_constraintEnd_toEndOf="@id/poster"
+            android:layout_margin="12dp"
+            app:backgroundTint="@color/colorAccent"
+            android:tint="@android:color/white"
+            android:onClick="@{() -> viewModel.toggleFavorite()}"
+            android:src="@{viewModel.details.favorite ? @drawable/ic_star_filled : @drawable/ic_star}"
+            app:fabSize="mini"
+            />
+
         <TextView
             android:id="@+id/title"
             android:layout_width="0dp"

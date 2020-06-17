@@ -23,6 +23,10 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
 
     fun state(): LiveData<LoadingState> = loadingState
 
+    fun toggleFavorite(){
+        details.value = details.value?.copy(favorite = !details.value!!.favorite)
+    }
+
     fun fetchDetails() {
         loadingState.value = LoadingState.IN_PROGRESS
         detailService.getMovie(DetailActivity.queryProvider.getMovieId()).enqueue(object : Callback, retrofit2.Callback<MovieDetail> {

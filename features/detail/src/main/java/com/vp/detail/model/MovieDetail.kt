@@ -1,5 +1,6 @@
 package com.vp.detail.model
 
+import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class MovieDetail(@SerializedName("Title") val title: String,
@@ -7,4 +8,6 @@ data class MovieDetail(@SerializedName("Title") val title: String,
                        @SerializedName("Runtime") val runtime: String,
                        @SerializedName("Director") val director: String,
                        @SerializedName("Plot") val plot: String,
-                       @SerializedName("Poster") val poster: String)
+                       @SerializedName("Poster") val poster: String,
+                       @Expose(serialize = false, deserialize = false) val favorite: Boolean = false
+)
