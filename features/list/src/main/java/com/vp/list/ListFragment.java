@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ViewAnimator;
@@ -39,6 +41,8 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     private ViewAnimator viewAnimator;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
+    private LinearLayout errorContainer;
+    private Button reloadButton;
     private TextView errorTextView;
     private String currentQuery = "Interview";
 
@@ -62,12 +66,15 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         viewAnimator = view.findViewById(R.id.viewAnimator);
         progressBar = view.findViewById(R.id.progressBar);
         errorTextView = view.findViewById(R.id.errorText);
+        reloadButton = view.findViewById(R.id.reloadButton);
+        errorContainer = view.findViewById(R.id.errorContainer);
 
         if (savedInstanceState != null) {
             currentQuery = savedInstanceState.getString(CURRENT_QUERY);
         }
 
         initBottomNavigation(view);
+        initReloadButton();
         initList();
         listViewModel.observeMovies().observe(this, searchResult -> {
             if (searchResult != null) {
@@ -76,6 +83,12 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         });
         listViewModel.searchMoviesByTitle(currentQuery, 1);
         showProgressBar();
+    }
+
+    private void initReloadButton() {
+        reloadButton.setOnClickListener(view -> {
+            listViewModel.searchMoviesByTitle(currentQuery, 1);
+        });
     }
 
     private void initBottomNavigation(@NonNull View view) {
@@ -114,7 +127,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     }
 
     private void showError() {
-        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(errorTextView));
+        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(errorContainer));
     }
 
     private void handleResult(@NonNull ListAdapter listAdapter, @NonNull SearchResult searchResult) {
