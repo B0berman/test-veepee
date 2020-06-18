@@ -41,6 +41,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     private ProgressBar progressBar;
     private TextView errorTextView;
     private String currentQuery = "Interview";
+    private Uri.Builder detailUriBuilder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,11 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         viewAnimator = view.findViewById(R.id.viewAnimator);
         progressBar = view.findViewById(R.id.progressBar);
         errorTextView = view.findViewById(R.id.errorText);
+
+        detailUriBuilder = new Uri.Builder()
+                .authority("movies")
+                .scheme("app")
+                .path("/detail");
 
         if (savedInstanceState != null) {
             currentQuery = savedInstanceState.getString(CURRENT_QUERY);
@@ -164,6 +170,14 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
 
     @Override
     public void onItemClick(String imdbID) {
-        //TODO handle click events
+        detailUriBuilder.clearQuery();
+        Uri detailData = detailUriBuilder
+                .appendQueryParameter("imdbID", imdbID)
+                .build();
+        Intent detailActivity = new Intent()
+                .setAction(Intent.ACTION_VIEW)
+                .setData(detailData);
+
+        startActivity(detailActivity);
     }
 }

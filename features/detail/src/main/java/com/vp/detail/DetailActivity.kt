@@ -12,6 +12,9 @@ import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 import kotlin.run
 
+/**
+ * This activity should be initialized with the **query** "imdbID"
+ */
 class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
 
     @Inject
