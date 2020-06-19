@@ -45,6 +45,15 @@ android {
     dataBinding {
         enabled = true
     }
+
+    packagingOptions {
+        exclude("/META-INF/*.kotlin_module")
+        exclude("**/kotlin/**")
+        exclude("**/okhttp3/**") // This can be removed since we know the only domains we are connecting to
+        exclude("**/*.txt")
+        exclude("**/*.xml")
+        exclude("**/*.properties")
+    }
 }
 
 dependencies {
