@@ -16,7 +16,7 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun providesRetrofit(okHttpClient: OkHttpClient) = Retrofit.Builder()
+    fun providesRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl("https://www.omdbapi.com/")
             .client(okHttpClient)
