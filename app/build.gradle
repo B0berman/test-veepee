@@ -16,6 +16,7 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
         buildConfigField "String", "API_KEY", localProperties['apiKey']
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        resConfigs 'en' // Only English is used in the app
     }
     buildTypes {
         debug {
@@ -23,8 +24,16 @@ android {
         }
         debugProguard {
             initWith buildTypes.debug
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            debuggable false
+            jniDebuggable false
+            renderscriptDebuggable false
+            pseudoLocalesEnabled false
+            zipAlignEnabled true
+
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             minifyEnabled true
+            shrinkResources true
         }
     }
 
