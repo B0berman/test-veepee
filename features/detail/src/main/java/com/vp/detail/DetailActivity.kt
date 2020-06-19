@@ -36,6 +36,13 @@ class DetailActivity : DaggerAppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.detail_menu, menu)
+        val favoriteItem = menu?.findItem(R.id.star)
+
+        favoriteItem?.setOnMenuItemClickListener {
+            if (detailViewModel.favoriteMovie())
+                favoriteItem.icon = getDrawable(R.drawable.ic_star_filled)
+            return@setOnMenuItemClickListener true
+        }
         return true
     }
 
