@@ -15,19 +15,20 @@ import kotlin.run
 /**
  * This activity should be initialized with the **query** "imdbID"
  */
-class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
+class DetailActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
 
+    private lateinit var detailViewModel: DetailsViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding: ActivityDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
-        val detailViewModel = ViewModelProviders.of(this, factory).get(DetailsViewModel::class.java)
+        detailViewModel = ViewModelProviders.of(this, factory).get(DetailsViewModel::class.java)
         binding.viewModel = detailViewModel
-        queryProvider = this
         binding.setLifecycleOwner(this)
-        detailViewModel.fetchDetails()
+        detailViewModel.fetchDetails(getMovieId())
         detailViewModel.title().observe(this, Observer {
             supportActionBar?.title = it
         })
@@ -38,13 +39,9 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
         return true
     }
 
-    override fun getMovieId(): String {
+    private fun getMovieId(): String {
         return intent?.data?.getQueryParameter("imdbID") ?: run {
             throw IllegalStateException("You must provide movie id to display details")
         }
-    }
-
-    companion object {
-        lateinit var queryProvider: QueryProvider
     }
 }

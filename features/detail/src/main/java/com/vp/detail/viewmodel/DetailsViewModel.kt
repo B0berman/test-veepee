@@ -23,9 +23,9 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
 
     fun state(): LiveData<LoadingState> = loadingState
 
-    fun fetchDetails() {
+    fun fetchDetails(movieId: String) {
         loadingState.value = LoadingState.IN_PROGRESS
-        detailService.getMovie(DetailActivity.queryProvider.getMovieId()).enqueue(object : Callback, retrofit2.Callback<MovieDetail> {
+        detailService.getMovie(movieId).enqueue(object : Callback, retrofit2.Callback<MovieDetail> {
             override fun onResponse(call: Call<MovieDetail>?, response: Response<MovieDetail>?) {
                 details.postValue(response?.body())
 
