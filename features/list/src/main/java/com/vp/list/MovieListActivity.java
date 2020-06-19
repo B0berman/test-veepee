@@ -47,9 +47,10 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
-        MenuItem menuItem = menu.findItem(R.id.search);
+        MenuItem searchItem = menu.findItem(R.id.search);
+        MenuItem refreshItem = menu.findItem(R.id.refresh);
 
-        searchView = (SearchView) menuItem.getActionView();
+        searchView = (SearchView) searchItem.getActionView();
         searchView.setQuery(queryingText, false);
         searchView.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         searchView.setIconified(searchViewExpanded);
@@ -65,6 +66,12 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
             public boolean onQueryTextChange(String newText) {
                 return false;
             }
+        });
+
+        refreshItem.setOnMenuItemClickListener(item -> {
+            ListFragment listFragment = (ListFragment) getSupportFragmentManager().findFragmentByTag(ListFragment.TAG);
+            listFragment.reloadHomePage();
+            return true;
         });
 
         return true;

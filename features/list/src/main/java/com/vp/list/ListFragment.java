@@ -40,7 +40,8 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private TextView errorTextView;
-    private String currentQuery = "Interview";
+    private String initialQuery = "Interview";
+    private String currentQuery = initialQuery;
     private Uri.Builder detailUriBuilder;
 
     @Override
@@ -80,8 +81,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
                 handleResult(listAdapter, searchResult);
             }
         });
-        listViewModel.searchMoviesByTitle(currentQuery, 1);
-        showProgressBar();
+        loadData(currentQuery);
     }
 
     private void initBottomNavigation(@NonNull View view) {
@@ -141,6 +141,11 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         gridPagingScrollListener.markLoading(false);
     }
 
+    private void loadData(String query) {
+        listViewModel.searchMoviesByTitle(query, 1);
+        showProgressBar();
+    }
+
     private void setItemsData(@NonNull ListAdapter listAdapter, @NonNull SearchResult searchResult) {
         listAdapter.setItems(searchResult.getItems());
 
@@ -166,6 +171,10 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         listAdapter.clearItems();
         listViewModel.searchMoviesByTitle(query, 1);
         showProgressBar();
+    }
+
+    public void reloadHomePage() {
+        loadData(initialQuery);
     }
 
     @Override
