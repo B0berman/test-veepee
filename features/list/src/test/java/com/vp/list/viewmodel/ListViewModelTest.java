@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.Observer;
 
 import com.vp.list.model.SearchResponse;
+import com.vp.list.model.SearchResult;
 import com.vp.list.service.SearchService;
 
 import org.junit.Rule;
@@ -51,7 +52,7 @@ public class ListViewModelTest {
         listViewModel.searchMoviesByTitle("title", 1);
 
         //then
-        verify(mockObserver).onChanged(SearchResult.inProgress());
+        verify(mockObserver).onChanged(SearchResult.Companion.inProgress());
     }
 
     @Test
