@@ -8,11 +8,11 @@ interface FavoritesRepository {
 
     fun insertAll(vararg movieFavorites: MovieFavorite)
 
-    fun getFromId(id: Int): MovieFavorite?
+    fun getFromId(imdbID: String): MovieFavorite?
 
     fun getAll(): List<MovieFavorite>
 
-    fun getAllFromIds(ids: IntArray): List<MovieFavorite>
+    fun getAllFromIds(imdbIDs: Array<String>): List<MovieFavorite>
 
     fun delete(movieFavorite: MovieFavorite)
 

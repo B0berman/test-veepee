@@ -8,6 +8,7 @@ class DetailToFavoriteMapper : Mapper<MovieDetail, MovieFavorite> {
 
     override fun map(i: MovieDetail): MovieFavorite {
         return MovieFavorite(
+                imdbID = i.imdbID,
                 title = i.title,
                 year = i.year,
                 runtime = i.runtime,

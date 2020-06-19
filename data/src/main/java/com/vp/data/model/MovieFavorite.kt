@@ -6,7 +6,7 @@ import java.util.*
 
 @Entity(tableName = "favorites")
 data class MovieFavorite(
-    @PrimaryKey(autoGenerate = true) var id: Int = 0,
+    @PrimaryKey val imdbID: String,
     val title: String,
     val year: String,
     val runtime: String,

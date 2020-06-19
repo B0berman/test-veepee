@@ -16,16 +16,16 @@ class FavoritesRepositoryImpl @Inject constructor(private val favoritesDao: Favo
         favoritesDao.insertAll(*movieFavorites)
     }
 
-    override fun getFromId(id: Int): MovieFavorite? {
-        return favoritesDao.getFromId(id)
+    override fun getFromId(imdbID: String): MovieFavorite? {
+        return favoritesDao.getFromId(imdbID)
     }
 
     override fun getAll(): List<MovieFavorite> {
         return favoritesDao.getAll()
     }
 
-    override fun getAllFromIds(ids: IntArray): List<MovieFavorite> {
-        return favoritesDao.getAllFromIds(ids)
+    override fun getAllFromIds(imdbIDs: Array<String>): List<MovieFavorite> {
+        return favoritesDao.getAllFromIds(imdbIDs)
     }
 
     override fun delete(movieFavorite: MovieFavorite) {
