@@ -42,6 +42,7 @@ dependencies {
     implementation project(':features:list')
     implementation project(':features:detail')
     implementation project(':features:favorites')
+    implementation project(':data')
     implementation project(':dagger.addons')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin"
@@ -56,6 +57,10 @@ dependencies {
     implementation "com.google.dagger:dagger-android:$rootProject.dagger"
     implementation "com.google.dagger:dagger-android-support:$rootProject.dagger"
     kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
+
+    //room
+    implementation "androidx.room:room-runtime:$rootProject.lifecycle"
+    kapt "androidx.room:room-compiler:$rootProject.lifecycle"
 
     //api
     implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp"
