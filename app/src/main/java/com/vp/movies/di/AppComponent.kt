@@ -18,6 +18,7 @@ import javax.inject.Singleton
     NetworkModule::class,
     MovieListActivityModule::class,
     DetailActivityModule::class,
+    FavoritesActivityModule::class,
     DataModule::class])
 interface AppComponent {
 
