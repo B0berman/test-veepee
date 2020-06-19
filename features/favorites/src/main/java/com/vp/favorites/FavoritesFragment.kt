@@ -1,5 +1,7 @@
 package com.vp.favorites
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,6 +34,7 @@ class FavoritesFragment : Fragment(), FavoritesAdapter.OnItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
     private lateinit var emptyTextView: TextView
+    private lateinit var detailUriBuilder: Uri.Builder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +52,11 @@ class FavoritesFragment : Fragment(), FavoritesAdapter.OnItemClickListener {
         viewAnimator = view.findViewById(R.id.viewAnimator)
         progressBar = view.findViewById(R.id.progressBar)
         emptyTextView = view.findViewById(R.id.noFavoritesText)
+
+        detailUriBuilder = Uri.Builder()
+                .authority("movies")
+                .scheme("app")
+                .path("/detail")
 
         initList()
         viewModel.favorites().observe(this, Observer { favoritesList ->
@@ -93,6 +101,16 @@ class FavoritesFragment : Fragment(), FavoritesAdapter.OnItemClickListener {
     }
 
     override fun onItemClick(position: Int) {
-        //TODO
+        detailUriBuilder.clearQuery()
+        viewModel.favorites().value?.let { list ->
+            val detailData: Uri = detailUriBuilder
+                    .appendQueryParameter("imdbID", list[position].imdbID)
+                    .build()
+            val detailActivity = Intent()
+                    .setAction(Intent.ACTION_VIEW)
+                    .setData(detailData)
+
+            startActivity(detailActivity)
+        }
     }
 }
