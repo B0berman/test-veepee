@@ -10,7 +10,6 @@ import com.vp.detail.databinding.ActivityDetailBinding
 import com.vp.detail.viewmodel.DetailsViewModel
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
-import kotlin.run
 
 /**
  * This activity should be initialized with the **query** "imdbID"
@@ -39,10 +38,21 @@ class DetailActivity : DaggerAppCompatActivity() {
         val favoriteItem = menu?.findItem(R.id.star)
 
         favoriteItem?.setOnMenuItemClickListener {
-            if (detailViewModel.favoriteMovie())
-                favoriteItem.icon = getDrawable(R.drawable.ic_star_filled)
+            if (detailViewModel.isFavorite().value!!) {
+                detailViewModel.unfavoriteMovie()
+            } else {
+                detailViewModel.favoriteMovie()
+            }
             return@setOnMenuItemClickListener true
         }
+
+        detailViewModel.isFavorite().observe(this, Observer {
+            if (it) {
+                favoriteItem?.icon = getDrawable(R.drawable.ic_star_filled)
+            } else {
+                favoriteItem?.icon = getDrawable(R.drawable.ic_star)
+            }
+        })
         return true
     }
 
