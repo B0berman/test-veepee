@@ -60,6 +60,7 @@ class MovieListActivity : AppCompatActivity(), HasSupportFragmentInjector {
         refreshItem.setOnMenuItemClickListener {
             val listFragment = supportFragmentManager.findFragmentByTag(ListFragment.TAG) as ListFragment
             listFragment.reloadHomePage()
+            searchView.onActionViewCollapsed()
             return@setOnMenuItemClickListener true
         }
         return true

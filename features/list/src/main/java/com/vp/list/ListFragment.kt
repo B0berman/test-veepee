@@ -155,6 +155,8 @@ class ListFragment : Fragment(), LoadMoreItemsListener, ListAdapter.OnItemClickL
     }
 
     fun reloadHomePage() {
+        recyclerView.scrollToPosition(0)
+        currentQuery = initialQuery
         loadData(initialQuery)
     }
 

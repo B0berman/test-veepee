@@ -22,7 +22,7 @@ class ListViewModel @Inject internal constructor(private val searchService: Sear
     fun observeMovies(): LiveData<SearchResult> = liveData
 
     fun searchMoviesByTitle(title: String, page: Int) {
-        if (page == 1 && title != currentTitle) {
+        if (page == 1 || title != currentTitle) {
             aggregatedItems.clear()
             currentTitle = title
             liveData.value = SearchResult.inProgress()
