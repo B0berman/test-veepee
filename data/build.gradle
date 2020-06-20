@@ -36,6 +36,9 @@ dependencies {
     implementation "androidx.room:room-runtime:$rootProject.lifecycle"
     kapt "androidx.room:room-compiler:$rootProject.lifecycle"
 
+    //livedata
+    implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle"
+
     //dagger
     implementation "com.google.dagger:dagger:$rootProject.dagger"
     kapt "com.google.dagger:dagger-compiler:$rootProject.dagger"

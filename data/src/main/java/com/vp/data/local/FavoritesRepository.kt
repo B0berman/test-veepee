@@ -1,5 +1,6 @@
 package com.vp.data.local
 
+import androidx.lifecycle.LiveData
 import com.vp.data.model.MovieFavorite
 
 interface FavoritesRepository {
@@ -9,6 +10,8 @@ interface FavoritesRepository {
     fun insertAll(vararg movieFavorites: MovieFavorite)
 
     fun getFromId(imdbID: String): MovieFavorite?
+
+    fun getAllLiveData(): LiveData<List<MovieFavorite>>
 
     fun getAll(): List<MovieFavorite>
 

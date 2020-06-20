@@ -1,5 +1,6 @@
 package com.vp.data.local
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.vp.data.model.MovieFavorite
 
@@ -17,6 +18,9 @@ interface FavoritesDao {
 
     @Query("SELECT * from favorites WHERE imdbID IN (:imdbIDs)")
     fun getAllFromIds(imdbIDs: Array<String>): List<MovieFavorite>
+
+    @Query("SELECT * from favorites ORDER BY timePersisted ASC")
+    fun getAllLiveData(): LiveData<List<MovieFavorite>>
 
     @Query("SELECT * from favorites ORDER BY timePersisted ASC")
     fun getAll(): List<MovieFavorite>

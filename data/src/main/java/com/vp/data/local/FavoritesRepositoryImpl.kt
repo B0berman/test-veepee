@@ -1,5 +1,6 @@
 package com.vp.data.local
 
+import androidx.lifecycle.LiveData
 import com.vp.data.model.MovieFavorite
 import java.util.*
 import javax.inject.Inject
@@ -18,6 +19,10 @@ class FavoritesRepositoryImpl @Inject constructor(private val favoritesDao: Favo
 
     override fun getFromId(imdbID: String): MovieFavorite? {
         return favoritesDao.getFromId(imdbID)
+    }
+
+    override fun getAllLiveData(): LiveData<List<MovieFavorite>> {
+        return favoritesDao.getAllLiveData()
     }
 
     override fun getAll(): List<MovieFavorite> {

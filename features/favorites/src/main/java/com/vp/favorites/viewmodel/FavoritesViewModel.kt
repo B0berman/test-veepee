@@ -1,7 +1,7 @@
 package com.vp.favorites.viewmodel;
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import com.vp.data.local.FavoritesRepository
 import com.vp.data.model.MovieFavorite
@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class FavoritesViewModel @Inject constructor(private val repository: FavoritesRepository): ViewModel() {
 
-    private val favoritesLiveData = MutableLiveData<List<MovieFavorite>>()
+    private val favoritesLiveData = MediatorLiveData<List<MovieFavorite>>()
 
     fun favorites(): LiveData<List<MovieFavorite>> = favoritesLiveData
 
@@ -18,9 +18,8 @@ class FavoritesViewModel @Inject constructor(private val repository: FavoritesRe
     }
 
     fun loadFavorites() {
-        Thread(Runnable{
-            val list = repository.getAll()
-            favoritesLiveData.postValue(list)
-        }).start()
+        favoritesLiveData.addSource(repository.getAllLiveData()) {
+            favoritesLiveData.value = it
+        }
     }
 }
