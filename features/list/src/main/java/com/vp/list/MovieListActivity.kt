@@ -17,7 +17,7 @@ class MovieListActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Fragment>
 
-    private lateinit var searchView: SearchView
+    private var searchView: SearchView? = null
     private var searchViewExpanded = true
     private var queryingText = ""
 
@@ -43,33 +43,37 @@ class MovieListActivity : AppCompatActivity(), HasSupportFragmentInjector {
         val refreshItem = menu.findItem(R.id.refresh)
 
         searchView = searchItem.actionView as SearchView
-        searchView.setQuery(queryingText, false)
-        searchView.imeOptions = EditorInfo.IME_FLAG_NO_EXTRACT_UI
-        searchView.isIconified = searchViewExpanded
+        searchView?.let { view ->
+            view.setQuery(queryingText, false)
+            view.imeOptions = EditorInfo.IME_FLAG_NO_EXTRACT_UI
+            view.isIconified = searchViewExpanded
 
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
+            view.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    val listFragment = supportFragmentManager.findFragmentByTag(ListFragment.TAG) as ListFragment
+                    listFragment.submitSearchQuery(query)
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String) = false
+            })
+
+            refreshItem.setOnMenuItemClickListener {
                 val listFragment = supportFragmentManager.findFragmentByTag(ListFragment.TAG) as ListFragment
-                listFragment.submitSearchQuery(query)
-                return true
+                listFragment.reloadHomePage()
+                view.onActionViewCollapsed()
+                return@setOnMenuItemClickListener true
             }
-
-            override fun onQueryTextChange(newText: String) = false
-        })
-
-        refreshItem.setOnMenuItemClickListener {
-            val listFragment = supportFragmentManager.findFragmentByTag(ListFragment.TAG) as ListFragment
-            listFragment.reloadHomePage()
-            searchView.onActionViewCollapsed()
-            return@setOnMenuItemClickListener true
         }
         return true
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putBoolean(IS_SEARCH_VIEW_ICONIFIED, searchView.isIconified)
-        outState.putString(QUERYING_TEXT, searchView.query.toString())
+        searchView?.let {
+            outState.putBoolean(IS_SEARCH_VIEW_ICONIFIED, it.isIconified)
+            outState.putString(QUERYING_TEXT, it.query.toString())
+        }
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingActivityInjector
