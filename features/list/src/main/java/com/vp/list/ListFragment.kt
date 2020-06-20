@@ -36,6 +36,7 @@ class ListFragment : Fragment(), LoadMoreItemsListener, ListAdapter.OnItemClickL
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
     private lateinit var errorTextView: TextView
+    private lateinit var loadingMoreProgressBar: ProgressBar
 
     private lateinit var detailUriBuilder: Uri.Builder
     private lateinit var currentQuery: String
@@ -58,6 +59,7 @@ class ListFragment : Fragment(), LoadMoreItemsListener, ListAdapter.OnItemClickL
         viewAnimator = view.findViewById(R.id.viewAnimator)
         progressBar = view.findViewById(R.id.progressBar)
         errorTextView = view.findViewById(R.id.errorText)
+        loadingMoreProgressBar = view.findViewById(R.id.loadingMoreProgressBar)
 
         detailUriBuilder = Uri.Builder()
                 .authority("movies")
@@ -117,10 +119,14 @@ class ListFragment : Fragment(), LoadMoreItemsListener, ListAdapter.OnItemClickL
         when (searchResult.listState) {
             ListState.LOADED -> {
                 setItemsData(listAdapter, searchResult)
+                loadingMoreProgressBar.visibility = View.GONE
                 showList()
             }
             ListState.IN_PROGRESS -> showProgressBar()
-            else -> showError()
+            else -> {
+                loadingMoreProgressBar.visibility = View.GONE
+                showError()
+            }
         }
         gridPagingScrollListener.markLoading(false)
     }
@@ -144,6 +150,7 @@ class ListFragment : Fragment(), LoadMoreItemsListener, ListAdapter.OnItemClickL
 
     override fun loadMoreItems(page: Int) {
         gridPagingScrollListener.markLoading(true)
+        loadingMoreProgressBar.visibility = View.VISIBLE
         listViewModel.searchMoviesByTitle(currentQuery, page)
     }
 
