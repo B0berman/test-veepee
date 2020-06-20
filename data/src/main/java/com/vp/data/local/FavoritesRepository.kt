@@ -14,6 +14,8 @@ interface FavoritesRepository {
 
     fun getAllFromIds(imdbIDs: Array<String>): List<MovieFavorite>
 
+    fun deleteFromId(imdbID: String)
+
     fun delete(movieFavorite: MovieFavorite)
 
     fun deleteAll()

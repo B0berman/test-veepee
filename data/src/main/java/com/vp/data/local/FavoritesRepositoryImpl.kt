@@ -28,6 +28,10 @@ class FavoritesRepositoryImpl @Inject constructor(private val favoritesDao: Favo
         return favoritesDao.getAllFromIds(imdbIDs)
     }
 
+    override fun deleteFromId(imdbID: String) {
+        favoritesDao.deleteFromId(imdbID)
+    }
+
     override fun delete(movieFavorite: MovieFavorite) {
         favoritesDao.delete(movieFavorite)
     }

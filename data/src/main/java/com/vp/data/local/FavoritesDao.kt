@@ -21,6 +21,9 @@ interface FavoritesDao {
     @Query("SELECT * from favorites ORDER BY timePersisted ASC")
     fun getAll(): List<MovieFavorite>
 
+    @Query("DELETE FROM favorites WHERE imdbID =:imdbID")
+    fun deleteFromId(imdbID: String)
+
     @Delete
     fun delete(movieFavorite: MovieFavorite)
 
