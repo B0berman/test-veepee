@@ -1,7 +1,5 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
@@ -25,6 +23,7 @@ android {
             initWith buildTypes.debug
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             minifyEnabled true
+            shrinkResources true
         }
     }
 
@@ -32,19 +31,23 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 
-    dataBinding {
-        enabled = true
+    buildFeatures {
+        dataBinding = true
     }
 }
 
 dependencies {
     implementation project(':features:list')
     implementation project(':features:detail')
-    implementation project(':features:favorites')
+    implementation project(':features:favorite')
     implementation project(':dagger.addons')
+    implementation project(':favorites:common')
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$rootProject.kotlin"
 
     //support
     implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"

@@ -1,52 +1,57 @@
 package com.vp.list;
 
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.ViewAnimator;
 
-import com.vp.list.viewmodel.SearchResult;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.vp.list.search.CustomSearchView;
 import com.vp.list.viewmodel.ListViewModel;
+import com.vp.list.viewmodel.SearchResult;
 
 import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
 
 public class ListFragment extends Fragment implements GridPagingScrollListener.LoadMoreItemsListener, ListAdapter.OnItemClickListener {
+    private static final String SEARCH_VIEW_STATE = "search_view_state";
     public static final String TAG = "ListFragment";
-    private static final String CURRENT_QUERY = "current_query";
-
     @Inject
     ViewModelProvider.Factory factory;
 
+    private CustomSearchView searchView;
+    private Bundle searchViewState;
     private ListViewModel listViewModel;
     private GridPagingScrollListener gridPagingScrollListener;
     private ListAdapter listAdapter;
     private ViewAnimator viewAnimator;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
-    private TextView errorTextView;
-    private String currentQuery = "Interview";
+    private ViewGroup errorContainer;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         AndroidSupportInjection.inject(this);
-        listViewModel = ViewModelProviders.of(this, factory).get(ListViewModel.class);
+        super.onCreate(savedInstanceState);
+        listViewModel = new ViewModelProvider(this, factory).get(ListViewModel.class);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -61,21 +66,25 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         recyclerView = view.findViewById(R.id.recyclerView);
         viewAnimator = view.findViewById(R.id.viewAnimator);
         progressBar = view.findViewById(R.id.progressBar);
-        errorTextView = view.findViewById(R.id.errorText);
+        errorContainer = view.findViewById(R.id.errorContainer);
+        if (savedInstanceState == null) {
+            listViewModel.searchMoviesByTitle("Interview");
 
-        if (savedInstanceState != null) {
-            currentQuery = savedInstanceState.getString(CURRENT_QUERY);
+        } else {
+            searchViewState = savedInstanceState.getParcelable(SEARCH_VIEW_STATE);
         }
 
         initBottomNavigation(view);
         initList();
-        listViewModel.observeMovies().observe(this, searchResult -> {
+        listViewModel.observeMovies().observe(getViewLifecycleOwner(), searchResult -> {
             if (searchResult != null) {
                 handleResult(listAdapter, searchResult);
             }
         });
-        listViewModel.searchMoviesByTitle(currentQuery, 1);
         showProgressBar();
+        view.findViewById(R.id.retry).setOnClickListener(v -> {
+            listViewModel.loadCurrentPageAndTitle();
+        });
     }
 
     private void initBottomNavigation(@NonNull View view) {
@@ -106,15 +115,18 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     }
 
     private void showProgressBar() {
+        gridPagingScrollListener.markLoading(true);
         viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(progressBar));
     }
 
     private void showList() {
+        gridPagingScrollListener.markLoading(false);
         viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(recyclerView));
     }
 
     private void showError() {
-        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(errorTextView));
+        gridPagingScrollListener.markLoading(false);
+        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(errorContainer));
     }
 
     private void handleResult(@NonNull ListAdapter listAdapter, @NonNull SearchResult searchResult) {
@@ -132,38 +144,56 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
                 showError();
             }
         }
-        gridPagingScrollListener.markLoading(false);
     }
 
     private void setItemsData(@NonNull ListAdapter listAdapter, @NonNull SearchResult searchResult) {
         listAdapter.setItems(searchResult.getItems());
+        gridPagingScrollListener.markLastPage(searchResult.getTotalResult() < listAdapter.getItemCount());
+    }
 
-        if (searchResult.getTotalResult() <= listAdapter.getItemCount()) {
-            gridPagingScrollListener.markLastPage(true);
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.refresh) {
+            listViewModel.loadFirstPageForCurrentTitle();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.options_menu, menu);
+        MenuItem menuItem = menu.findItem(R.id.search);
+
+        searchView = (CustomSearchView) menuItem.getActionView();
+        if (searchViewState != null) {
+            searchView.onRestoreInstanceState(searchViewState);
+        }
+
+        searchView.setOnSubmitQueryListener(this::submitSearchQuery);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(CURRENT_QUERY, currentQuery);
+        outState.putParcelable(SEARCH_VIEW_STATE, searchView.onSaveInstanceState());
     }
 
     @Override
     public void loadMoreItems(int page) {
-        gridPagingScrollListener.markLoading(true);
-        listViewModel.searchMoviesByTitle(currentQuery, page);
+        listViewModel.loadNextPageForCurrentQuery();
     }
 
     public void submitSearchQuery(@NonNull final String query) {
-        currentQuery = query;
         listAdapter.clearItems();
-        listViewModel.searchMoviesByTitle(query, 1);
+        listViewModel.searchMoviesByTitle(query);
         showProgressBar();
     }
 
     @Override
     public void onItemClick(String imdbID) {
-        //TODO handle click events
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("app://movies/detail?id=" + imdbID));
+        intent.setPackage(requireContext().getPackageName());
+        startActivity(intent);
     }
 }
