@@ -26,6 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/errorText"
                 android:layout_width="wrap_content"
@@ -40,11 +41,11 @@
                 android:layout_marginTop="12dp"
                 android:layout_gravity="center"
                 android:textColor="@color/colorAccent"
-                android:text="@string/reload_button_text"
-                />
+                android:text="@string/reload_button_text" />
         </LinearLayout>
-
     </ViewAnimator>
+
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"

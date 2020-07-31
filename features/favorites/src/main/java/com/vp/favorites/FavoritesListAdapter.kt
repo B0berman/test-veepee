@@ -8,7 +8,7 @@ import com.vp.favorites.databinding.ItemFavoriteBinding
 import com.vp.favorites.model.MovieFavorite
 
 
-class FavoritesListAdapter: RecyclerView.Adapter<FavoritesListAdapter.ViewHolder>() {
+class FavoritesListAdapter(private inline val onFavoriteClick: (imdbID: String) -> Unit): RecyclerView.Adapter<FavoritesListAdapter.ViewHolder>() {
 
     private var favorites : List<MovieFavorite> = listOf()
 
@@ -25,12 +25,24 @@ class FavoritesListAdapter: RecyclerView.Adapter<FavoritesListAdapter.ViewHolder
         holder.bind(favorite)
     }
 
-    class ViewHolder(private val binding: ViewDataBinding): RecyclerView.ViewHolder(binding.root){
+    fun setItems(favorites: List<MovieFavorite>) {
+        this.favorites = favorites
+        notifyDataSetChanged()
+    }
+
+    fun onFavoriteClick (imdbID: String) = onFavoriteClick.invoke(imdbID)
+
+    inner class ViewHolder(
+            private val binding: ViewDataBinding
+    ): RecyclerView.ViewHolder(binding.root){
 
         fun bind(favorite: MovieFavorite){
-            binding.setVariable(BR.favorite, favorite)
+            binding.setVariable(BR.favorite,favorite)
+            binding.setVariable(BR.adapter, this@FavoritesListAdapter)
             binding.executePendingBindings()
         }
+
+
 
     }
 

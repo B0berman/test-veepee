@@ -1,34 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
             name="favorite"
             type="com.vp.favorites.model.MovieFavorite" />
+        <variable
+            name="adapter"
+            type="com.vp.favorites.FavoritesListAdapter" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="200dp"
-        android:layout_height="100dp">
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="2dp"
+        android:padding="6dp">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/endImageGuideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.40"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:onClick="@{() -> adapter.onFavoriteClick(favorite.id)}"
+            android:layout_margin="12dp">
 
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/endImageGuideline"/>
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/endImageGuideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.20"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/middleHorizontalGuideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.5"/>
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:src ="@android:drawable/ic_input_add"
+                app:layout_constraintEnd_toEndOf="@id/endImageGuideline"
+                app:imageUrl="@{favorite.poster}"/>
+
+            <TextView
+                android:id="@+id/titleTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/endImageGuideline"
+                app:layout_constraintBottom_toTopOf="@id/middleHorizontalGuideline"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="4dp"
+
+                android:layout_marginBottom="12dp"
+                android:text="@{favorite.title}"
+                android:textStyle="bold"
+                android:textSize="16dp"
+                tools:text ="ExampleTest"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/titleTextView"
+                app:layout_constraintTop_toBottomOf="@id/middleHorizontalGuideline"
+                app:layout_constraintEnd_toEndOf="@id/titleTextView"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="12dp"
+                android:text="@{favorite.year}"
+                android:textStyle="bold"
+                android:textSize="16dp"
+                tools:text ="ExampleTest"/>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
 
 
 </layout>

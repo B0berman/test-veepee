@@ -1,6 +1,8 @@
 package com.vp.favorites
 
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +12,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.vp.favorites.model.MovieFavorite
 import com.vp.favorites.viewmodel.FavoritesViewModel
 import dagger.android.support.AndroidSupportInjection
@@ -27,7 +31,11 @@ class FavoritesListFragment : Fragment() {
     }
 
     private val favoritesListAdapter: FavoritesListAdapter by lazy{
-        FavoritesListAdapter()
+        FavoritesListAdapter{ imdbID ->
+            Intent(Intent.ACTION_VIEW, Uri.parse("app://movies/detail?imdbID=$imdbID")).apply {
+                setPackage(requireContext().packageName)
+            }.also(::startActivity)
+        }
     }
 
 
@@ -62,30 +70,30 @@ class FavoritesListFragment : Fragment() {
 
     private fun handleState(loadingState: FavoritesViewModel.LoadingState) {
         when(loadingState){
-            FavoritesViewModel.LoadingState.IN_PROGRESS -> showProgressBar()
-            FavoritesViewModel.LoadingState.LOADED -> showList()
-            FavoritesViewModel.LoadingState.ERROR -> showError()
+            FavoritesViewModel.LoadingState.InProgress -> showProgressBar()
+            is FavoritesViewModel.LoadingState.Loaded -> showList().also {
+                setItemsData(favoritesListAdapter, loadingState.favorites)
+            }
+            FavoritesViewModel.LoadingState.Error-> showError()
         }
     }
 
     private fun setItemsData(favoritesListAdapter: FavoritesListAdapter, favorites: List<MovieFavorite>) {
         favoritesListAdapter.setItems(favorites)
-        if (searchResult.getTotalResult() <= listAdapter.getItemCount()) {
-            gridPagingScrollListener.markLastPage(true)
-        }
     }
 
     private fun initList() {
         recyclerView.adapter = favoritesListAdapter
         recyclerView.setHasFixedSize(true)
-        val layoutManager = GridLayoutManager(context,
-                if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 1 else 2)
+        val layoutManager =
+                if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+                } else {
+                    GridLayoutManager(context, 2)
+                }
         recyclerView.layoutManager = layoutManager
+        recyclerView.addItemDecoration(ItemOffsetDecoration(R.dimen.recycler_offset))
 
-        /*// Pagination
-        gridPagingScrollListener = GridPagingScrollListener(layoutManager)
-        gridPagingScrollListener.setLoadMoreItemsListener(this)
-        recyclerView.addOnScrollListener(gridPagingScrollListener)*/
     }
 
     private fun initReloadButton() {
@@ -103,6 +111,8 @@ class FavoritesListFragment : Fragment() {
     private fun showError() {
         viewAnimator.displayedChild = viewAnimator.indexOfChild(errorContainer)
     }
+
+
 
 
 

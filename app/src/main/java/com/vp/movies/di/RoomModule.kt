@@ -12,7 +12,6 @@ import javax.inject.Singleton
 @Module
 class RoomModule {
 
-
     @Singleton
     @Provides
     fun providesRoomDatabase(application: Application): MoviesDatabase=
