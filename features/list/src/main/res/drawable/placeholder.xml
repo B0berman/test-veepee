@@ -13,6 +13,6 @@
         </shape>
     </item>
     <item
-        android:drawable="@drawable/ic_camera"
+        android:drawable="@drawable/ic_baseline_camera_alt_24"
         android:gravity="center" />
 </layer-list>

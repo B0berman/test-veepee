@@ -1,12 +1,16 @@
 package com.vp.list.model;
 
+import androidx.annotation.Keep;
+
 import com.google.gson.annotations.SerializedName;
+
 
 public class ListItem {
     @SerializedName("Title")
     private String title;
     @SerializedName("Year")
     private String year;
+    @SerializedName("imdbID")
     private String imdbID;
     @SerializedName("Poster")
     private String poster;
