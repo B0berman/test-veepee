@@ -32,7 +32,7 @@ class DetailsViewModel @Inject constructor(
     fun toggleFavorite(){
         val provisionalDetailsValueOrNull = details.value?.copy(favorite = !details.value!!.favorite)
         provisionalDetailsValueOrNull?.let {movie ->
-            // I use a AsyncTask just because coroutines are experimental and I don´t know if
+            // I use a AsyncTask just because coroutines are experimental in this kotlin version and I don´t know if
             // libraries are allowed like the reactive ones, I now other methods like threading
             // but I think async task is better when no observables or suspend functions are allowed
             AsyncTask.execute {
@@ -41,10 +41,9 @@ class DetailsViewModel @Inject constructor(
         }
     }
 
-    fun fetchDetails() {
+    fun fetchDetails(movieId: String) {
         loadingState.value = LoadingState.IN_PROGRESS
-        val movieId = DetailActivity.queryProvider.getMovieId()
-        // I use a AsyncTask just because coroutines are experimental and I don´t know if
+        // I use a AsyncTask just because coroutines are experimental in this kotlin version and I don´t know if
         // libraries are allowed like the reactive ones, I now other methods like threading
         // but I think async task is better when no observables or suspend functions are allowed
         AsyncTask.execute {
@@ -54,7 +53,7 @@ class DetailsViewModel @Inject constructor(
                     title.postValue(movie.title)
                     loadingState.postValue(LoadingState.LOADED)
                 }catch (e: Exception) {
-                    fetchDetails()
+                    fetchDetails(movieId)
                 }
             } ?: fetchDetailsFromApi(movieId)
         }
