@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import java.util.Collections;
 import java.util.List;
 
+// TODO not used, weird
 public class SearchResult {
 
     private List<ListItem> items;
