@@ -74,7 +74,8 @@ class ListFragment : Fragment() {
 
     private fun loadMoreItems(page: Int) {
         gridPagingScrollListener?.markLoading(true)
-        listViewModel.searchMoviesByTitle(currentQuery, page)
+        listViewModel.searchMoviesByTitle(currentQuery,page)
+
     }
 
     fun submitSearchQuery(query: String) {
@@ -108,13 +109,15 @@ class ListFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
         val layoutManager = GridLayoutManager(context,
                 if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 3)
-        recyclerView!!.layoutManager = layoutManager
+        recyclerView.layoutManager = layoutManager
 
         // Pagination
         gridPagingScrollListener = GridPagingScrollListener(
                 layoutManager,
                 ::loadMoreItems
         ).also(recyclerView::addOnScrollListener)
+
+
 
     }
 
@@ -124,10 +127,12 @@ class ListFragment : Fragment() {
 
     private fun showList() {
         viewAnimator.displayedChild = viewAnimator!!.indexOfChild(recyclerView)
+        pagingProgressBar.visibility = View.GONE
     }
 
     private fun showError() {
         viewAnimator.displayedChild = viewAnimator!!.indexOfChild(errorContainer)
+        pagingProgressBar.visibility = View.GONE
     }
 
     private fun handleResult(listAdapter: ListAdapter, searchResult: SearchResult) {
@@ -135,11 +140,24 @@ class ListFragment : Fragment() {
             ListState.LOADED -> {
                 setItemsData(listAdapter, searchResult)
                 showList()
+                gridPagingScrollListener?.markLoading(false)
             }
-            ListState.IN_PROGRESS -> showProgressBar()
-            else -> showError()
+            ListState.IN_PROGRESS -> {
+                showProgressBar()
+                gridPagingScrollListener?.markLoading(false)
+            }
+            ListState.PAGING -> showPagingProgressBar()
+
+            else -> {
+                showError()
+                gridPagingScrollListener?.markLoading(false)
+            }
         }
-        gridPagingScrollListener?.markLoading(false)
+
+    }
+
+    private fun showPagingProgressBar() {
+        pagingProgressBar.visibility = View.VISIBLE
     }
 
     private fun setItemsData(listAdapter: ListAdapter, searchResult: SearchResult) {

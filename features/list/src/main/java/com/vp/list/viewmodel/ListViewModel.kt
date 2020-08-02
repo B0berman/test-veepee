@@ -28,6 +28,8 @@ class ListViewModel @Inject constructor(
             aggregatedItems.clear()
             currentTitle = title
             liveData.value = SearchResult.inProgress()
+        } else {
+            liveData.value = SearchResult.paging()
         }
         searchService.search(title, page).enqueue(object : Callback<SearchResponse?> {
             override fun onResponse(call: Call<SearchResponse?>, response: Response<SearchResponse?>) {
