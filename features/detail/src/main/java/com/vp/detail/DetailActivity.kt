@@ -12,7 +12,7 @@ import com.vp.detail.viewmodel.DetailsViewModel
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
-class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
+class DetailActivity : DaggerAppCompatActivity() {
 
     private lateinit var detailViewModel: DetailsViewModel
     private var favoriteButton: MenuItem? = null
@@ -22,17 +22,24 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val movieId = intent?.data?.getQueryParameter("imdbID") ?: run {
+            throw IllegalStateException("You must provide movie id to display details")
+        }
+
         val binding: ActivityDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
         detailViewModel = ViewModelProviders.of(this, factory).get(DetailsViewModel::class.java)
         binding.viewModel = detailViewModel
-        queryProvider = this
         binding.setLifecycleOwner(this)
-        detailViewModel.fetchDetails()
-        detailViewModel.title().observe(this, Observer {
-            supportActionBar?.title = it
-        })
 
-        detailViewModel.fetchFavorite()
+        with(detailViewModel) {
+            setMovieId(movieId)
+            fetchDetails()
+            title().observe(this@DetailActivity, Observer {
+                supportActionBar?.title = it
+            })
+            fetchFavorite()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -56,15 +63,5 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun getMovieId(): String {
-        return intent?.data?.getQueryParameter("imdbID") ?: run {
-            throw IllegalStateException("You must provide movie id to display details")
-        }
-    }
-
-    companion object {
-        lateinit var queryProvider: QueryProvider
     }
 }

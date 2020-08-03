@@ -22,6 +22,10 @@ class DetailsViewModel @Inject constructor(
     private val loadingState: MutableLiveData<LoadingState> = MutableLiveData()
     private val isFavorite: MutableLiveData<Boolean> = MutableLiveData()
 
+    private lateinit var movieId: String
+
+    fun setMovieId(movieId: String) { this.movieId = movieId }
+
     fun title(): LiveData<String> = title
 
     fun details(): LiveData<MovieDetail> = details
@@ -32,7 +36,7 @@ class DetailsViewModel @Inject constructor(
 
     fun fetchDetails() {
         loadingState.value = LoadingState.IN_PROGRESS
-        detailService.getMovie(DetailActivity.queryProvider.getMovieId()).enqueue(object : Callback, retrofit2.Callback<MovieDetail> {
+        detailService.getMovie(movieId).enqueue(object : Callback, retrofit2.Callback<MovieDetail> {
             override fun onResponse(call: Call<MovieDetail>?, response: Response<MovieDetail>?) {
                 details.postValue(response?.body())
 
@@ -51,12 +55,12 @@ class DetailsViewModel @Inject constructor(
     }
 
     fun fetchFavorite() {
-        isFavorite.value = favoriteRepository.isFavorite(DetailActivity.queryProvider.getMovieId())
+        isFavorite.value = favoriteRepository.isFavorite(movieId)
     }
 
     fun onFavoriteClick() {
         details.value?.let {
-            val favoriteResult = favoriteRepository.onFavoriteSelection(it.toMovieDetail())
+            val favoriteResult = favoriteRepository.onFavoriteSelection(it.toMovieDetail(movieId))
             isFavorite.value = favoriteResult
         }
     }
@@ -66,6 +70,6 @@ class DetailsViewModel @Inject constructor(
     }
 }
 
-private fun MovieDetail.toMovieDetail(): FavoriteMovie {
-    return FavoriteMovie(title = title, movieId = DetailActivity.queryProvider.getMovieId(), cover = poster)
+private fun MovieDetail.toMovieDetail(movieId: String): FavoriteMovie {
+    return FavoriteMovie(title = title, movieId = movieId, cover = poster)
 }
