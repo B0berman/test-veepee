@@ -14,6 +14,8 @@ Technologies mentioned below have been respected (no library, kotlin or gradle u
 
 Time spent : approximately 7-8 hours (not in a row, you can see in Git commits I worked times to times on it).
 
+Note : apiKey used to hit IMdb API is contained into the local.properties file, add yours in this same file.
+
 ### Technologies
 * Architecture - MVVM with [Android Architecture Components](https://developer.android.com/topic/libraries/architecture/)
 * Programming languages - Java 8, Kotlin 1.2.60
