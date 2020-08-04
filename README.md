@@ -13,13 +13,13 @@ Good luck!
 # About the project
 The project uses [OMDb API](http://www.omdbapi.com/) to display a list of movie posters and some details about the selected movie like the runtime, director or the release year.
 
-![Screenshot 1](images/screenshot_1.png)
-![Screenshot 2](images/screenshot_2.png)
+![Screenshot 1](images/screenshot_1.webp)
+![Screenshot 2](images/screenshot_2.webp)
 
 It contains three gradle modules called `list`, `detail` and `favorites`. `List` module is written in Java and `detail` module is written in Kotlin. 
 We left `favorites` module empty to let you make choice of language.
 
-![Diagram](images/diagram.png)
+![Diagram](images/diagram.webp)
 
 ### Technologies
 * Architecture - MVVM with [Android Architecture Components](https://developer.android.com/topic/libraries/architecture/)
