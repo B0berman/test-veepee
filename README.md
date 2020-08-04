@@ -1,25 +1,18 @@
 # Introduction
 
-Hello future colleague!
+Hello dear reviewer !
 
-We are a bunch of developers that like to be surrounded with creative and curious people, who thrive on sharing their experiences and learning continuously.
-If you are here, it's because you probably have applied to vente-privée as an Android Developer. If not we encourage you to do so, through our [careers site](https://careers.vente-privee.com/en/home-page-en/), we have some open positions for you.
-We know that your time is precious, and we don't want you to waste any of it. 
-That's why we provide you with this skeleton project so you can show off your dazzling abilities by completing a few challenges listed below.
-If you have any suggestions or questions related to this repository, you can contact us or open an issue. We will be happy to answer you.
+I have completed the technical test.
+It was really interesting and complete from a Android developer point of view.
+I liked working on many different points : bug solving, adding new feature, architecture building and optimizing app archive.
 
-Good luck!
+I have to admit that I am not 100% comfortable with Dagger and Dependency Injection, so you will note that my architecture is not the best.
 
-# About the project
-The project uses [OMDb API](http://www.omdbapi.com/) to display a list of movie posters and some details about the selected movie like the runtime, director or the release year.
+I have completed the first bonus point, the memory leaked has been fixed. However, I am missing time to crack the last 2 bonus points.
 
-![Screenshot 1](images/screenshot_1.webp)
-![Screenshot 2](images/screenshot_2.webp)
+Technologies mentioned below have been respected (no library, kotlin or gradle update).
 
-It contains three gradle modules called `list`, `detail` and `favorites`. `List` module is written in Java and `detail` module is written in Kotlin. 
-We left `favorites` module empty to let you make choice of language.
-
-![Diagram](images/diagram.webp)
+Time spent : approximately 7-8 hours (not in a row, you can see in Git commits I worked times to times on it).
 
 ### Technologies
 * Architecture - MVVM with [Android Architecture Components](https://developer.android.com/topic/libraries/architecture/)
