@@ -26,6 +26,7 @@ import javax.inject.Inject;
 public class ListFragment extends Fragment implements GridPagingScrollListener.LoadMoreItemsListener, ListAdapter.OnItemClickListener {
     public static final String TAG = "ListFragment";
     private static final String CURRENT_QUERY = "current_query";
+    private static final String DEFAULT_QUERY = "Interview";
 
     @Inject
     ViewModelProvider.Factory factory;
@@ -38,7 +39,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     private ProgressBar progressBar;
     private View errorLayout;
     private View errorButton;
-    private String currentQuery = "Interview";
+    private String currentQuery = DEFAULT_QUERY;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -166,6 +167,13 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         currentQuery = query;
         listAdapter.clearItems();
         listViewModel.searchMoviesByTitle(query, 1);
+        showProgressBar();
+    }
+
+    public void clearSearchQuery() {
+        currentQuery = DEFAULT_QUERY;
+        listAdapter.clearItems();
+        listViewModel.searchMoviesByTitle(DEFAULT_QUERY, 1);
         showProgressBar();
     }
 
