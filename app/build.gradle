@@ -19,6 +19,7 @@ android {
     }
     buildTypes {
         debug {
+          //  proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             minifyEnabled false
         }
         debugProguard {
@@ -36,12 +37,17 @@ android {
     dataBinding {
         enabled = true
     }
+
+    packagingOptions {
+        exclude 'META-INF/proguard/coroutines.pro'
+    }
 }
 
 dependencies {
     implementation project(':features:list')
     implementation project(':features:detail')
     implementation project(':features:favorites')
+    implementation project(':features:storage')
     implementation project(':dagger.addons')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin"

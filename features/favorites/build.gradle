@@ -1,4 +1,7 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -6,7 +9,6 @@ android {
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-
         testInstrumentationRunner "com.android.support.test.runner.AndroidJUnitRunner"
 
     }
@@ -21,15 +23,36 @@ android {
         }
     }
 
+    dataBinding {
+        enabled = true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':dagger.addons')
+    implementation project(':features:list')
+    implementation project(':features:storage')
 
-    implementation('androidx.constraintlayout:constraintlayout:1.1.2')
+    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayout"
 
     //support
     implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
+    implementation "androidx.recyclerview:recyclerview:$rootProject.recyclerView"
+
+    //dagger
+    implementation "com.google.dagger:dagger:$rootProject.dagger"
+    implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle"
+    kapt "com.google.dagger:dagger-compiler:$rootProject.dagger"
+    implementation "com.google.dagger:dagger-android:$rootProject.dagger"
+    implementation("com.google.dagger:dagger-android-support:$rootProject.dagger")
+    kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
+
 
     //tests
     testImplementation 'junit:junit:4.12'
