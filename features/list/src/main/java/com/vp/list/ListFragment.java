@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.ViewAnimator;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,7 +36,8 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     private ViewAnimator viewAnimator;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
-    private TextView errorTextView;
+    private View errorLayout;
+    private View errorButton;
     private String currentQuery = "Interview";
 
     @Override
@@ -59,7 +59,10 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         recyclerView = view.findViewById(R.id.recyclerView);
         viewAnimator = view.findViewById(R.id.viewAnimator);
         progressBar = view.findViewById(R.id.progressBar);
-        errorTextView = view.findViewById(R.id.errorText);
+        errorLayout = view.findViewById(R.id.errorLayout);
+        errorButton = view.findViewById(R.id.errorButton);
+
+        errorButton.setOnClickListener(v -> tryAgainQuery());
 
         if (savedInstanceState != null) {
             currentQuery = savedInstanceState.getString(CURRENT_QUERY);
@@ -112,7 +115,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     }
 
     private void showError() {
-        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(errorTextView));
+        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(errorLayout));
     }
 
     private void handleResult(@NonNull ListAdapter listAdapter, @NonNull SearchResult searchResult) {
@@ -151,6 +154,12 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     public void loadMoreItems(int page) {
         gridPagingScrollListener.markLoading(true);
         listViewModel.searchMoviesByTitle(currentQuery, page);
+    }
+
+    public void tryAgainQuery() {
+        listAdapter.clearItems();
+        listViewModel.searchMoviesByTitle(currentQuery, 1);
+        showProgressBar();
     }
 
     public void submitSearchQuery(@NonNull final String query) {
