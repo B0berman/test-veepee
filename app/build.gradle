@@ -40,6 +40,7 @@ dependencies {
     implementation project(':features:list')
     implementation project(':features:detail')
     implementation project(':features:favorites')
+    implementation project(':storage')
     implementation project(':dagger.addons')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$rootProject.kotlin"
