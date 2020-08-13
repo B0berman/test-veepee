@@ -15,6 +15,7 @@ class MoviesApplication : Application(), HasAndroidInjector {
         super.onCreate()
         DaggerAppComponent.builder()
                 .application(this)
+                .context(this)
                 .build()
                 .inject(this)
     }
