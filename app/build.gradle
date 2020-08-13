@@ -33,9 +33,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    dataBinding {
-        enabled = true
-    }
+    buildFeatures.dataBinding true
 }
 
 dependencies {
@@ -44,7 +42,7 @@ dependencies {
     implementation project(':features:favorites')
     implementation project(':dagger.addons')
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$rootProject.kotlin"
 
     //support
     implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
@@ -63,6 +61,6 @@ dependencies {
 
     //test
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
