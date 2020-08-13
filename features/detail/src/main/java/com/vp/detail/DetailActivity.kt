@@ -29,7 +29,7 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.detail_menu, menu)
+        menuInflater.inflate(R.menu.detail_menu_default, menu)
         return true
     }
 
