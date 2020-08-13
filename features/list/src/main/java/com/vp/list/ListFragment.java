@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.ViewAnimator;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +26,7 @@ import javax.inject.Inject;
 public class ListFragment extends Fragment implements GridPagingScrollListener.LoadMoreItemsListener, ListAdapter.OnItemClickListener {
     public static final String TAG = "ListFragment";
     private static final String CURRENT_QUERY = "current_query";
+    private static final String DEFAULT_QUERY = "Interview";
 
     @Inject
     ViewModelProvider.Factory factory;
@@ -37,8 +37,9 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     private ViewAnimator viewAnimator;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
-    private TextView errorTextView;
-    private String currentQuery = "Interview";
+    private View errorLayout;
+    private View errorButton;
+    private String currentQuery = DEFAULT_QUERY;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,7 +60,10 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         recyclerView = view.findViewById(R.id.recyclerView);
         viewAnimator = view.findViewById(R.id.viewAnimator);
         progressBar = view.findViewById(R.id.progressBar);
-        errorTextView = view.findViewById(R.id.errorText);
+        errorLayout = view.findViewById(R.id.errorLayout);
+        errorButton = view.findViewById(R.id.errorButton);
+
+        errorButton.setOnClickListener(v -> tryAgainQuery());
 
         if (savedInstanceState != null) {
             currentQuery = savedInstanceState.getString(CURRENT_QUERY);
@@ -112,7 +116,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     }
 
     private void showError() {
-        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(errorTextView));
+        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(errorLayout));
     }
 
     private void handleResult(@NonNull ListAdapter listAdapter, @NonNull SearchResult searchResult) {
@@ -153,10 +157,23 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         listViewModel.searchMoviesByTitle(currentQuery, page);
     }
 
+    public void tryAgainQuery() {
+        listAdapter.clearItems();
+        listViewModel.searchMoviesByTitle(currentQuery, 1);
+        showProgressBar();
+    }
+
     public void submitSearchQuery(@NonNull final String query) {
         currentQuery = query;
         listAdapter.clearItems();
         listViewModel.searchMoviesByTitle(query, 1);
+        showProgressBar();
+    }
+
+    public void clearSearchQuery() {
+        currentQuery = DEFAULT_QUERY;
+        listAdapter.clearItems();
+        listViewModel.searchMoviesByTitle(DEFAULT_QUERY, 1);
         showProgressBar();
     }
 

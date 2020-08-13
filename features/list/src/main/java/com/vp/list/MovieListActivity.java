@@ -55,7 +55,9 @@ public class MovieListActivity extends AppCompatActivity implements HasAndroidIn
             @Override
             public boolean onQueryTextSubmit(String query) {
                 ListFragment listFragment = (ListFragment) getSupportFragmentManager().findFragmentByTag(ListFragment.TAG);
-                listFragment.submitSearchQuery(query);
+                if (listFragment != null) {
+                    listFragment.submitSearchQuery(query);
+                }
                 return true;
             }
 
@@ -63,6 +65,13 @@ public class MovieListActivity extends AppCompatActivity implements HasAndroidIn
             public boolean onQueryTextChange(String newText) {
                 return false;
             }
+        });
+        searchView.setOnCloseListener(() -> {
+            ListFragment listFragment = (ListFragment) getSupportFragmentManager().findFragmentByTag(ListFragment.TAG);
+            if (listFragment != null) {
+                listFragment.clearSearchQuery();
+            }
+            return false;
         });
 
         return true;
