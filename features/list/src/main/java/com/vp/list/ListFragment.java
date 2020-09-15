@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -39,6 +40,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     private ViewAnimator viewAnimator;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
+    private SwipeRefreshLayout swipeRefresh;
     private TextView errorTextView;
     private String currentQuery = "Interview";
 
@@ -62,6 +64,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         viewAnimator = view.findViewById(R.id.viewAnimator);
         progressBar = view.findViewById(R.id.progressBar);
         errorTextView = view.findViewById(R.id.errorText);
+        swipeRefresh = view.findViewById(R.id.swipeRefresh);
 
         if (savedInstanceState != null) {
             currentQuery = savedInstanceState.getString(CURRENT_QUERY);
@@ -70,12 +73,21 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         initBottomNavigation(view);
         initList();
         listViewModel.observeMovies().observe(this, searchResult -> {
+            swipeRefresh.setRefreshing(false);
             if (searchResult != null) {
                 handleResult(listAdapter, searchResult);
             }
         });
         listViewModel.searchMoviesByTitle(currentQuery, 1);
         showProgressBar();
+        initSwipeRefresh();
+    }
+
+    private void initSwipeRefresh() {
+        swipeRefresh.setOnRefreshListener(() -> {
+            swipeRefresh.setRefreshing(true);
+            listViewModel.searchMoviesByTitle(currentQuery, 1);
+        });
     }
 
     private void initBottomNavigation(@NonNull View view) {
