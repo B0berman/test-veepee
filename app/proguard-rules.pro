@@ -45,3 +45,6 @@
 
 # OkHttp platform used only on JVM and when Conscrypt dependency is available.
 -dontwarn okhttp3.internal.platform.ConscryptPlatform
+
+# Application classes that will be serialized/deserialized over Gson
+-keep class com.vp.** { *; }
