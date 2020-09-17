@@ -7,18 +7,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vp.favorites.R.layout
 import com.vp.favorites.domain.model.FavoriteItem
 import com.vp.favorites.presentation.ui.adapters.FavoriteAdapter.ViewHolder
-import kotlinx.android.synthetic.main.favorite_list_item.view.favoriteImage
-import kotlinx.android.synthetic.main.favorite_list_item.view.favoriteTitle
+import com.vp.common.GlideApp
+import kotlinx.android.synthetic.main.favorite_list_item.view.poster
 
-class FavoriteAdapter (private val itemClick: (FavoriteItem) -> Unit) :
-    RecyclerView.Adapter<ViewHolder>() {
+class FavoriteAdapter : RecyclerView.Adapter<ViewHolder>() {
 
   private var favouriteItem = emptyList<FavoriteItem>()
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-    val view = LayoutInflater.from(parent.context).inflate(
-        layout.favorite_list_item, parent, false)
-    return ViewHolder(view, itemClick)
+    val view = LayoutInflater.from(parent.context)
+        .inflate(layout.favorite_list_item, parent, false)
+    return ViewHolder(view)
   }
 
   override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -32,16 +31,17 @@ class FavoriteAdapter (private val itemClick: (FavoriteItem) -> Unit) :
     notifyDataSetChanged()
   }
 
-  class ViewHolder(view: View, private val itemClick: (FavoriteItem) -> Unit) :
-      RecyclerView.ViewHolder(view) {
+  class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     fun bindArticle(item: FavoriteItem) {
       with(item) {
-        itemView.favoriteTitle.text = title
-
-        if(image.isNotEmpty()) {
-          //TODO use glide to show image
+        if (image.isNotEmpty()) {
+          val density = itemView.poster.resources.displayMetrics.density
+          GlideApp
+              .with(itemView.poster)
+              .load(image)
+              .override((300 * density).toInt(), (600 * density).toInt())
+              .into(itemView.poster)
         }
-        itemView.setOnClickListener { itemClick(this) }
       }
     }
   }

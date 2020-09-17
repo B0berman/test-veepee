@@ -1,12 +1,12 @@
 package com.vp.favorites.presentation.ui
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.vp.favorites.R.layout
-import com.vp.favorites.domain.model.FavoriteItem
 import com.vp.favorites.presentation.ui.adapters.FavoriteAdapter
 import com.vp.favorites.presentation.viewmodel.FavoriteViewModel
 import dagger.android.support.DaggerAppCompatActivity
@@ -42,9 +42,12 @@ class FavoriteActivity : DaggerAppCompatActivity() {
   }
 
   private fun initRecyclerView() {
-    adapter = FavoriteAdapter { performAction(it) }
+    adapter = FavoriteAdapter()
     recyclerView.adapter = adapter
-    recyclerView.layoutManager = LinearLayoutManager(this)
+    recyclerView.setHasFixedSize(true)
+    recyclerView.layoutManager = GridLayoutManager(
+        applicationContext, if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 3
+    )
   }
 
   private fun initObservers() {
@@ -53,10 +56,6 @@ class FavoriteActivity : DaggerAppCompatActivity() {
         adapter?.setItems(it)
       }
     })
-  }
-
-  private fun performAction(favoriteItem: FavoriteItem) {
-    // TODO open detail
   }
 
   companion object {
