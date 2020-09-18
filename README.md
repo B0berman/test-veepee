@@ -23,7 +23,7 @@ We left `favorites` module empty to let you make choice of language.
 
 ### Technologies
 * Architecture - MVVM with [Android Architecture Components](https://developer.android.com/topic/libraries/architecture/)
-* Programming languages - Java 8, Kotlin 1.2.60
+* Programming languages - Java 8, Kotlin 1.4.10
 * Dependency injection - [Dagger 2](https://github.com/google/dagger)
 * Images loading - [Glide](https://github.com/bumptech/glide)
 * HTTP client - [Retrofit](https://square.github.io/retrofit/)
