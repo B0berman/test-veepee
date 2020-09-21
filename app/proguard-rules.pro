@@ -28,9 +28,10 @@
     @retrofit2.http.* <methods>;
 }
 
--dontwarn androidx.**
--keep class androidx.** { *; }
--keep interface androidx.* { *; }
+
+-keep class com.vp.detail.model.MovieDetail
+-keep class com.vp.detail.viewmodel.DetailsViewModel
+
 
 # Ignore annotation used for build tooling.
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
