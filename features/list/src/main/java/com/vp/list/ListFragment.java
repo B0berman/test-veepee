@@ -164,6 +164,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     @Override
     public void loadMoreItems(int page) {
         gridPagingScrollListener.markLoading(true);
+        swipeRefresh.setRefreshing(true);
         listViewModel.searchMoviesByTitle(currentQuery, page);
     }
 
