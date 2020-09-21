@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">favorites</string>
     <string name="activity_label">Favorites</string>
+    <string name="no_favorite_movies_found">No favorite movies found</string>
 </resources>

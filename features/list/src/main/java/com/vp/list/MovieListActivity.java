@@ -21,6 +21,7 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
     private static final String IS_SEARCH_VIEW_ICONIFIED = "is_search_view_iconified";
     private static final String TEXT_SEARCH_QUERY = "text_search_query";
     String savedQueryText = "";
+
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingActivityInjector;
     private SearchView searchView;
