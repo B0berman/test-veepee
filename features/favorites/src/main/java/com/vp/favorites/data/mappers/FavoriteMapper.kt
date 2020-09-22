@@ -7,12 +7,12 @@ fun List<FavoriteDB>.toDomain() = map { it.toDomain() }
 
 fun FavoriteDB.toDomain() = FavoriteItem(
     id = id,
-    image = favoriteImage,
+    poster = favoriteImage,
     title = favoriteTitle
 )
 
 fun FavoriteItem.toDB() = FavoriteDB(
     id = id,
-    favoriteImage = image,
+    favoriteImage = poster,
     favoriteTitle = title
 )

@@ -1,43 +1,45 @@
-package com.vp.favorites.presentation.ui.adapters
+package com.vp.list
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.vp.favorites.R.layout
-import com.vp.favorites.domain.model.FavoriteItem
-import com.vp.favorites.presentation.ui.adapters.FavoriteAdapter.ViewHolder
-import com.vp.common.GlideApp
-import com.vp.favorites.R
-import kotlinx.android.synthetic.main.favorite_list_item.view.poster
+import com.vp.list.model.ListItem
+import kotlinx.android.synthetic.main.item_list.view.poster
 
-class FavoriteAdapter : RecyclerView.Adapter<ViewHolder>() {
+class ListAdapter(private val itemClick: (String) -> Unit) :
+    RecyclerView.Adapter<ListAdapter.ViewHolder>() {
 
-  private var favouriteItem = emptyList<FavoriteItem>()
+  private var listItem = mutableListOf<ListItem>()
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
     val view = LayoutInflater.from(parent.context)
-        .inflate(layout.favorite_list_item, parent, false)
-    return ViewHolder(view)
+        .inflate(R.layout.item_list, parent, false)
+    return ViewHolder(view, itemClick)
   }
 
   override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-    holder.bindArticle(favouriteItem.elementAt(position))
+    holder.bindArticle(listItem.elementAt(position))
   }
 
-  override fun getItemCount() = favouriteItem.size
+  override fun getItemCount() = listItem.size
 
-  internal fun setItems(items: List<FavoriteItem>) {
-    this.favouriteItem = items
+  internal fun setItems(items: MutableList<ListItem>) {
+    this.listItem = items
     notifyDataSetChanged()
   }
 
-  class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    fun bindArticle(item: FavoriteItem) {
+  fun clearItems() {
+    this.listItem.clear()
+  }
+
+  class ViewHolder(view: View, private val itemClick: (String) -> Unit) : RecyclerView.ViewHolder(view) {
+
+    fun bindArticle(item: ListItem) {
       with(item) {
         if (!poster.isNullOrEmpty() && NO_IMAGE != poster) {
           val density = itemView.poster.resources.displayMetrics.density
-          GlideApp
+          com.vp.common.GlideApp
               .with(itemView.poster)
               .load(poster)
               .override((300 * density).toInt(), (600 * density).toInt())
@@ -45,6 +47,7 @@ class FavoriteAdapter : RecyclerView.Adapter<ViewHolder>() {
         } else {
           itemView.poster.setImageResource(R.drawable.placeholder);
         }
+        itemView.setOnClickListener { itemClick(this.imdbID) }
       }
     }
   }
