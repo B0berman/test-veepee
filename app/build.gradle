@@ -1,7 +1,5 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
@@ -10,6 +8,7 @@ localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
+
     defaultConfig {
         applicationId "com.vp.movies"
         minSdkVersion rootProject.minSdkVersion
@@ -17,14 +16,18 @@ android {
         buildConfigField "String", "API_KEY", localProperties['apiKey']
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
+
         debug {
             minifyEnabled false
         }
+
         debugProguard {
             initWith buildTypes.debug
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             minifyEnabled true
+            shrinkResources true
         }
     }
 
@@ -39,10 +42,10 @@ android {
 }
 
 dependencies {
+    implementation project(':dagger.addons')
     implementation project(':features:list')
     implementation project(':features:detail')
     implementation project(':features:favorites')
-    implementation project(':dagger.addons')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin"
 
@@ -57,12 +60,20 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$rootProject.dagger"
     kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
 
+    // RxJava
+    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxjava"
+    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroid"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$rootProject.rxcalladapter"
+
     //api
     implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp"
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofit"
 
+    // LeakCanary
+//    debugImplementation "com.squareup.leakcanary:leakcanary-android:$rootProject.leakcanary"
+
     //test
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    testImplementation "junit:junit:4.12"
+    androidTestImplementation "androidx.test:runner:1.1.1"
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.1.1"
 }
