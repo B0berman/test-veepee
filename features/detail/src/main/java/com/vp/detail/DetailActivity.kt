@@ -1,33 +1,57 @@
 package com.vp.detail
 
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.databinding.DataBindingUtil
-import android.os.Bundle
-import android.view.Menu
 import com.vp.detail.databinding.ActivityDetailBinding
-import com.vp.detail.viewmodel.DetailsViewModel
+import com.vp.detail.viewmodel.DetailViewModel
 import dagger.android.support.DaggerAppCompatActivity
+import kotlinx.android.synthetic.main.activity_detail.*
 import javax.inject.Inject
-import kotlin.run
 
-class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
+class DetailActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
+    lateinit var detailViewModel: DetailViewModel
+
+    private val queryProvider = object : QueryProvider {
+        private val queryId by lazy {
+            intent?.data?.getQueryParameter("imdbID") ?: throw IllegalStateException("You must provide movie id to display details")
+        }
+
+        override fun getMovieId() = queryId
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding: ActivityDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
-        val detailViewModel = ViewModelProviders.of(this, factory).get(DetailsViewModel::class.java)
+        detailViewModel = ViewModelProviders.of(this, factory).get(DetailViewModel::class.java)
+        detailViewModel.bindFavoriteObserver(this, queryProvider.getMovieId())
         binding.viewModel = detailViewModel
-        queryProvider = this
         binding.setLifecycleOwner(this)
-        detailViewModel.fetchDetails()
+        detailViewModel.fetchDetails(queryProvider.getMovieId())
         detailViewModel.title().observe(this, Observer {
             supportActionBar?.title = it
         })
+        detailViewModel.favorite().observe(this, Observer {
+            invalidateOptionsMenu()
+        })
+
+        errorReload.setOnClickListener {
+            detailViewModel.fetchDetails(queryProvider.getMovieId())
+        }
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        val isFavorite = detailViewModel.isFavorite()
+        menu?.findItem(R.id.add_favorite)?.isVisible = !isFavorite
+        menu?.findItem(R.id.remove_favorite)?.isVisible = isFavorite
+        return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -35,13 +59,11 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
         return true
     }
 
-    override fun getMovieId(): String {
-        return intent?.data?.getQueryParameter("imdbID") ?: run {
-            throw IllegalStateException("You must provide movie id to display details")
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.add_favorite -> detailViewModel.saveToFavorites(queryProvider.getMovieId())
+            R.id.remove_favorite -> detailViewModel.removeFromFavorites(queryProvider.getMovieId())
         }
-    }
-
-    companion object {
-        lateinit var queryProvider: QueryProvider
+        return super.onOptionsItemSelected(item)
     }
 }

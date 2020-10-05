@@ -26,6 +26,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/data_loading_error" />
+
+        <TextView
+            android:id="@+id/errorReloadText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawableRight="@drawable/ic_baseline_refresh_24"
+            android:text="@string/reload_data_loading_error" />
     </ViewAnimator>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

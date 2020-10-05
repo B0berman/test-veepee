@@ -1,22 +1,22 @@
-package com.vp.detail.di
+package com.vp.favorites.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.vp.daggeraddons.DaggerViewModelFactory
 import com.vp.daggeraddons.ViewModelKey
-import com.vp.detail.viewmodel.DetailViewModel
+import com.vp.favorites.viewmodel.FavoriteViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
 
 @Module
-abstract class DetailViewModelsModule {
+abstract class FavoriteViewModelModule {
 
     @Binds
     abstract fun bindDaggerViewModelFactory(daggerViewModelFactory: DaggerViewModelFactory): ViewModelProvider.Factory
 
     @Binds
     @IntoMap
-    @ViewModelKey(DetailViewModel::class)
-    abstract fun bindDetailViewModel(detailViewModel: DetailViewModel): ViewModel
+    @ViewModelKey(FavoriteViewModel::class)
+    abstract fun bindDetailViewModel(detailsViewModel: FavoriteViewModel): ViewModel
 }

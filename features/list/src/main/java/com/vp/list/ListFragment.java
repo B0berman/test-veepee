@@ -39,7 +39,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     private ViewAnimator viewAnimator;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
-    private TextView errorTextView;
+    private View errorReloadText;
     private String currentQuery = "Interview";
 
     @Override
@@ -61,7 +61,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         recyclerView = view.findViewById(R.id.recyclerView);
         viewAnimator = view.findViewById(R.id.viewAnimator);
         progressBar = view.findViewById(R.id.progressBar);
-        errorTextView = view.findViewById(R.id.errorText);
+        errorReloadText = view.findViewById(R.id.errorReloadText);
 
         if (savedInstanceState != null) {
             currentQuery = savedInstanceState.getString(CURRENT_QUERY);
@@ -76,6 +76,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         });
         listViewModel.searchMoviesByTitle(currentQuery, 1);
         showProgressBar();
+        view.findViewById(R.id.errorReloadText).setOnClickListener(v -> listViewModel.searchMoviesByTitle(currentQuery, 1));
     }
 
     private void initBottomNavigation(@NonNull View view) {
@@ -114,7 +115,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     }
 
     private void showError() {
-        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(errorTextView));
+        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(errorReloadText));
     }
 
     private void handleResult(@NonNull ListAdapter listAdapter, @NonNull SearchResult searchResult) {
@@ -164,6 +165,9 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
 
     @Override
     public void onItemClick(String imdbID) {
-        //TODO handle click events
+        Uri uri = Uri.parse("app://movies/detail?imdbID=" + imdbID);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.setPackage(requireContext().getPackageName());
+        startActivity(intent);
     }
 }

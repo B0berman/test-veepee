@@ -6,4 +6,8 @@
     <string name="runtime">Runtime: %s</string>
     <string name="loading_error">Loading error</string>
     <string name="favorite">Favorite</string>
+    <string name="reload">Reload</string>
+    <string name="add_favorite">Add to Favorites</string>
+    <string name="remove_favorite">Remove from favorites</string>
+
 </resources>

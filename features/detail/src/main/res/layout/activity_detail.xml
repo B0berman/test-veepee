@@ -5,13 +5,13 @@
 
     <data>
 
-        <import type="com.vp.detail.viewmodel.DetailsViewModel.LoadingState" />
+        <import type="com.vp.detail.viewmodel.DetailViewModel.LoadingState" />
 
         <import type="android.view.View" />
 
         <variable
             name="viewModel"
-            type="com.vp.detail.viewmodel.DetailsViewModel" />
+            type="com.vp.detail.viewmodel.DetailViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -110,19 +110,37 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/errorContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/loading_error"
+            android:layout_gravity="center"
             android:visibility="@{viewModel.state == LoadingState.ERROR ? View.VISIBLE : View.GONE}"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/loading_error"
+                android:padding="4dp"
+                android:textColor="#333" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/errorReload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:drawableEnd="@drawable/ic_reload"
+                android:gravity="center_vertical"
+                android:drawablePadding="4dp"
+                android:padding="4dp"
+                android:text="@string/reload"
+                android:textColor="#333" />
+        </LinearLayout>
 
         <androidx.constraintlayout.widget.Group
             android:layout_width="wrap_content"
