@@ -1,16 +1,14 @@
 package com.vp.detail
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import android.view.Menu
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.vp.detail.databinding.ActivityDetailBinding
 import com.vp.detail.viewmodel.DetailsViewModel
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
-import kotlin.run
 
 class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
 
@@ -23,11 +21,9 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
         val detailViewModel = ViewModelProviders.of(this, factory).get(DetailsViewModel::class.java)
         binding.viewModel = detailViewModel
         queryProvider = this
-        binding.setLifecycleOwner(this)
+        binding.lifecycleOwner = this
         detailViewModel.fetchDetails()
-        detailViewModel.title().observe(this, Observer {
-            supportActionBar?.title = it
-        })
+        detailViewModel.title().observe(this) { supportActionBar?.title = it }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
