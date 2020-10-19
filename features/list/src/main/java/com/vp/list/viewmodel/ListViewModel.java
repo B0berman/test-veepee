@@ -10,6 +10,7 @@ import com.vp.list.service.SearchService;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
+import org.jetbrains.annotations.NotNull;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,12 +32,17 @@ public class ListViewModel extends ViewModel {
     }
 
     public void searchMoviesByTitle(@NonNull String title, int page) {
-
         if (page == 1 && !title.equals(currentTitle)) {
             aggregatedItems.clear();
             currentTitle = title;
             liveData.setValue(SearchResult.inProgress());
+        } else {
+            liveData.setValue(SearchResult.loadingMore(aggregatedItems));
         }
+        executeSearchQuery(title, page);
+    }
+
+    private void executeSearchQuery(@NotNull String title, int page) {
         searchService.search(title, page).enqueue(new Callback<SearchResponse>() {
             @Override
             public void onResponse(
@@ -44,6 +50,11 @@ public class ListViewModel extends ViewModel {
                 @NonNull Response<SearchResponse> response
             ) {
 
+                try {
+                    Thread.sleep(1000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 SearchResponse result = response.body();
 
                 if (result != null) {
@@ -61,5 +72,11 @@ public class ListViewModel extends ViewModel {
                 liveData.setValue(SearchResult.error());
             }
         });
+    }
+
+    public void refreshMovies() {
+        aggregatedItems.clear();
+        liveData.setValue(SearchResult.inProgress());
+        executeSearchQuery(currentTitle, 1);
     }
 }

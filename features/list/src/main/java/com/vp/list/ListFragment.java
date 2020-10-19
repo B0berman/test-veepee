@@ -1,7 +1,6 @@
 package com.vp.list;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,6 +21,7 @@ import com.vp.list.viewmodel.ListViewModel;
 import com.vp.list.viewmodel.SearchResult;
 import dagger.android.support.AndroidSupportInjection;
 import javax.inject.Inject;
+import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 
 public class ListFragment extends Fragment
     implements GridPagingScrollListener.LoadMoreItemsListener, ListAdapter.OnItemClickListener {
@@ -97,12 +97,19 @@ public class ListFragment extends Fragment
         listAdapter.setOnItemClickListener(this);
         recyclerView.setAdapter(listAdapter);
         recyclerView.setHasFixedSize(true);
+        final int spanCount = getResources().getConfiguration().orientation == ORIENTATION_PORTRAIT
+            ? 2
+            : 3;
         GridLayoutManager layoutManager = new GridLayoutManager(
             getContext(),
-            getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT
-                ? 2
-                : 3
+            spanCount
         );
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return listAdapter.getItemSpanSize(position, spanCount);
+            }
+        });
         recyclerView.setLayoutManager(layoutManager);
 
         // Pagination
@@ -137,6 +144,11 @@ public class ListFragment extends Fragment
                 showProgressBar();
                 break;
             }
+            case LOADING_MORE: {
+                final boolean isLoadingMore = searchResult.isLoadingMore();
+                listAdapter.setItems(searchResult.getItems(), isLoadingMore);
+                showList();
+            }
             default: {
                 showError();
             }
@@ -148,9 +160,10 @@ public class ListFragment extends Fragment
         @NonNull ListAdapter listAdapter,
         @NonNull SearchResult searchResult
     ) {
-        listAdapter.setItems(searchResult.getItems());
+        final boolean isLoadingMore = searchResult.isLoadingMore();
+        listAdapter.setItems(searchResult.getItems(), isLoadingMore);
 
-        if (searchResult.getTotalResult() <= listAdapter.getItemCount()) {
+        if (!isLoadingMore && searchResult.getTotalResult() <= listAdapter.getItemCount()) {
             gridPagingScrollListener.markLastPage(true);
         }
     }
@@ -172,6 +185,10 @@ public class ListFragment extends Fragment
         listAdapter.clearItems();
         listViewModel.searchMoviesByTitle(query, 1);
         showProgressBar();
+    }
+
+    public void refresh() {
+        listViewModel.refreshMovies();
     }
 
     @Override

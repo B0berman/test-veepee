@@ -8,14 +8,21 @@ import java.util.Objects;
 
 public class SearchResult {
 
-    private List<ListItem> items;
-    private int totalResult;
-    private ListState listState;
+    private final List<ListItem> items;
+    private final int totalResult;
+    private final ListState listState;
+    private final boolean isLoadingMore;
 
-    private SearchResult(List<ListItem> items, int totalResult, ListState listState) {
+    private SearchResult(
+        List<ListItem> items,
+        int totalResult,
+        ListState listState,
+        boolean isLoadingMore
+    ) {
         this.items = items;
         this.listState = listState;
         this.totalResult = totalResult;
+        this.isLoadingMore = isLoadingMore;
     }
 
     public List<ListItem> getItems() {
@@ -30,16 +37,24 @@ public class SearchResult {
         return listState;
     }
 
+    public boolean isLoadingMore() {
+        return isLoadingMore;
+    }
+
     public static SearchResult error() {
-        return new SearchResult(Collections.emptyList(), 0, ListState.ERROR);
+        return new SearchResult(Collections.emptyList(), 0, ListState.ERROR, false);
     }
 
     public static SearchResult success(List<ListItem> items, int totalResult) {
-        return new SearchResult(items, totalResult, ListState.LOADED);
+        return new SearchResult(items, totalResult, ListState.LOADED, false);
+    }
+
+    public static SearchResult loadingMore(List<ListItem> items) {
+        return new SearchResult(items, 0, ListState.LOADING_MORE, true);
     }
 
     public static SearchResult inProgress() {
-        return new SearchResult(Collections.emptyList(), 0, ListState.IN_PROGRESS);
+        return new SearchResult(Collections.emptyList(), 0, ListState.IN_PROGRESS, false);
     }
 
     @Override

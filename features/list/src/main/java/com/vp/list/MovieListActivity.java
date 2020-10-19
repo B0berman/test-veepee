@@ -1,21 +1,17 @@
 package com.vp.list;
 
-import android.app.Activity;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.widget.SearchView;
-
-import dagger.android.HasAndroidInjector;
-import javax.inject.Inject;
-
+import androidx.appcompat.app.AppCompatActivity;
 import dagger.android.AndroidInjection;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
+import dagger.android.HasAndroidInjector;
+import javax.inject.Inject;
 
 public class MovieListActivity extends AppCompatActivity implements HasAndroidInjector {
     private static final String IS_SEARCH_VIEW_ICONIFIED = "is_search_view_iconified";
@@ -48,8 +44,15 @@ public class MovieListActivity extends AppCompatActivity implements HasAndroidIn
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
-        MenuItem menuItem = menu.findItem(R.id.search);
 
+        MenuItem refreshItem = menu.findItem(R.id.refresh);
+        refreshItem.setOnMenuItemClickListener(item -> {
+            ListFragment listFragment = (ListFragment) getSupportFragmentManager().findFragmentByTag(ListFragment.TAG);
+            listFragment.refresh();
+            return true;
+        });
+
+        MenuItem menuItem = menu.findItem(R.id.search);
         searchView = (SearchView) menuItem.getActionView();
         searchView.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         searchView.setIconified(searchViewExpanded);
