@@ -71,7 +71,7 @@ public class ListFragment extends Fragment
 
         initBottomNavigation(view);
         initList();
-        listViewModel.observeMovies().observe(this, searchResult -> {
+        listViewModel.observeMovies().observe(getViewLifecycleOwner(), searchResult -> {
             if (searchResult != null) {
                 handleResult(listAdapter, searchResult);
             }
