@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static org.mockito.Mockito.inOrder;
 import retrofit2.mock.Calls;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,6 +53,24 @@ public class ListViewModelTest {
 
         //then
         verify(mockObserver).onChanged(SearchResult.inProgress());
+    }
+
+    @Test
+    public void shouldReturnInSuccessState() {
+        //given
+        SearchService searchService = mock(SearchService.class);
+        final SearchResponse searchResponse = mock(SearchResponse.class);
+        when(searchService.search(anyString(), anyInt())).thenReturn(Calls.response(searchResponse));
+        ListViewModel listViewModel = new ListViewModel(searchService);
+        Observer<SearchResult> mockObserver = (Observer<SearchResult>) mock(Observer.class);
+        listViewModel.observeMovies().observeForever(mockObserver);
+
+        //when
+        listViewModel.searchMoviesByTitle("title", 1);
+
+        //then
+        verify(mockObserver).onChanged(SearchResult.inProgress());
+        verify(mockObserver).onChanged(SearchResult.success(searchResponse.getSearch(), searchResponse.getTotalResults()));
     }
 
 }
