@@ -6,11 +6,11 @@ import com.vp.list.di.MovieListActivityModule
 import com.vp.movies.MoviesApplication
 import dagger.BindsInstance
 import dagger.Component
-import dagger.android.support.AndroidSupportInjectionModule
+import dagger.android.AndroidInjectionModule
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AndroidSupportInjectionModule::class, NetworkModule::class, MovieListActivityModule::class, DetailActivityModule::class])
+@Component(modules = [AndroidInjectionModule::class, NetworkModule::class, MovieListActivityModule::class, DetailActivityModule::class])
 interface AppComponent {
 
     @Component.Builder

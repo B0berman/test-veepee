@@ -1,5 +1,6 @@
 package com.vp.list;
 
+import android.app.Activity;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,19 +10,19 @@ import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.widget.SearchView;
 
+import dagger.android.HasAndroidInjector;
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
-import dagger.android.support.HasSupportFragmentInjector;
 
-public class MovieListActivity extends AppCompatActivity implements HasSupportFragmentInjector {
+public class MovieListActivity extends AppCompatActivity implements HasAndroidInjector {
     private static final String IS_SEARCH_VIEW_ICONIFIED = "is_search_view_iconified";
     private static final String CURRENT_QUERY = "current_query";
 
     @Inject
-    DispatchingAndroidInjector<Fragment> dispatchingActivityInjector;
+    DispatchingAndroidInjector<Object> dispatchingActivityInjector;
     private SearchView searchView;
     private boolean searchViewExpanded = true;
     private CharSequence savedQuery = null;
@@ -78,7 +79,7 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
     }
 
     @Override
-    public AndroidInjector<Fragment> supportFragmentInjector() {
+    public AndroidInjector<Object> androidInjector() {
         return dispatchingActivityInjector;
     }
 }
