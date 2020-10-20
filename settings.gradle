@@ -1,1 +1,6 @@
-include ':app', ':features:list', ':features:favorites', ':dagger.addons', 'features:detail'
+include ':app'
+include ':features:list'
+include ':features:favorites'
+include ':dagger.addons'
+include 'features:detail'
+include ':api:favorite'

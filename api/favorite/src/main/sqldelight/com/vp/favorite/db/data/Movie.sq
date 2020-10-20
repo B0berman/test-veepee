@@ -1,0 +1,28 @@
+CREATE TABLE movie (
+  id TEXT NOT NULL PRIMARY KEY,
+  title TEXT NOT NULL,
+  year TEXT NOT NULL,
+  runtime TEXT NOT NULL,
+  director TEXT NOT NULL,
+  plot TEXT NOT NULL,
+  posterUri TEXT NOT NULL
+);
+
+insertMovie:
+INSERT
+INTO movie (id, title, year, runtime, director, plot, posterUri)
+VALUES (?, ?, ?, ?, ?, ?, ?);
+
+deleteMovie:
+DELETE
+FROM movie
+WHERE id = ?;
+
+getMovie:
+SELECT movie.*
+FROM movie
+WHERE id = ?;
+
+selectAll:
+SELECT *
+FROM movie;
