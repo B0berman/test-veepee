@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">favorites</string>
     <string name="activity_label">Favorites</string>
+    <string name="movie_card_release_date_title">"Year"</string>
+    <string name="movie_card_director_title">"Director"</string>
+    <string name="movie_card_runtime_title">"Runtime"</string>
+    <string name="movie_card_plot_title">"Plot"</string>
+    <string name="movie_card_genre_title">"Genre"</string>
 </resources>

@@ -16,17 +16,34 @@ import com.vp.favorite.db.data.Movie as MovieEntity
 class DbFavoriteMovieRepository @Inject internal constructor(
     private val movieQueries: MovieQueries
 ) : FavoriteMovieRepository {
-    override val favoriteMovies: Flow<List<Movie>>
-        get() = movieQueries.selectAll()
-            .asFlow()
-            .mapToList()
-            .map { movies -> movies.map(MovieEntity::toMovie) }
+    override val favoriteMovies: Flow<List<Movie>> = movieQueries.selectAll()
+        .asFlow()
+        .mapToList()
+        .map { movies -> movies.map(MovieEntity::toMovie) }
 
     override fun movieFlow(id: String): Flow<Movie> {
         return movieQueries.getMovie(id)
             .asFlow()
             .mapToOne()
             .map { it.toMovie() }
+    }
+
+    override suspend fun getFavoriteMovies(): List<Movie> {
+        return withContext(Dispatchers.Main) {
+            withContext(Dispatchers.Default) {
+                movieQueries.selectAll()
+                    .executeAsList()
+                    .map(MovieEntity::toMovie)
+            }
+        }
+    }
+
+    override suspend fun getMovie(id: String): Movie {
+        return withContext(Dispatchers.Main) {
+            withContext(Dispatchers.Default) {
+                movieQueries.getMovie(id).executeAsOne().toMovie()
+            }
+        }
     }
 
     override suspend fun isFavorite(id: String): Boolean {
