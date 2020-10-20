@@ -23,7 +23,7 @@ import com.vp.list.viewmodel.SearchResult
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
-class ListFragment : Fragment(R.layout.fragment_list), LoadMoreItemsListener, OnItemClickListener {
+class ListFragment : Fragment(R.layout.fragment_list) {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     private val listViewModel: ListViewModel by lazy {
@@ -49,7 +49,7 @@ class ListFragment : Fragment(R.layout.fragment_list), LoadMoreItemsListener, On
         }
         initBottomNavigation(view)
         initList()
-        listViewModel.observeMovies().observe(viewLifecycleOwner, { searchResult: SearchResult? ->
+        listViewModel.movies.observe(viewLifecycleOwner, { searchResult: SearchResult? ->
             if (searchResult != null) {
                 handleResult(listAdapter, searchResult)
             }
@@ -77,7 +77,15 @@ class ListFragment : Fragment(R.layout.fragment_list), LoadMoreItemsListener, On
 
     private fun initList() {
         val binding = requireBinding()
-        listAdapter.setOnItemClickListener(this)
+        listAdapter.setOnItemClickListener {imdbID ->
+            val detailUri = Uri.parse("app://movies/detail")
+                .buildUpon()
+                .appendQueryParameter("imdbID", imdbID)
+                .build()
+            val intent = Intent(Intent.ACTION_VIEW, detailUri)
+            intent.setPackage(requireContext().packageName)
+            startActivity(intent)
+        }
         binding.recyclerView.adapter = listAdapter
         binding.recyclerView.setHasFixedSize(true)
         val spanCount =
@@ -92,7 +100,10 @@ class ListFragment : Fragment(R.layout.fragment_list), LoadMoreItemsListener, On
 
         // Pagination
         gridPagingScrollListener = GridPagingScrollListener(layoutManager)
-        gridPagingScrollListener.setLoadMoreItemsListener(this)
+        gridPagingScrollListener.setLoadMoreItemsListener { page ->
+            gridPagingScrollListener.markLoading(true)
+            listViewModel.searchMoviesByTitle(currentQuery, page)
+        }
         binding.recyclerView.addOnScrollListener(gridPagingScrollListener)
     }
 
@@ -149,11 +160,6 @@ class ListFragment : Fragment(R.layout.fragment_list), LoadMoreItemsListener, On
         outState.putString(CURRENT_QUERY, currentQuery)
     }
 
-    override fun loadMoreItems(page: Int) {
-        gridPagingScrollListener.markLoading(true)
-        listViewModel.searchMoviesByTitle(currentQuery, page)
-    }
-
     fun submitSearchQuery(query: String) {
         currentQuery = query
         listAdapter.clearItems()
@@ -163,16 +169,6 @@ class ListFragment : Fragment(R.layout.fragment_list), LoadMoreItemsListener, On
 
     fun refresh() {
         listViewModel.refreshMovies()
-    }
-
-    override fun onItemClick(imdbID: String) {
-        val detailUri = Uri.parse("app://movies/detail")
-            .buildUpon()
-            .appendQueryParameter("imdbID", imdbID)
-            .build()
-        val intent = Intent(Intent.ACTION_VIEW, detailUri)
-        intent.setPackage(requireContext().packageName)
-        startActivity(intent)
     }
 
     companion object {

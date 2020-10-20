@@ -5,8 +5,8 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
 @Module
-abstract class ListFragmentModule {
+interface ListFragmentModule {
 
     @ContributesAndroidInjector
-    abstract fun bindListFragment(): ListFragment
+    fun bindListFragment(): ListFragment
 }
