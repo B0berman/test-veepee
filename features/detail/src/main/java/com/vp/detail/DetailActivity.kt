@@ -29,7 +29,7 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
             .get(DetailsViewModel::class.java)
         binding.viewModel = detailViewModel
         binding.lifecycleOwner = this
-        detailViewModel.fetchDetails(getMovieId())
+        detailViewModel.fetchDetails(getMovieId(), isFavorite())
         detailViewModel.title().observe(this) { supportActionBar?.title = it }
         detailViewModel.isFavorite().observe(this) { isFavorite ->
             this.isFavorite = isFavorite
@@ -53,6 +53,10 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
         } else {
             super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun isFavorite(): Boolean {
+        return intent?.data?.getQueryParameter("isFavorite").toBoolean()
     }
 
     override fun getMovieId(): String {

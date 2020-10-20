@@ -42,28 +42,37 @@ class DetailsViewModel @Inject constructor(
         }
     }
 
-    fun fetchDetails(movieId: String) {
+    fun fetchDetails(movieId: String, fromFavorite: Boolean) {
         loadingState.value = LoadingState.IN_PROGRESS
-        detailService.getMovie(movieId).enqueue(object : Callback, retrofit2.Callback<MovieDetail> {
-            override fun onResponse(call: Call<MovieDetail>?, response: Response<MovieDetail>?) {
-                viewModelScope.launch {
-                    val movie = response?.body()
-                    if (movie != null) {
-                        val isFavorite = favoriteRepository.isFavorite(movie.id)
-                        details.postValue(movie.copy(isFavorite = isFavorite))
+        if (fromFavorite) {
+            viewModelScope.launch {
+                val movie = favoriteRepository.getMovie(movieId)
+                details.postValue(movie.toMovieDetail())
+                title.postValue(movie.title)
+                loadingState.value = LoadingState.LOADED
+            }
+        } else {
+            detailService.getMovie(movieId).enqueue(object : Callback, retrofit2.Callback<MovieDetail> {
+                override fun onResponse(call: Call<MovieDetail>?, response: Response<MovieDetail>?) {
+                    viewModelScope.launch {
+                        val movie = response?.body()
+                        if (movie != null) {
+                            val isFavorite = favoriteRepository.isFavorite(movie.id)
+                            details.postValue(movie.copy(isFavorite = isFavorite))
 
-                        movie.title.let(title::postValue)
+                            movie.title.let(title::postValue)
 
-                        loadingState.value = LoadingState.LOADED
+                            loadingState.value = LoadingState.LOADED
+                        }
                     }
                 }
-            }
 
-            override fun onFailure(call: Call<MovieDetail>?, t: Throwable?) {
-                details.postValue(null)
-                loadingState.value = LoadingState.ERROR
-            }
-        })
+                override fun onFailure(call: Call<MovieDetail>?, t: Throwable?) {
+                    details.postValue(null)
+                    loadingState.value = LoadingState.ERROR
+                }
+            })
+        }
     }
 
     enum class LoadingState {
@@ -80,5 +89,18 @@ private fun MovieDetail.toMovie(): Movie {
         director = director,
         plot = plot,
         posterUri = Uri.parse(poster)
+    )
+}
+
+private fun Movie.toMovieDetail(): MovieDetail {
+    return MovieDetail(
+        id = id,
+        title = title,
+        year = year,
+        runtime = runtime,
+        director = director,
+        plot = plot,
+        poster = posterUri.toString(),
+        isFavorite = true
     )
 }
