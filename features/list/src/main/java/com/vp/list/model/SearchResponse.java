@@ -13,9 +13,10 @@ public class SearchResponse {
     @SerializedName("Search")
     private List<ListItem> search;
 
+    @SerializedName("totalResults")
     private int totalResults;
     @SerializedName("Response")
-    private String response;
+    private final String response;
 
     private SearchResponse(String response) {
         this.response = response;
