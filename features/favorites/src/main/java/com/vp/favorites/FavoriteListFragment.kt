@@ -1,29 +1,18 @@
 package com.vp.favorites
 
 import android.content.Intent
-import android.content.res.Resources
-import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.vp.favorite.model.Movie
 import com.vp.favorites.R.layout
 import com.vp.favorites.databinding.FragmentFavoritesBinding
-import com.vp.favorites.databinding.ItemMovieBinding
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
-import kotlin.math.ceil
 
 class FavoriteListFragment : Fragment(layout.fragment_favorites) {
 
@@ -105,86 +94,3 @@ class FavoriteListFragment : Fragment(layout.fragment_favorites) {
     }
 }
 
-interface OnFavoriteActionListener {
-    fun onItemClicked(id: String)
-    fun onRemove(id: String)
-}
-
-class FavoriteAdapter(
-    private val listener: OnFavoriteActionListener
-) : ListAdapter<Movie, FavoriteViewHolder>(
-    object : DiffUtil.ItemCallback<Movie>() {
-        override fun areItemsTheSame(oldItem: Movie, newItem: Movie) = oldItem.id == newItem.id
-
-        override fun areContentsTheSame(oldItem: Movie, newItem: Movie) = oldItem == newItem
-    }
-) {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteViewHolder {
-        return FavoriteViewHolder.create(LayoutInflater.from(parent.context), parent, listener)
-    }
-
-    override fun onBindViewHolder(holder: FavoriteViewHolder, position: Int) {
-        holder.bind(getItem(position))
-    }
-}
-
-class FavoriteViewHolder(
-    private val binding: ItemMovieBinding,
-    private val listener: OnFavoriteActionListener
-) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(item: Movie) {
-        binding.apply {
-            movieCardTitle.text = item.title
-            movieCardDirectorValue.text = item.director
-            movieCardRuntimeValue.text = item.runtime
-            movieCardPlotValue.text = item.plot
-            movieCardReleaseDateValue.text = item.year
-            Glide.with(movieCardPoster).load(item.posterUri).into(movieCardPoster)
-            movieCardDelete.setOnClickListener { listener.onRemove(item.id) }
-            root.setOnClickListener { listener.onItemClicked(item.id) }
-        }
-    }
-
-    companion object {
-        fun create(
-            inflater: LayoutInflater,
-            parent: ViewGroup,
-            listener: OnFavoriteActionListener
-        ): FavoriteViewHolder {
-            val binding = ItemMovieBinding.inflate(inflater, parent, false)
-            return FavoriteViewHolder(binding, listener)
-        }
-    }
-}
-
-val Int.dp: Int
-    get() = ceil(this * Resources.getSystem().displayMetrics.density).toInt()
-
-class OffsetItemDecoration(
-    private val orientation: Int,
-    private val offsetPx: Int
-) : RecyclerView.ItemDecoration() {
-
-    override fun getItemOffsets(
-        outRect: Rect,
-        view: View,
-        parent: RecyclerView,
-        state: RecyclerView.State
-    ) {
-        super.getItemOffsets(outRect, view, parent, state)
-
-        val itemCount = state.itemCount
-        val position = parent.getChildAdapterPosition(view)
-        if (position == itemCount - 1 || position < 0 || position >= itemCount) return
-
-        if (orientation == LinearLayoutManager.HORIZONTAL) {
-            if (offsetPx > 0) {
-                outRect.right = offsetPx
-            }
-        } else if (orientation == LinearLayoutManager.VERTICAL) {
-            if (offsetPx > 0) {
-                outRect.bottom = offsetPx
-            }
-        }
-    }
-}
