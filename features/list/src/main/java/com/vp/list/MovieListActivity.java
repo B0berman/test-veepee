@@ -76,4 +76,6 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
     public AndroidInjector<Fragment> supportFragmentInjector() {
         return dispatchingActivityInjector;
     }
+
+
 }
