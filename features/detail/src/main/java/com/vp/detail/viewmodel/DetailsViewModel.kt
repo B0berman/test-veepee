@@ -3,6 +3,7 @@ package com.vp.detail.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.vp.database.DatabaseManager
 import com.vp.detail.DetailActivity
 import com.vp.detail.model.MovieDetail
 import com.vp.detail.service.DetailService
@@ -13,6 +14,7 @@ import javax.security.auth.callback.Callback
 
 class DetailsViewModel @Inject constructor(private val detailService: DetailService) : ViewModel() {
 
+
     private val details: MutableLiveData<MovieDetail> = MutableLiveData()
     private val title: MutableLiveData<String> = MutableLiveData()
     private val loadingState: MutableLiveData<LoadingState> = MutableLiveData()
@@ -22,6 +24,7 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
     fun details(): LiveData<MovieDetail> = details
 
     fun state(): LiveData<LoadingState> = loadingState
+
 
     fun fetchDetails() {
         loadingState.value = LoadingState.IN_PROGRESS
