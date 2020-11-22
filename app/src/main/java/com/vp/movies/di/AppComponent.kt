@@ -22,4 +22,5 @@ interface AppComponent {
     }
 
     fun inject(app: MoviesApplication)
+
 }

@@ -39,12 +39,17 @@ android {
 }
 
 dependencies {
+    implementation project(':features:database')
     implementation project(':features:list')
     implementation project(':features:detail')
     implementation project(':features:favorites')
     implementation project(':dagger.addons')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin"
+
+    //db
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 
     //support
     implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"

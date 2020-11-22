@@ -43,10 +43,4 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
-    //dagger
-    implementation "com.google.dagger:dagger:$rootProject.dagger"
-    kapt "com.google.dagger:dagger-compiler:$rootProject.dagger"
-    implementation "com.google.dagger:dagger-android:$rootProject.dagger"
-    implementation("com.google.dagger:dagger-android-support:$rootProject.dagger")
-    kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
 }

@@ -1,31 +1,28 @@
 package com.vp.detail
 
-import android.os.AsyncTask
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.vp.database.async.doAsync
 import com.vp.database.beans.Movie
 import com.vp.database.db.MovieDatabase
 import com.vp.detail.databinding.ActivityDetailBinding
 import com.vp.detail.viewmodel.DetailsViewModel
 import dagger.android.support.DaggerAppCompatActivity
-import kotlinx.android.synthetic.main.activity_detail.*
 import javax.inject.Inject
-import kotlin.run
 
 class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
-    lateinit var favoriteView: MenuItem
-    lateinit var movie: Movie
-    var isFavorite: MutableLiveData<Boolean> = MutableLiveData()
+    private lateinit var favoriteView: MenuItem
+    private lateinit var movie: Movie
+    private var isFavorite: MutableLiveData<Boolean> = MutableLiveData()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
