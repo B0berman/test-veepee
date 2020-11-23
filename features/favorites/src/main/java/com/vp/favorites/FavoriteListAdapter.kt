@@ -15,7 +15,7 @@ class FavoriteListAdapter : RecyclerView.Adapter<FavoriteListAdapter.ViewHolder>
     private val NO_IMAGE = "N/A"
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_list, parent, false));
+        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_list, parent, false))
     }
 
     fun setItems(newItems: List<Movie>) {
@@ -26,7 +26,7 @@ class FavoriteListAdapter : RecyclerView.Adapter<FavoriteListAdapter.ViewHolder>
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: FavoriteListAdapter.ViewHolder, position: Int) {
-        val item: Movie = items.get(position)
+        val item: Movie = items[position]
         if (NO_IMAGE != item.poster) {
             val density = holder.image.resources.displayMetrics.density
             GlideApp.with(holder.image)
@@ -51,9 +51,7 @@ class FavoriteListAdapter : RecyclerView.Adapter<FavoriteListAdapter.ViewHolder>
         }
 
         override fun onClick(v: View) {
-            onItemClickListener?.let {
-                it.onItemClick(items[adapterPosition].id)
-            }
+            onItemClickListener?.onItemClick(items[adapterPosition].id)
         }
     }
 
