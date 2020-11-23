@@ -24,6 +24,7 @@ import com.vp.list.viewmodel.ListState
 import com.vp.list.viewmodel.ListViewModel
 import com.vp.list.viewmodel.SearchResult
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.fragment_list.*
 import javax.inject.Inject
 
 class ListFragment : Fragment(), LoadMoreItemsListener, ListAdapter.OnItemClickListener {
@@ -120,6 +121,7 @@ class ListFragment : Fragment(), LoadMoreItemsListener, ListAdapter.OnItemClickL
         when (searchResult.listState) {
             ListState.LOADED -> {
                 setItemsData(listAdapter, searchResult)
+                loadMoreProgressBar.visibility = View.GONE
                 refreshLayout!!.isRefreshing = false
                 showList()
             }
@@ -147,6 +149,7 @@ class ListFragment : Fragment(), LoadMoreItemsListener, ListAdapter.OnItemClickL
 
     override fun loadMoreItems(page: Int) {
         gridPagingScrollListener!!.markLoading(true)
+        loadMoreProgressBar.visibility = View.VISIBLE
         listViewModel!!.searchMoviesByTitle(currentQuery, page)
     }
 

@@ -33,7 +33,12 @@
             android:text="@string/data_loading_error" />
     </ViewAnimator>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
+    <ProgressBar
+        android:id="@+id/loadMoreProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_gravity="center" />
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
