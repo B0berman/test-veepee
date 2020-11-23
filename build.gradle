@@ -35,6 +35,17 @@ buildscript {
         // in the individual module build.gradle files
     }
 }
+
+allprojects {
+    configurations.all {
+        resolutionStrategy.force "com.google.android.gms:play-services-tasks:15.0.1"
+    }
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
 subprojects {
     project.configurations.all {
         resolutionStrategy.eachDependency { details ->
@@ -49,15 +60,6 @@ subprojects {
                 details.useVersion "1.0.0"
             }
         }
-    }
-}
-allprojects {
-    configurations.all {
-        resolutionStrategy.force "com.google.android.gms:play-services-tasks:15.0.1"
-    }
-    repositories {
-        google()
-        jcenter()
     }
 }
 
