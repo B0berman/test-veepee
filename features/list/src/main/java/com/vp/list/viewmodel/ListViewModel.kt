@@ -41,4 +41,8 @@ class ListViewModel @Inject internal constructor(private val searchService: Sear
         })
     }
 
+    fun refreshList() {
+        aggregatedItems.clear()
+        searchMoviesByTitle(currentTitle, 1)
+    }
 }

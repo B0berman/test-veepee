@@ -72,7 +72,9 @@ class ListFragment : Fragment(), LoadMoreItemsListener, ListAdapter.OnItemClickL
     }
 
     private fun initRefreshListener() {
-        refreshLayout!!.setOnRefreshListener { listViewModel!!.searchMoviesByTitle(currentQuery, 1) }
+        refreshLayout!!.setOnRefreshListener {
+            listViewModel!!.refreshList()
+        }
     }
 
     private fun initBottomNavigation(view: View) {
