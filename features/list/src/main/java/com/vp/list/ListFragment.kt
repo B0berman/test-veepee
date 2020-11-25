@@ -160,6 +160,11 @@ class ListFragment : Fragment(), LoadMoreItemsListener, ListAdapter.OnItemClickL
         showProgressBar()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        recyclerView!!.adapter = null
+    }
+
     override fun onItemClick(imdbID: String?) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("app://movies/detail?imdbID=$imdbID"))
         startActivity(intent)
